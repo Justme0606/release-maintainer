@@ -9,7 +9,7 @@ export default function AppLayout() {
           <Rocket size={28} />
           <div>
             <strong>Rocq Platform</strong>
-            <span>Release Console</span>
+            <span>Release Dashboard</span>
           </div>
         </div>
 
