@@ -10,7 +10,7 @@ import {
 import { packages } from "../data/mockPackages";
 
 export default function PackageDetailPage() {
-  const { packageName } = useParams();
+  const { releaseId, packageName } = useParams();
 
   const pkg = packages.find((item) => item.name === packageName);
 
@@ -26,7 +26,7 @@ export default function PackageDetailPage() {
   return (
     <>
       <div className="detail-header">
-        <Link to="/" className="linkish">
+        <Link to={`/releases/${releaseId}`} className="linkish">
           ← Back to dashboard
         </Link>
 
@@ -220,7 +220,7 @@ export default function PackageDetailPage() {
 
             <div className="detail-info">
               <span>Name</span>
-              <strong>Gaëtan Gilbert</strong>
+              <strong>John Doe</strong>
             </div>
 
             <div className="detail-info">

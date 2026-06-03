@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { packages } from "../data/mockPackages";
 
 export default function PackageTable() {
   const navigate = useNavigate();
+  const { releaseId } = useParams();
 
   return (
     <section className="panel">
@@ -37,7 +38,9 @@ export default function PackageTable() {
             <tr
               className="clickable-row"
               key={pkg.name}
-              onClick={() => navigate(`/packages/${pkg.name}`)}
+              onClick={() =>
+                navigate(`/releases/${releaseId}/packages/${pkg.name}`)
+              }
             >
               <td>
                 <strong>{pkg.name}</strong>
