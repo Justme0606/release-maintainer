@@ -1,9 +1,30 @@
-export default function ReleaseHeader() {
+type ReleaseHeaderProps = {
+  release: {
+    id?: string;
+    name?: string;
+    description?: string;
+    published_at?: string;
+    draft?: boolean;
+    prerelease?: boolean;
+    status?: string;
+  } | null;
+};
+
+export default function ReleaseHeader({ release }: ReleaseHeaderProps) {
   return (
     <section className="release-header">
       <div>
-        <h1>Release 2026.01</h1>
-        <p>Rocq 9.1.0 · rocq-prover/platform · main</p>
+        <h1>Release {release?.name ?? "Loading..."}</h1>
+
+        <p>{release?.description ?? "Loading release information..."}</p>
+
+        {release?.status === "in_progress" && (
+          <span className="status-badge">🚧 IN PROGRESS</span>
+        )}
+
+        {release?.published_at && (
+          <p>Published {new Date(release.published_at).toLocaleDateString()}</p>
+        )}
       </div>
 
       <div className="progress-block">

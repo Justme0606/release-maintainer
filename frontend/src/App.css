@@ -829,3 +829,13 @@ td small {
   grid-template-columns: repeat(5, 1fr);
   padding: 22px 0 10px;
 }
+
+.release-select {
+  color: #f8fafc;
+  cursor: pointer;
+}
+
+.release-select option {
+  color: #020617;
+  background: white;
+}
