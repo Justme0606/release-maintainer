@@ -1,11 +1,52 @@
-from fastapi import FastAPI, HTTPException
+import logging
+from contextlib import asynccontextmanager
+
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.health import router as health_router
+from app.api.releases import router as releases_router
+from app.api.github import router as github_router
+from app.core.config import settings
 from app.services.github_service import GithubService
+from app.services.kpi_service import KpiService
+from app.services.release_cache_service import refresh_release
+
+logger = logging.getLogger(__name__)
+
+scheduler = AsyncIOScheduler()
+
+
+async def nightly_refresh():
+    """Refresh the in-progress release data."""
+    logger.info("Nightly refresh: starting")
+    github = GithubService()
+    kpi_service = KpiService(github)
+    await refresh_release("in-progress", github, kpi_service)
+    logger.info("Nightly refresh: done")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    scheduler.add_job(
+        nightly_refresh,
+        trigger="cron",
+        hour=2,
+        minute=0,
+        id="nightly_refresh",
+        replace_existing=True,
+    )
+    scheduler.start()
+    logger.info("Scheduler started – nightly refresh registered at 02:00")
+    yield
+    scheduler.shutdown()
+
 
 app = FastAPI(
-    title="Rocq Release Console API",
+    title=settings.app_name,
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -16,130 +57,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-github = GithubService()
+app.include_router(health_router)
 
+app.include_router(
+    github_router,
+    prefix="/api/github",
+    tags=["github"],
+)
 
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
-
-
-@app.get("/api/github/repo")
-async def get_repo():
-    return await github.get_repo(
-        owner="rocq-prover",
-        repo="platform",
-    )
-
-
-@app.get("/api/releases")
-async def get_releases():
-    releases = await github.get_releases(
-        owner="rocq-prover",
-        repo="platform",
-    )
-
-    published_releases = [
-        {
-            "id": release["tag_name"],
-            "name": release["tag_name"],
-            "description": release["name"],
-            "published_at": release["published_at"],
-            "draft": release["draft"],
-            "prerelease": release["prerelease"],
-            "status": "released",
-        }
-        for release in releases
-    ]
-
-    return [
-        {
-            "id": "in-progress",
-            "name": "In Progress Release",
-            "description": "Release cycle in progress targeting Rocq 9.1.0",
-            "published_at": None,
-            "draft": False,
-            "prerelease": True,
-            "status": "in_progress",
-        },
-        *published_releases,
-    ]
-
-
-@app.get("/api/releases/{release_id}")
-async def get_release(release_id: str):
-    repo = await github.get_repo(
-        owner="rocq-prover",
-        repo="platform",
-    )
-
-    if release_id == "in-progress":
-        return {
-            "id": "in-progress",
-            "name": "2026.01",
-            "description": "Release cycle in progress targeting Rocq 9.1.0",
-            "published_at": None,
-            "draft": False,
-            "prerelease": True,
-            "status": "in_progress",
-            "platform": {
-                "version": "2026.01",
-                "status": "in_progress",
-                "package_pick": "package-pick-9.1~2026.01",
-                "repository": repo["full_name"],
-                "default_branch": repo["default_branch"],
-                "open_issues": repo["open_issues_count"],
-            },
-            "rocq": {
-                "version": "9.1.0",
-            },
-            "summary": {
-                "packages": 142,
-                "ready": 118,
-                "waiting": 17,
-                "blocked": 7,
-            },
-        }
-
-    releases = await github.get_releases(
-        owner="rocq-prover",
-        repo="platform",
-    )
-
-    release = next(
-        (r for r in releases if r["tag_name"] == release_id),
-        None,
-    )
-
-    if release is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Release not found",
-        )
-
-    return {
-        "id": release["tag_name"],
-        "name": release["tag_name"],
-        "description": release["name"],
-        "published_at": release["published_at"],
-        "draft": release["draft"],
-        "prerelease": release["prerelease"],
-        "status": "released",
-        "platform": {
-            "version": release["tag_name"],
-            "status": "released",
-            "package_pick": None,
-            "repository": repo["full_name"],
-            "default_branch": repo["default_branch"],
-            "open_issues": repo["open_issues_count"],
-        },
-        "rocq": {
-            "version": "unknown",
-        },
-        "summary": {
-            "packages": 0,
-            "ready": 0,
-            "waiting": 0,
-            "blocked": 0,
-        },
-    }
+app.include_router(
+    releases_router,
+    prefix="/api/releases",
+    tags=["releases"],
+)

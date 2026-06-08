@@ -11,6 +11,7 @@ __pycache__/
 .venv/
 venv/
 env/
+.env
 
 # -----------------------------------------------------------------------------
 # Python packaging
@@ -42,3 +43,10 @@ output/
 # -----------------------------------------------------------------------------
 *.logbackend/.env
 .env
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Docker
+mongodb_data/

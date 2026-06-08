@@ -1,5 +1,4 @@
 import {
-  Activity,
   Boxes,
   CheckCircle2,
   GitBranch,
@@ -7,26 +6,39 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-const timeline = [
-  { label: "Package Pick", state: "done", date: "May 1", icon: Boxes },
-  { label: "Please Pick", state: "current", date: "May 3", icon: GitBranch },
-  { label: "Validation", state: "done", date: "May 12", icon: ShieldCheck },
-  { label: "CI Build", state: "current", date: "May 15", icon: Activity },
-  { label: "Release Candidate", state: "todo", date: "May 22", icon: Rocket },
-  { label: "Final Release", state: "todo", date: "May 29", icon: CheckCircle2 },
-];
+type TimelineStep = {
+  label: string;
+  date: string;
+  state: "done" | "current" | "todo";
+};
 
-export default function ReleaseTimeline() {
+interface ReleaseTimelineProps {
+  steps?: TimelineStep[];
+}
+
+const ICONS: Record<string, typeof Boxes> = {
+  "Package Pick": Boxes,
+  "Please Pick": GitBranch,
+  "Validation": ShieldCheck,
+  "Release Candidate": Rocket,
+  "Final Release": CheckCircle2,
+};
+
+function formatDate(iso: string) {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+export default function ReleaseTimeline({ steps }: ReleaseTimelineProps) {
   return (
     <section className="panel">
       <div className="panel-header">
         <h2>Release Timeline</h2>
-        <button>View full timeline</button>
       </div>
 
       <div className="horizontal-timeline">
-        {timeline.map((item) => {
-          const Icon = item.icon;
+        {(steps ?? []).map((item) => {
+          const Icon = ICONS[item.label] ?? Boxes;
 
           return (
             <div className={`timeline-step ${item.state}`} key={item.label}>
@@ -42,7 +54,7 @@ export default function ReleaseTimeline() {
                     ? "In Progress"
                     : "Pending"}
               </span>
-              <small>{item.date}</small>
+              <small>{formatDate(item.date)}</small>
             </div>
           );
         })}

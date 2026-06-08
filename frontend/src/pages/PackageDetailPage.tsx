@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   CheckCircle2,
@@ -7,12 +8,40 @@ import {
   Rocket,
 } from "lucide-react";
 
-import { packages } from "../data/mockPackages";
+interface PackageInfo {
+  name: string;
+  pick_version: string;
+  opam_version: string | null;
+  git_tag: string | null;
+  issue_url: string | null;
+  status: "ready" | "waiting" | "unknown";
+}
 
 export default function PackageDetailPage() {
   const { releaseId, packageName } = useParams();
+  const [pkg, setPkg] = useState<PackageInfo | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const pkg = packages.find((item) => item.name === packageName);
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/api/releases/${releaseId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const found = (data.packages_list ?? []).find(
+          (p: PackageInfo) => p.name === packageName
+        );
+        setPkg(found ?? null);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [releaseId, packageName]);
+
+  if (loading) {
+    return (
+      <section className="panel">
+        <p>Loading...</p>
+      </section>
+    );
+  }
 
   if (!pkg) {
     return (
@@ -31,35 +60,34 @@ export default function PackageDetailPage() {
         </Link>
 
         <h1>{pkg.name}</h1>
-        <p>{pkg.repo}</p>
       </div>
 
       <section className="kpi-grid">
         <div className="kpi blue">
           <div>
             <span>Selected Version</span>
-            <strong>{pkg.pick}</strong>
+            <strong>{pkg.pick_version}</strong>
           </div>
         </div>
 
         <div className="kpi green">
           <div>
             <span>Latest OPAM</span>
-            <strong>{pkg.opam}</strong>
+            <strong>{pkg.opam_version ?? "—"}</strong>
           </div>
         </div>
 
         <div className="kpi purple">
           <div>
             <span>Latest Git Tag</span>
-            <strong>{pkg.tag}</strong>
+            <strong>{pkg.git_tag ?? "—"}</strong>
           </div>
         </div>
 
         <div className="kpi yellow">
           <div>
-            <span>Please Pick</span>
-            <strong>{pkg.issue}</strong>
+            <span>Tracker</span>
+            <strong>{pkg.issue_url ? "Linked" : "—"}</strong>
           </div>
         </div>
       </section>
@@ -229,8 +257,8 @@ export default function PackageDetailPage() {
             </div>
 
             <div className="detail-info">
-              <span>Repository</span>
-              <strong>{pkg.repo}</strong>
+              <span>Issue</span>
+              <strong>{pkg.issue_url ? <a href={pkg.issue_url} target="_blank" rel="noopener noreferrer">View</a> : "—"}</strong>
             </div>
           </section>
 

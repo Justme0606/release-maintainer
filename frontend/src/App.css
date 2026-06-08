@@ -142,10 +142,46 @@ nav span {
   background: transparent;
 }
 
+.dashboard-layout-wrapper {
+  position: relative;
+}
+
+.refresh-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: rgba(2, 6, 23, 0.6);
+  backdrop-filter: blur(2px);
+  border-radius: 24px;
+}
+
+.refresh-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  color: #94a3b8;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.refresh-spinner svg {
+  color: #60a5fa;
+}
+
+.dashboard-layout.refreshing {
+  opacity: 0.45;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
 .dashboard-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
   gap: 18px;
+  transition: opacity 0.2s ease;
 }
 
 .dashboard-main {
@@ -228,6 +264,51 @@ nav span {
   margin: 8px 0;
 }
 
+.ci-status-list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.ci-status-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ci-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ci-status-list strong {
+  margin: 0;
+  font-size: 13px;
+}
+
+.ci-status-list small {
+  margin-left: auto;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.ci-status-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.ci-status-link:hover {
+  opacity: 0.8;
+}
+
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(130px, 1fr));
@@ -255,6 +336,15 @@ nav span {
 
 .kpi svg {
   opacity: 0.9;
+}
+
+.kpi-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.kpi-link:hover {
+  text-decoration: underline;
 }
 
 .kpi.blue svg {
@@ -317,7 +407,7 @@ nav span {
 
 .horizontal-timeline {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0;
   padding: 14px 0;
 }
@@ -455,6 +545,48 @@ td small {
 
 .side-card h3 {
   margin-bottom: 16px;
+}
+
+.activity-list {
+  min-height: 220px;
+}
+
+.activity-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.activity-pagination span {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.activity-pagination button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 8px;
+  color: #cbd5e1;
+  background: rgba(30, 41, 59, 0.8);
+  cursor: pointer;
+}
+
+.activity-pagination button:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.18);
+  color: #fff;
+}
+
+.activity-pagination button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .activity-item {
@@ -838,4 +970,59 @@ td small {
 .release-select option {
   color: #020617;
   background: white;
+}
+
+/* Package table */
+.package-table-panel .table-scroll {
+  max-height: 540px;
+  overflow-y: auto;
+}
+
+.package-table-panel .table-scroll thead th {
+  position: sticky;
+  top: 0;
+  background: rgba(15, 23, 42, 0.95);
+  z-index: 1;
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.clickable-row:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.pagination span {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 10px;
+  color: #cbd5e1;
+  background: rgba(30, 41, 59, 0.8);
+  cursor: pointer;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.18);
+  color: #fff;
+}
+
+.pagination button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }

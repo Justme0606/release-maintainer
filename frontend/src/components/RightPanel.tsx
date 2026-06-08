@@ -1,29 +1,72 @@
-import { Circle } from "lucide-react";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 
-export default function RightPanel() {
+interface ActivityEvent {
+  type: string;
+  text: string;
+  url: string;
+  date: string;
+  state: string;
+}
+
+const PAGE_SIZE = 4;
+
+function formatRelativeDate(dateStr: string): string {
+  if (!dateStr) return "";
+  const now = Date.now();
+  const then = new Date(dateStr).getTime();
+  const diffMs = now - then;
+  if (diffMs < 0) return "just now";
+  const minutes = Math.floor(diffMs / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  return `${Math.floor(days / 30)}mo ago`;
+}
+
+interface RightPanelProps {
+  recentActivity?: ActivityEvent[];
+}
+
+export default function RightPanel({ recentActivity = [] }: RightPanelProps) {
+  const [page, setPage] = useState(0);
+  const totalPages = Math.max(1, Math.ceil(recentActivity.length / PAGE_SIZE));
+  const pageItems = recentActivity.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
   return (
     <aside className="right-panel">
       <SideCard title="Recent Activity">
-        <ActivityItem
-          state="success"
-          text="CI build #1284 succeeded"
-          meta="2h ago · rocq-platform-bot"
-        />
-        <ActivityItem
-          state="danger"
-          text="Please pick issue #1284 opened for coq-elpi"
-          meta="3h ago · @ocamlpro"
-        />
-        <ActivityItem
-          state="success"
-          text="Package mathcomp marked as ready"
-          meta="5h ago · @ocamlpro"
-        />
-        <ActivityItem
-          state="danger"
-          text="CI build #1281 failed"
-          meta="1d ago · rocq-platform-bot"
-        />
+        <div className="activity-list">
+          {recentActivity.length === 0 && (
+            <div className="activity-item info">
+              <Circle size={10} />
+              <div><strong>No recent activity</strong><span></span></div>
+            </div>
+          )}
+          {pageItems.map((event, i) => (
+            <ActivityItem
+              key={page * PAGE_SIZE + i}
+              state={event.state}
+              text={event.text}
+              meta={formatRelativeDate(event.date)}
+              url={event.url}
+            />
+          ))}
+        </div>
+        {totalPages > 1 && (
+          <div className="activity-pagination">
+            <button disabled={page === 0} onClick={() => setPage(page - 1)}>
+              <ChevronLeft size={14} />
+            </button>
+            <span>{page + 1} / {totalPages}</span>
+            <button disabled={page >= totalPages - 1} onClick={() => setPage(page + 1)}>
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        )}
       </SideCard>
 
       <SideCard title="Issues by State">
@@ -82,16 +125,22 @@ function ActivityItem({
   state,
   text,
   meta,
+  url,
 }: {
   state: string;
   text: string;
   meta: string;
+  url?: string;
 }) {
   return (
     <div className={`activity-item ${state}`}>
       <Circle size={10} />
       <div>
-        <strong>{text}</strong>
+        {url ? (
+          <a href={url} target="_blank" rel="noopener noreferrer"><strong>{text}</strong></a>
+        ) : (
+          <strong>{text}</strong>
+        )}
         <span>{meta}</span>
       </div>
     </div>
