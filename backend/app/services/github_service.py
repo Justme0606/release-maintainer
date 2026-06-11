@@ -117,6 +117,11 @@ class GithubService:
             f"/repos/{owner}/{repo}/actions/runs?per_page=10&branch={branch}"
         )
 
+    async def get_all_workflow_runs(self, owner: str, repo: str, per_page: int = 30):
+        return await self._get(
+            f"/repos/{owner}/{repo}/actions/runs?per_page={per_page}"
+        )
+
     async def get_workflows(self, owner: str, repo: str):
         return await self._get(
             f"/repos/{owner}/{repo}/actions/workflows"
@@ -138,3 +143,42 @@ class GithubService:
         """Return the commit SHA for a given ref (branch/tag)."""
         data = await self._get(f"/repos/{owner}/{repo}/commits/{ref}?per_page=1")
         return data["sha"]
+
+    async def get_opam_file(self, pkg_name: str, version: str) -> str:
+        """Return the content of an opam file from ocaml/opam-repository."""
+        path = f"packages/{pkg_name}/{pkg_name}.{version}/opam"
+        return await self.get_file_content("ocaml", "opam-repository", path)
+
+    async def get_issue_details(self, owner: str, repo: str, issue_number: int) -> dict:
+        """Fetch full issue details including labels, assignees, comments."""
+        issue = await self._get(f"/repos/{owner}/{repo}/issues/{issue_number}")
+        comments = await self._get(
+            f"/repos/{owner}/{repo}/issues/{issue_number}/comments?per_page=100"
+        )
+        return {
+            "number": issue.get("number"),
+            "title": issue.get("title"),
+            "state": issue.get("state"),
+            "html_url": issue.get("html_url"),
+            "created_at": issue.get("created_at"),
+            "updated_at": issue.get("updated_at"),
+            "author": issue.get("user", {}).get("login"),
+            "author_avatar": issue.get("user", {}).get("avatar_url"),
+            "labels": [
+                {"name": l.get("name"), "color": l.get("color")}
+                for l in issue.get("labels", [])
+            ],
+            "assignees": [
+                {"login": a.get("login"), "avatar_url": a.get("avatar_url")}
+                for a in issue.get("assignees", [])
+            ],
+            "comments": [
+                {
+                    "author": c.get("user", {}).get("login"),
+                    "author_avatar": c.get("user", {}).get("avatar_url"),
+                    "created_at": c.get("created_at"),
+                    "body": c.get("body", ""),
+                }
+                for c in (comments if isinstance(comments, list) else [])
+            ],
+        }

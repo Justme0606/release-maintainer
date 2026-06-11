@@ -1,13 +1,14 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { SidebarStatsProvider } from "./context/SidebarStatsContext";
+import { DepGraphProvider } from "./context/DepGraphContext";
 import AppLayout from "./layout/AppLayout";
 import DashboardPage from "./pages/DashboardPage";
 import PackageDetailPage from "./pages/PackageDetailPage";
+import PackagePickPage from "./pages/PackagePickPage";
 import "./App.css";
 
 function App() {
   return (
-    <SidebarStatsProvider>
+    <DepGraphProvider>
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
@@ -20,10 +21,11 @@ function App() {
               path="/releases/:releaseId/packages/:packageName"
               element={<PackageDetailPage />}
             />
+            <Route path="/package-pick" element={<PackagePickPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
-    </SidebarStatsProvider>
+    </DepGraphProvider>
   );
 }
 

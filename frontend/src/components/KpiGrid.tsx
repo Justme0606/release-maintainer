@@ -2,6 +2,7 @@ import {
   Boxes,
   CheckCircle2,
   Clock,
+  CircleOff,
   GitBranch,
   GitPullRequest,
   TriangleAlert,
@@ -13,6 +14,7 @@ interface KpiGridProps {
     ready: number;
     waiting: number;
     blocked: number;
+    disabled?: number;
   };
   openIssues: number;
   openPullRequests: number;
@@ -25,6 +27,7 @@ export default function KpiGrid({ summary, openIssues, openPullRequests }: KpiGr
       <Kpi title="Ready" value={summary.ready} icon={<CheckCircle2 />} />
       <Kpi title="Waiting" value={summary.waiting} icon={<Clock />} />
       <Kpi title="Blocked" value={summary.blocked} icon={<TriangleAlert />} />
+      <Kpi title="Disabled" value={summary.disabled ?? 0} icon={<CircleOff />} />
       <Kpi title="Issues Open" value={openIssues} icon={<GitBranch />} href="https://github.com/rocq-prover/platform/issues" />
       <Kpi title="Pull Requests" value={openPullRequests} icon={<GitPullRequest />} href="https://github.com/rocq-prover/platform/pulls" />
     </section>

@@ -142,39 +142,29 @@ nav span {
   background: transparent;
 }
 
-.dashboard-layout-wrapper {
+.zone-wrapper {
   position: relative;
 }
 
-.refresh-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 50;
-  display: grid;
-  place-items: center;
-  background: rgba(2, 6, 23, 0.6);
-  backdrop-filter: blur(2px);
-  border-radius: 24px;
-}
-
-.refresh-spinner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  color: #94a3b8;
-  font-size: 15px;
-  font-weight: 500;
-}
-
-.refresh-spinner svg {
-  color: #60a5fa;
-}
-
-.dashboard-layout.refreshing {
-  opacity: 0.45;
+.zone-wrapper.loading > *:first-child {
+  opacity: 0.4;
   pointer-events: none;
   transition: opacity 0.2s ease;
+}
+
+.zone-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  background: rgba(2, 6, 23, 0.5);
+  backdrop-filter: blur(2px);
+  border-radius: 20px;
+}
+
+.zone-overlay svg {
+  color: #60a5fa;
 }
 
 .dashboard-layout {
@@ -311,7 +301,7 @@ nav span {
 
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(130px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: 14px;
 }
 
@@ -397,12 +387,23 @@ nav span {
 .filters {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
 }
 
 .filters button.active {
   color: white;
   background: rgba(37, 99, 235, 0.8);
+}
+
+.package-search {
+  min-width: 180px;
+  padding: 6px 10px;
+  margin-left: 4px;
+}
+
+.package-search input {
+  font-size: 0.85rem;
 }
 
 .horizontal-timeline {
@@ -621,12 +622,6 @@ td small {
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: conic-gradient(
-    #8b5cf6 0 64%,
-    #22c55e 64% 92%,
-    #ef4444 92% 96%,
-    #64748b 96% 100%
-  );
 }
 
 .donut div {
@@ -972,6 +967,229 @@ td small {
   background: white;
 }
 
+/* Dependency graph — ReactFlow */
+.dep-graph {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ReactFlow dark mode overrides */
+.dep-graph .react-flow__background {
+  background: transparent;
+}
+
+.dep-graph .react-flow__pane {
+  cursor: grab;
+}
+
+.dep-graph .react-flow__pane:active {
+  cursor: grabbing;
+}
+
+.dep-graph .react-flow__controls {
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.dep-graph .react-flow__controls button {
+  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(148, 163, 184, 0.16);
+  color: #cbd5e1;
+  fill: #cbd5e1;
+}
+
+.dep-graph .react-flow__controls button:hover {
+  background: rgba(59, 130, 246, 0.18);
+}
+
+.dep-graph .react-flow__controls button svg {
+  fill: currentColor;
+}
+
+.dep-graph .react-flow__minimap {
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Custom node */
+.dep-flow-node {
+  display: flex;
+  align-items: center;
+  width: 200px;
+  height: 40px;
+  padding: 0 12px 0 14px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1.5px solid rgba(148, 163, 184, 0.2);
+  border-left-width: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+
+.dep-flow-node .dep-flow-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dep-flow-node.highlighted {
+  background: rgba(59, 130, 246, 0.22);
+  border-color: rgba(96, 165, 250, 0.6);
+  border-left-width: 4px;
+}
+
+.dep-flow-node.highlighted .dep-flow-label {
+  color: #93c5fd;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.dep-flow-node.related {
+  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+.dep-flow-node.dimmed {
+  opacity: 0.2;
+}
+
+.dep-flow-node:hover:not(.dimmed) {
+  border-color: rgba(96, 165, 250, 0.5);
+  filter: brightness(1.2);
+}
+
+/* Hide ReactFlow handles visually */
+.dep-flow-node .react-flow__handle {
+  width: 6px;
+  height: 6px;
+  background: rgba(148, 163, 184, 0.3);
+  border: none;
+}
+
+.dep-empty {
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Package relations */
+.rel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.rel-col h3 {
+  margin: 0;
+}
+
+.rel-heading {
+  font-size: 14px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 10px;
+}
+
+.rel-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  margin-left: 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #93c5fd;
+  background: rgba(59, 130, 246, 0.18);
+}
+
+.rel-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rel-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 10px;
+  background: rgba(30, 41, 59, 0.8);
+  color: #cbd5e1;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.rel-chip:hover {
+  background: rgba(59, 130, 246, 0.18);
+  color: #fff;
+}
+
+.rel-chip-bar {
+  display: block;
+  width: 4px;
+  height: 16px;
+  border-radius: 2px;
+  background: #64748b;
+  flex-shrink: 0;
+}
+
+.rel-chip-bar.ready {
+  background: #22c55e;
+}
+
+.rel-chip-bar.waiting {
+  background: #f59e0b;
+}
+
+.rel-chip-bar.blocked {
+  background: #ef4444;
+}
+
+/* Package Pick page */
+.package-pick-page {
+  padding: 0 4px;
+}
+
+.editor-header {
+  display: inline-block;
+  padding: 8px 14px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  color: #93c5fd;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.editor-container .cm-editor {
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  overflow: hidden;
+  max-height: calc(100vh - 160px);
+}
+
+.editor-container .cm-scroller {
+  overflow: auto;
+}
+
+@media (max-width: 900px) {
+  .rel-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Package table */
 .package-table-panel .table-scroll {
   max-height: 540px;
@@ -991,6 +1209,27 @@ td small {
 
 .clickable-row:hover {
   background: rgba(59, 130, 246, 0.08);
+}
+
+.clickable-row.disabled-row {
+  opacity: 0.55;
+}
+
+.clickable-row.disabled-row:hover {
+  opacity: 0.75;
+}
+
+.disabled-reason {
+  display: block;
+  color: #94a3b8;
+  font-weight: 400;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.pill.disabled {
+  color: #94a3b8;
+  background: rgba(148, 163, 184, 0.14);
 }
 
 .pagination {

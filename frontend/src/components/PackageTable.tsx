@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Search } from "lucide-react";
 
 interface PackageInfo {
   name: string;
@@ -7,7 +8,9 @@ interface PackageInfo {
   opam_version: string | null;
   git_tag: string | null;
   issue_url: string | null;
-  status: "ready" | "waiting" | "unknown";
+  status: "ready" | "waiting" | "blocked" | "unknown";
+  disabled?: boolean;
+  disabled_reason?: string | null;
 }
 
 interface PackageTableProps {
@@ -16,12 +19,14 @@ interface PackageTableProps {
 
 const PAGE_SIZE = 20;
 
-type Filter = "all" | "ready" | "waiting" | "unknown";
+type Filter = "all" | "ready" | "waiting" | "blocked" | "unknown" | "disabled";
 
 const FILTERS: { value: Filter; label: string }[] = [
   { value: "all", label: "All" },
   { value: "ready", label: "Ready" },
   { value: "waiting", label: "Waiting" },
+  { value: "blocked", label: "Blocked" },
+  { value: "disabled", label: "Disabled" },
   { value: "unknown", label: "Unknown" },
 ];
 
@@ -30,11 +35,17 @@ export default function PackageTable({ packages }: PackageTableProps) {
   const { releaseId } = useParams();
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<Filter>("all");
+  const [search, setSearch] = useState("");
 
-  const filtered =
-    filter === "all"
-      ? packages
-      : packages.filter((p) => p.status === filter);
+  const filtered = packages.filter((p) => {
+    if (filter === "disabled") {
+      if (!p.disabled) return false;
+    } else if (filter !== "all") {
+      if (p.status !== filter) return false;
+    }
+    if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages - 1);
@@ -43,6 +54,11 @@ export default function PackageTable({ packages }: PackageTableProps) {
 
   const handleFilter = (f: Filter) => {
     setFilter(f);
+    setPage(0);
+  };
+
+  const handleSearch = (value: string) => {
+    setSearch(value);
     setPage(0);
   };
 
@@ -61,6 +77,14 @@ export default function PackageTable({ packages }: PackageTableProps) {
               {f.label}
             </button>
           ))}
+          <div className="search package-search">
+            <Search size={14} />
+            <input
+              placeholder="Search packages..."
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
@@ -80,7 +104,7 @@ export default function PackageTable({ packages }: PackageTableProps) {
           <tbody>
             {pagePackages.map((pkg) => (
               <tr
-                className="clickable-row"
+                className={`clickable-row${pkg.disabled ? " disabled-row" : ""}`}
                 key={pkg.name}
                 onClick={() =>
                   navigate(`/releases/${releaseId}/packages/${pkg.name}`)
@@ -88,6 +112,9 @@ export default function PackageTable({ packages }: PackageTableProps) {
               >
                 <td>
                   <strong>{pkg.name}</strong>
+                  {pkg.disabled && pkg.disabled_reason && (
+                    <small className="disabled-reason">{pkg.disabled_reason}</small>
+                  )}
                 </td>
                 <td>{pkg.pick_version}</td>
                 <td>{pkg.opam_version ?? "—"}</td>
@@ -108,7 +135,11 @@ export default function PackageTable({ packages }: PackageTableProps) {
                   )}
                 </td>
                 <td>
-                  <span className={`pill ${pkg.status}`}>{pkg.status}</span>
+                  {pkg.disabled ? (
+                    <span className="pill disabled">disabled</span>
+                  ) : (
+                    <span className={`pill ${pkg.status}`}>{pkg.status}</span>
+                  )}
                 </td>
               </tr>
             ))}

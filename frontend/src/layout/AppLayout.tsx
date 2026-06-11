@@ -1,10 +1,7 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { Rocket } from "lucide-react";
-import { useSidebarStats } from "../context/SidebarStatsContext";
 
 export default function AppLayout() {
-  const { stats } = useSidebarStats();
-
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -24,16 +21,12 @@ export default function AppLayout() {
           >
             Overview
           </NavLink>
-          <a>
-            Packages {stats && <span>{stats.packages}</span>}
-          </a>
-          <a>
-            Issues Open {stats && <span>{stats.openIssues}</span>}
-          </a>
-          <a>
-            CI Builds {stats && <span>{stats.ciBuilds}</span>}
-          </a>
-          <a>Package Pick</a>
+          <NavLink
+            to="/package-pick"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Package Pick
+          </NavLink>
           <a>Platforms & Tags</a>
           <a>Releases</a>
         </nav>
