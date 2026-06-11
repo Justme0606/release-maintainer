@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 
 type ReleaseOption = {
   id: string;
@@ -14,7 +14,7 @@ export default function TopBar({ releaseId }: { releaseId: string }) {
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/releases")
       .then((res) => res.json())
-      .then((data) => setReleases(data))
+      .then((data) => setReleases(data.releases ?? data))
       .catch((err) => console.error("Failed to fetch releases", err));
   }, []);
 
@@ -37,11 +37,6 @@ export default function TopBar({ releaseId }: { releaseId: string }) {
       <span className="status-badge">IN PROGRESS</span>
 
       <div className="topbar-spacer" />
-
-      <div className="search">
-        <Search size={16} />
-        <input placeholder="Search packages..." />
-      </div>
 
       <Settings size={18} />
     </header>

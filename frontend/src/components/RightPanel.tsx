@@ -1,51 +1,135 @@
-import { Circle } from "lucide-react";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 
-export default function RightPanel() {
+interface ActivityEvent {
+  type: string;
+  text: string;
+  url: string;
+  date: string;
+  state: string;
+}
+
+const PAGE_SIZE = 4;
+
+function formatRelativeDate(dateStr: string): string {
+  if (!dateStr) return "";
+  const now = Date.now();
+  const then = new Date(dateStr).getTime();
+  const diffMs = now - then;
+  if (diffMs < 0) return "just now";
+  const minutes = Math.floor(diffMs / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  return `${Math.floor(days / 30)}mo ago`;
+}
+
+interface IssuesByState {
+  open: number;
+  closed: number;
+  draft_prs: number;
+}
+
+interface BuildsSummary {
+  success: number;
+  failed: number;
+  running: number;
+  cancelled: number;
+}
+
+interface RightPanelProps {
+  recentActivity?: ActivityEvent[];
+  issuesByState?: IssuesByState;
+  buildsSummary?: BuildsSummary;
+}
+
+export default function RightPanel({ recentActivity = [], issuesByState, buildsSummary }: RightPanelProps) {
+  const [page, setPage] = useState(0);
+  const totalPages = Math.max(1, Math.ceil(recentActivity.length / PAGE_SIZE));
+  const pageItems = recentActivity.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
   return (
     <aside className="right-panel">
       <SideCard title="Recent Activity">
-        <ActivityItem
-          state="success"
-          text="CI build #1284 succeeded"
-          meta="2h ago · rocq-platform-bot"
-        />
-        <ActivityItem
-          state="danger"
-          text="Please pick issue #1284 opened for coq-elpi"
-          meta="3h ago · @ocamlpro"
-        />
-        <ActivityItem
-          state="success"
-          text="Package mathcomp marked as ready"
-          meta="5h ago · @ocamlpro"
-        />
-        <ActivityItem
-          state="danger"
-          text="CI build #1281 failed"
-          meta="1d ago · rocq-platform-bot"
-        />
+        <div className="activity-list">
+          {recentActivity.length === 0 && (
+            <div className="activity-item info">
+              <Circle size={10} />
+              <div><strong>No recent activity</strong><span></span></div>
+            </div>
+          )}
+          {pageItems.map((event, i) => (
+            <ActivityItem
+              key={page * PAGE_SIZE + i}
+              state={event.state}
+              text={event.text}
+              meta={formatRelativeDate(event.date)}
+              url={event.url}
+            />
+          ))}
+        </div>
+        {totalPages > 1 && (
+          <div className="activity-pagination">
+            <button disabled={page === 0} onClick={() => setPage(page - 1)}>
+              <ChevronLeft size={14} />
+            </button>
+            <span>{page + 1} / {totalPages}</span>
+            <button disabled={page >= totalPages - 1} onClick={() => setPage(page + 1)}>
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        )}
       </SideCard>
 
       <SideCard title="Issues by State">
-        <div className="donut">
-          <div>
-            53
-            <br />
-            <span>Total</span>
-          </div>
-        </div>
-
-        <Legend label="Open" value="34 (64%)" />
-        <Legend label="Closed" value="15 (28%)" />
-        <Legend label="Expired" value="2 (4%)" />
-        <Legend label="Draft" value="2 (4%)" />
+        {(() => {
+          const open = issuesByState?.open ?? 0;
+          const closed = issuesByState?.closed ?? 0;
+          const draft = issuesByState?.draft_prs ?? 0;
+          const total = open + closed + draft;
+          const pctOpen = total > 0 ? Math.round((open / total) * 100) : 0;
+          const pctClosed = total > 0 ? Math.round((closed / total) * 100) : 0;
+          const pctDraft = total > 0 ? 100 - pctOpen - pctClosed : 0;
+          const gradient = total > 0
+            ? `conic-gradient(#8b5cf6 0% ${pctOpen}%, #22c55e ${pctOpen}% ${pctOpen + pctClosed}%, #64748b ${pctOpen + pctClosed}% 100%)`
+            : "conic-gradient(#334155 0% 100%)";
+          return (
+            <>
+              <div className="donut" style={{ background: gradient }}>
+                <div>
+                  {total}
+                  <br />
+                  <span>Total</span>
+                </div>
+              </div>
+              <Legend label="Open" value={`${open} (${pctOpen}%)`} />
+              <Legend label="Closed" value={`${closed} (${pctClosed}%)`} />
+              <Legend label="Draft PRs" value={`${draft} (${pctDraft}%)`} />
+            </>
+          );
+        })()}
       </SideCard>
 
       <SideCard title="Builds Summary">
-        <Bar label="Success" value="128 (89%)" percent={89} />
-        <Bar label="Failed" value="10 (7%)" percent={7} />
-        <Bar label="Running" value="4 (3%)" percent={3} />
-        <Bar label="Cancelled" value="2 (1%)" percent={1} />
+        {(() => {
+          const success = buildsSummary?.success ?? 0;
+          const failed = buildsSummary?.failed ?? 0;
+          const running = buildsSummary?.running ?? 0;
+          const cancelled = buildsSummary?.cancelled ?? 0;
+          const total = success + failed + running + cancelled;
+          const pct = (v: number) => (total > 0 ? Math.round((v / total) * 100) : 0);
+          return (
+            <>
+              <Bar label="Success" value={`${success} (${pct(success)}%)`} percent={pct(success)} />
+              <Bar label="Failed" value={`${failed} (${pct(failed)}%)`} percent={pct(failed)} />
+              <Bar label="Running" value={`${running} (${pct(running)}%)`} percent={pct(running)} />
+              <Bar label="Cancelled" value={`${cancelled} (${pct(cancelled)}%)`} percent={pct(cancelled)} />
+            </>
+          );
+        })()}
       </SideCard>
 
       <SideCard title="Packages by Status">
@@ -82,16 +166,22 @@ function ActivityItem({
   state,
   text,
   meta,
+  url,
 }: {
   state: string;
   text: string;
   meta: string;
+  url?: string;
 }) {
   return (
     <div className={`activity-item ${state}`}>
       <Circle size={10} />
       <div>
-        <strong>{text}</strong>
+        {url ? (
+          <a href={url} target="_blank" rel="noopener noreferrer"><strong>{text}</strong></a>
+        ) : (
+          <strong>{text}</strong>
+        )}
         <span>{meta}</span>
       </div>
     </div>

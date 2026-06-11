@@ -21,16 +21,12 @@ export default function AppLayout() {
           >
             Overview
           </NavLink>
-          <a>
-            Packages <span>142</span>
-          </a>
-          <a>
-            Please Pick Issues <span>53</span>
-          </a>
-          <a>
-            CI Builds <span>4</span>
-          </a>
-          <a>Package Pick</a>
+          <NavLink
+            to="/package-pick"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Package Pick
+          </NavLink>
           <a>Platforms & Tags</a>
           <a>Releases</a>
         </nav>
