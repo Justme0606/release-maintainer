@@ -1,17 +1,33 @@
 import { AlertTriangle, CalendarDays, Link2 } from "lucide-react";
 
-export default function BottomPanels() {
+interface TimelineStep {
+  label: string;
+  date: string;
+  state: "done" | "current" | "todo";
+}
+
+function formatDate(iso: string) {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+export default function BottomPanels({ timeline }: { timeline?: TimelineStep[] }) {
   return (
     <section className="bottom-grid">
-      <MiniPanel
-        title="Upcoming Milestones"
-        icon={<CalendarDays size={16} />}
-        items={[
-          "May 22 · Release Candidate (RC1)",
-          "May 25 · RC Validation",
-          "May 29 · Final Release",
-        ]}
-      />
+      <section className="panel mini">
+        <div className="mini-header">
+          <CalendarDays size={16} />
+          <h3>Upcoming Milestones</h3>
+        </div>
+        {(timeline ?? []).map((step) => (
+          <p
+            key={step.label}
+            style={step.state === "done" ? { opacity: 0.4 } : undefined}
+          >
+            {formatDate(step.date)} · {step.label}
+          </p>
+        ))}
+      </section>
 
       <MiniPanel
         title="Alerts"

@@ -610,6 +610,15 @@ td small {
   font-size: 13px;
 }
 
+.activity-item a {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+
+.activity-item a:hover {
+  color: #f1f5f9;
+}
+
 .activity-item span {
   color: #94a3b8;
   font-size: 12px;
@@ -884,6 +893,7 @@ td small {
 }
 
 .kpi-grid {
+  margin-top: 18px;
   margin-bottom: 32px;
 }
 
