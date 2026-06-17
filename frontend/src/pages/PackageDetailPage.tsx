@@ -6,8 +6,20 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { ExternalLink, GitBranch } from "lucide-react";
 import { useDepGraph } from "../context/DepGraphContext";
+import {
+  ReactFlow,
+  MiniMap,
+  Controls,
+  Handle,
+  Position,
+  type Node,
+  type Edge,
+  type NodeTypes,
+  type NodeProps,
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 
-import type { FullGraph } from "../context/DepGraphContext";
+import type { FullGraph, GraphNode } from "../context/DepGraphContext";
 
 interface PackageInfo {
   name: string;
@@ -399,6 +411,7 @@ export default function PackageDetailPage() {
   const [graph, setGraph] = useState<FullGraph | null>(() =>
     releaseId ? getGraph(releaseId) : null,
   );
+  const [graphLoading, setGraphLoading] = useState(!graph);
 
   useEffect(() => {
     fetch(`/api/releases/${releaseId}/`)
@@ -445,11 +458,16 @@ export default function PackageDetailPage() {
     const cached = getGraph(releaseId);
     if (cached) {
       setGraph(cached);
+      setGraphLoading(false);
       return;
     }
+    setGraphLoading(true);
     fetchGraph(releaseId)
-      .then((g) => setGraph(g))
-      .catch(() => {});
+      .then((g) => {
+        setGraph(g);
+        setGraphLoading(false);
+      })
+      .catch(() => setGraphLoading(false));
   }, [releaseId]);
 
   if (loading) {
@@ -537,6 +555,24 @@ export default function PackageDetailPage() {
             </strong>
           </div>
         </div>
+      </section>
+
+      {/* Full dependency graph */}
+      <section className="panel" style={{ marginBottom: 18 }}>
+        <div className="panel-header">
+          <h2>Dependency Graph</h2>
+        </div>
+        {graphLoading ? (
+          <p className="dep-empty">Loading dependency graph...</p>
+        ) : graph ? (
+          <DependencyDAG
+            graph={graph}
+            highlighted={pkg.name}
+            releaseId={releaseId!}
+          />
+        ) : (
+          <p className="dep-empty">Failed to load dependency graph.</p>
+        )}
       </section>
 
       {/* Package relations */}
