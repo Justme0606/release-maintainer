@@ -1,3 +1,7 @@
+# Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+# SPDX-License-Identifier: MIT
+"""REST API routes for release management and package details."""
+
 import asyncio
 import re
 

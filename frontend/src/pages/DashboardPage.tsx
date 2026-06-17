@@ -1,3 +1,7 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** Main dashboard page assembling KPIs, timeline and package table. */
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
@@ -10,6 +14,7 @@ import PackageTable from "../components/PackageTable";
 import RightPanel from "../components/RightPanel";
 import BottomPanels from "../components/BottomPanels";
 
+/** Overlay wrapper that shows a spinner while a dashboard zone is refreshing. */
 function ZoneLoader({
   loading,
   children,
@@ -54,11 +59,12 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/releases/${releaseId}`)
+    fetch(`/api/releases/${releaseId}/`)
       .then((res) => res.json())
       .then(updateRelease);
   }, [releaseId]);
 
+  /** Sequentially refresh each dashboard zone via its dedicated API endpoint. */
   const handleRefresh = async () => {
     if (!releaseId || isRefreshing) return;
 
@@ -67,7 +73,7 @@ export default function DashboardPage() {
     const refreshZone = async (zone: keyof ZoneLoading) => {
       try {
         const res = await fetch(
-          `http://127.0.0.1:8000/api/releases/${releaseId}/refresh/${zone}`,
+          `/api/releases/${releaseId}/refresh/${zone}`,
           { method: "POST" }
         );
         const data = await res.json();

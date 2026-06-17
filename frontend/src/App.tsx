@@ -1,3 +1,7 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** Root application component with client-side routing. */
+
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { DepGraphProvider } from "./context/DepGraphContext";
 import AppLayout from "./layout/AppLayout";

@@ -1,3 +1,7 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** React context for sharing dependency graph state across components. */
+
 import {
   createContext,
   useCallback,
@@ -35,10 +39,15 @@ const DepGraphContext = createContext<DepGraphContextValue>({
   invalidateGraph: () => {},
 });
 
+/**
+ * Provider that manages a client-side cache of dependency graphs.
+ * Graphs are fetched once per release and shared across all components.
+ */
 export function DepGraphProvider({ children }: { children: ReactNode }) {
   const [cache, setCache] = useState<Record<string, FullGraph>>({});
-  // Track in-flight requests to avoid duplicate fetches
-  const inflight = useRef<Record<string, Promise<FullGraph>>>({});
+
+  // Track in-flight requests to avoid duplicate fetches for the same release
+  const inflight = useRef<Record<string, Promise<FullGraph> | undefined>>({});
 
   const getGraph = useCallback(
     (releaseId: string) => cache[releaseId] ?? null,
@@ -47,23 +56,36 @@ export function DepGraphProvider({ children }: { children: ReactNode }) {
 
   const fetchGraph = useCallback(
     async (releaseId: string): Promise<FullGraph> => {
-      // Return cached data if available
-      if (cache[releaseId]) return cache[releaseId];
+      const cachedGraph = cache[releaseId];
+      if (cachedGraph) {
+        return cachedGraph;
+      }
 
-      // Deduplicate concurrent requests for the same release
-      if (inflight.current[releaseId]) return inflight.current[releaseId];
+      const existingPromise = inflight.current[releaseId];
+      if (existingPromise) {
+        return existingPromise;
+      }
 
-      const promise = fetch(
-        `http://127.0.0.1:8000/api/releases/${releaseId}/dependency-graph`,
-      )
-        .then((res) => res.json())
+      const promise = fetch(`/api/releases/${releaseId}/dependency-graph`)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`Failed to fetch graph: ${res.status}`);
+          }
+          return res.json();
+        })
         .then((data) => {
           const graph: FullGraph = {
             nodes: data.nodes ?? [],
             edges: data.edges ?? [],
           };
-          setCache((prev) => ({ ...prev, [releaseId]: graph }));
+
+          setCache((prev) => ({
+            ...prev,
+            [releaseId]: graph,
+          }));
+
           delete inflight.current[releaseId];
+
           return graph;
         })
         .catch((err) => {
@@ -72,6 +94,7 @@ export function DepGraphProvider({ children }: { children: ReactNode }) {
         });
 
       inflight.current[releaseId] = promise;
+
       return promise;
     },
     [cache],
@@ -86,7 +109,13 @@ export function DepGraphProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <DepGraphContext.Provider value={{ getGraph, fetchGraph, invalidateGraph }}>
+    <DepGraphContext.Provider
+      value={{
+        getGraph,
+        fetchGraph,
+        invalidateGraph,
+      }}
+    >
       {children}
     </DepGraphContext.Provider>
   );

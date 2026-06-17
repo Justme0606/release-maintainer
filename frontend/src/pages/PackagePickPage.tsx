@@ -1,3 +1,7 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** Package pick file editor with CodeMirror integration. */
+
 import { useEffect, useRef, useState } from "react";
 import { EditorState } from "@codemirror/state";
 import { EditorView, lineNumbers } from "@codemirror/view";
@@ -11,7 +15,7 @@ export default function PackagePickPage() {
   const viewRef = useRef<EditorView | null>(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/releases/in-progress/package-pick")
+    fetch("/api/releases/in-progress/package-pick/")
       .then((r) => r.json())
       .then((data) => {
         setFilename(data.filename);

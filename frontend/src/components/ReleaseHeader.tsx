@@ -1,5 +1,10 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** Release header banner with CI status and refresh controls. */
+
 import { RefreshCw } from "lucide-react";
 
+/** CI workflow run status as returned by the backend. */
 type CiStatus = {
   name: string;
   status: string;
@@ -29,12 +34,14 @@ type ReleaseHeaderProps = {
   refreshing?: boolean;
 };
 
+/** Map a CI run to its indicator dot colour. */
 function ciDot(ci: CiStatus) {
   if (ci.status !== "completed") return "#f59e0b"; // yellow — in progress
   if (ci.conclusion === "success") return "#22c55e"; // green
   return "#ef4444"; // red — failure
 }
 
+/** Map a CI run to a human-readable label. */
 function ciLabel(ci: CiStatus) {
   if (ci.status !== "completed") return "In progress";
   if (ci.conclusion === "success") return "Passing";

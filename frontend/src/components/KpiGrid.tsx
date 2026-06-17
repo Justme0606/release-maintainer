@@ -1,3 +1,7 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** KPI summary grid displaying package status counters. */
+
 import {
   Boxes,
   CheckCircle2,

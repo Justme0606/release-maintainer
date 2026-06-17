@@ -1,3 +1,7 @@
+# Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+# SPDX-License-Identifier: MIT
+"""Cached release data aggregation and background refresh service."""
+
 import asyncio
 import json
 import logging
@@ -10,24 +14,36 @@ from app.services.kpi_service import KpiService
 
 logger = logging.getLogger(__name__)
 
+# Target GitHub repository for the Rocq Platform
 OWNER = "rocq-prover"
 REPO = "platform"
 
-# Ensures only one cache-clear + refresh cycle runs at a time
+# Concurrency guard: prevents overlapping cache-clear + refresh cycles
 _refresh_lock = asyncio.Lock()
 _last_cache_clear: float = 0.0
-_CACHE_CLEAR_COOLDOWN = 5.0  # seconds
+_CACHE_CLEAR_COOLDOWN = 5.0  # seconds between consecutive cache clears
 
+
+# ------------------------------------------------------------------
+#  Redis key helpers
+# ------------------------------------------------------------------
 
 def _release_key(release_id: str) -> str:
+    """Redis key storing the full JSON payload of a release."""
     return f"release_data:{release_id}"
 
 
 def _refreshed_at_key(release_id: str) -> str:
+    """Redis key storing the ISO timestamp of the last refresh."""
     return f"release_data:{release_id}:refreshed_at"
 
 
+# ------------------------------------------------------------------
+#  Release data computation (fetched from GitHub, not cached)
+# ------------------------------------------------------------------
+
 async def _compute_releases(github: GithubService) -> dict:
+    """Build the list of all releases (published + the in-progress one)."""
     releases = await github.get_releases(owner=OWNER, repo=REPO)
 
     published_releases = [
@@ -43,6 +59,7 @@ async def _compute_releases(github: GithubService) -> dict:
         for release in releases
     ]
 
+    # The in-progress release is always shown first
     return [
         {
             "id": "in-progress",
@@ -60,9 +77,11 @@ async def _compute_releases(github: GithubService) -> dict:
 async def _compute_release(
     release_id: str, github: GithubService, kpi_service: KpiService
 ) -> dict:
+    """Compute the full payload for a single release (in-progress or published)."""
     repo = await github.get_repo(owner=OWNER, repo=REPO)
 
     if release_id == "in-progress":
+        # Hard-coded parameters for the current release cycle
         package_pick_name = "package-pick-9.1~2026.01"
         release_version = "Rocq 9.1"
         branch = repo["default_branch"]
@@ -106,6 +125,7 @@ async def _compute_release(
             "recent_activity": summary["recent_activity"],
         }
 
+    # For published releases, look them up by tag name
     releases = await github.get_releases(owner=OWNER, repo=REPO)
     release = next(
         (r for r in releases if r["tag_name"] == release_id),
@@ -143,11 +163,14 @@ async def _compute_release(
     }
 
 
-async def _clear_github_cache():
-    """Delete all github:* keys so the next computation fetches fresh data.
+# ------------------------------------------------------------------
+#  GitHub cache invalidation
+# ------------------------------------------------------------------
 
-    Skips the clear if one happened within the last ``_CACHE_CLEAR_COOLDOWN``
-    seconds to avoid redundant work when multiple zones refresh together.
+async def _clear_github_cache():
+    """Delete all ``github:*`` Redis keys so the next computation fetches fresh data.
+
+    Uses a cooldown to avoid redundant work when multiple zones refresh together.
     """
     global _last_cache_clear
     now = time.monotonic()
@@ -155,6 +178,7 @@ async def _clear_github_cache():
         return
     _last_cache_clear = now
 
+    # Scan and delete in batches to avoid blocking Redis
     cursor = 0
     while True:
         cursor, keys = await redis_client.scan(
@@ -166,7 +190,12 @@ async def _clear_github_cache():
             break
 
 
+# ------------------------------------------------------------------
+#  Cache read / write for release list and individual releases
+# ------------------------------------------------------------------
+
 async def get_cached_releases(github: GithubService) -> dict:
+    """Return the cached release list, or compute and cache it on miss."""
     key = _release_key("list")
     at_key = _refreshed_at_key("list")
 
@@ -180,6 +209,7 @@ async def get_cached_releases(github: GithubService) -> dict:
 
 
 async def refresh_releases(github: GithubService) -> dict:
+    """Force-refresh the cached release list."""
     key = _release_key("list")
     at_key = _refreshed_at_key("list")
 
@@ -195,6 +225,7 @@ async def refresh_releases(github: GithubService) -> dict:
 async def get_cached_release(
     release_id: str, github: GithubService, kpi_service: KpiService
 ) -> dict:
+    """Return the cached release data, or compute and cache it on miss."""
     key = _release_key(release_id)
     at_key = _refreshed_at_key(release_id)
 
@@ -211,6 +242,7 @@ async def get_cached_release(
 async def refresh_release(
     release_id: str, github: GithubService, kpi_service: KpiService
 ) -> dict | None:
+    """Invalidate the GitHub cache and recompute the full release payload."""
     key = _release_key(release_id)
     at_key = _refreshed_at_key(release_id)
 
@@ -232,15 +264,25 @@ async def refresh_release(
 async def _get_release_params(
     release_id: str, github: GithubService
 ) -> tuple[str, str, str]:
-    """Return (package_pick_name, release_version, branch) for a release."""
+    """Return ``(package_pick_name, release_version, branch)`` for a release.
+
+    Only the in-progress release is supported for zone-level refresh.
+    """
     repo = await github.get_repo(owner=OWNER, repo=REPO)
     if release_id == "in-progress":
         return "package-pick-9.1~2026.01", "Rocq 9.1", repo["default_branch"]
     raise ValueError(f"Zone refresh not supported for release {release_id}")
 
 
+# ------------------------------------------------------------------
+#  Zone-level partial refresh helpers
+# ------------------------------------------------------------------
+
 def _deep_merge(base: dict, patch: dict) -> dict:
-    """Recursively merge *patch* into *base* (mutates *base*)."""
+    """Recursively merge *patch* into *base* (mutates *base*).
+
+    Dict values are merged recursively; all other types are overwritten.
+    """
     for key, value in patch.items():
         if key in base and isinstance(base[key], dict) and isinstance(value, dict):
             _deep_merge(base[key], value)
@@ -250,7 +292,11 @@ def _deep_merge(base: dict, patch: dict) -> dict:
 
 
 async def _read_modify_write(release_id: str, patch: dict) -> dict:
-    """Read the cached release data, deep-merge *patch* into it, write back."""
+    """Read the cached release data, deep-merge *patch* into it and write back.
+
+    This allows refreshing individual dashboard zones without recomputing
+    the entire release payload.
+    """
     key = _release_key(release_id)
     at_key = _refreshed_at_key(release_id)
     cached = await redis_client.get(key)
@@ -295,7 +341,7 @@ async def refresh_zone_header(
 async def refresh_zone_timeline(
     release_id: str, github: GithubService, kpi_service: KpiService
 ) -> dict:
-    """Refresh only the timeline zone."""
+    """Refresh only the timeline zone (milestone dates and states)."""
     await _clear_github_cache()
     timeline = await kpi_service.compute_timeline()
     patch = {"timeline": timeline}
@@ -306,7 +352,7 @@ async def refresh_zone_timeline(
 async def refresh_zone_packages(
     release_id: str, github: GithubService, kpi_service: KpiService
 ) -> dict:
-    """Refresh only the packages zone."""
+    """Refresh only the packages zone (package list and total count)."""
     await _clear_github_cache()
     package_pick_name, release_version, _ = await _get_release_params(
         release_id, github
@@ -325,7 +371,7 @@ async def refresh_zone_packages(
 async def refresh_zone_activity(
     release_id: str, github: GithubService, kpi_service: KpiService
 ) -> dict:
-    """Refresh only the activity zone."""
+    """Refresh only the activity zone (recent events feed)."""
     await _clear_github_cache()
     _, _, branch = await _get_release_params(release_id, github)
     activity = await kpi_service.compute_activity(branch)
@@ -335,19 +381,21 @@ async def refresh_zone_activity(
 
 
 # ------------------------------------------------------------------
-#  Dependency graph (full release, cached separately)
+#  Dependency graph (cached separately with a longer TTL)
 # ------------------------------------------------------------------
 
 _DEP_GRAPH_TTL = 3600  # 1 hour
 
 
 def _dep_graph_key(release_id: str) -> str:
+    """Redis key for the dependency graph of a release."""
     return f"dep_graph:{release_id}"
 
 
 async def get_cached_dep_graph(
     release_id: str, github: GithubService, kpi_service: KpiService
 ) -> dict:
+    """Return the cached dependency graph, or compute and cache it on miss."""
     key = _dep_graph_key(release_id)
     cached = await redis_client.get(key)
     if cached:
@@ -358,6 +406,7 @@ async def get_cached_dep_graph(
 async def refresh_dep_graph(
     release_id: str, github: GithubService, kpi_service: KpiService
 ) -> dict:
+    """Force-refresh the dependency graph cache."""
     package_pick_name, release_version, _ = await _get_release_params(
         release_id, github
     )

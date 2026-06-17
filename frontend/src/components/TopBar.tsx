@@ -1,3 +1,7 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** Top navigation bar with release selector and settings. */
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Settings } from "lucide-react";
@@ -12,7 +16,7 @@ export default function TopBar({ releaseId }: { releaseId: string }) {
   const [releases, setReleases] = useState<ReleaseOption[]>([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/releases")
+    fetch("/api/releases/")
       .then((res) => res.json())
       .then((data) => setReleases(data.releases ?? data))
       .catch((err) => console.error("Failed to fetch releases", err));

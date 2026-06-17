@@ -1,3 +1,7 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** Filterable and searchable package status table. */
+
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Search } from "lucide-react";
@@ -17,10 +21,12 @@ interface PackageTableProps {
   packages: PackageInfo[];
 }
 
+/** Number of packages displayed per page. */
 const PAGE_SIZE = 20;
 
 type Filter = "all" | "ready" | "waiting" | "blocked" | "unknown" | "disabled";
 
+/** Available filter buttons shown above the table. */
 const FILTERS: { value: Filter; label: string }[] = [
   { value: "all", label: "All" },
   { value: "ready", label: "Ready" },

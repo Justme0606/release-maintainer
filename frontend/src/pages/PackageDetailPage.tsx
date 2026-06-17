@@ -1,6 +1,10 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** Package detail page with dependency graph and issue details. */
+
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { ExternalLink, GitBranch, Rocket } from "lucide-react";
+import { ExternalLink, GitBranch } from "lucide-react";
 import { useDepGraph } from "../context/DepGraphContext";
 import {
   ReactFlow,
@@ -76,13 +80,14 @@ interface OpamInfo {
 /*  Full release DAG — ReactFlow interactive graph                     */
 /* ------------------------------------------------------------------ */
 
-const NODE_W = 200;
-const NODE_H = 40;
-const GAP_X = 80;
-const GAP_Y = 12;
-const PAD_X = 24;
-const PAD_Y = 20;
-const MAX_PER_COL = 10;
+// Layout constants for the ReactFlow dependency graph
+const NODE_W = 200;   // Node width in pixels
+const NODE_H = 40;    // Node height in pixels
+const GAP_X = 80;     // Horizontal gap between columns
+const GAP_Y = 12;     // Vertical gap between nodes in a column
+const PAD_X = 24;     // Left padding
+const PAD_Y = 20;     // Top padding
+const MAX_PER_COL = 10; // Max nodes per visual column before splitting
 
 type DepNodeData = {
   label: string;
@@ -139,7 +144,7 @@ function DependencyDAG({
   highlighted: string;
   releaseId: string;
 }) {
-  // BFS to find all nodes connected to the highlighted package
+  // BFS in both directions to find all nodes connected to the highlighted package
   const related = useMemo(() => {
     const set = new Set<string>();
     set.add(highlighted);
@@ -330,9 +335,7 @@ function PackageRelations({
       <button
         key={item.name}
         className="rel-chip"
-        onClick={() =>
-          navigate(`/releases/${releaseId}/packages/${item.name}`)
-        }
+        onClick={() => navigate(`/releases/${releaseId}/packages/${item.name}`)}
       >
         <span className={`rel-chip-bar ${item.status}`} />
         {item.name}
@@ -356,8 +359,7 @@ function PackageRelations({
         {requiredBy.length > 0 && (
           <div className="rel-col">
             <h3 className="rel-heading">
-              Required by{" "}
-              <span className="rel-count">{requiredBy.length}</span>
+              Required by <span className="rel-count">{requiredBy.length}</span>
             </h3>
             <div className="rel-list">{renderList(requiredBy)}</div>
           </div>
@@ -367,6 +369,7 @@ function PackageRelations({
   );
 }
 
+/** Format a date as a human-readable relative time (e.g. "3 days ago"). */
 function formatTimeAgo(dateStr: string): string {
   const date = new Date(dateStr);
   const now = new Date();
@@ -388,6 +391,7 @@ function formatDate(dateStr: string): string {
   });
 }
 
+/** Map a GitHub label name to a CSS status class for colour-coding. */
 function labelStatusClass(labelName: string): string {
   const lower = labelName.toLowerCase();
   if (lower.includes("waiting")) return "waiting";
@@ -410,11 +414,11 @@ export default function PackageDetailPage() {
   const [graphLoading, setGraphLoading] = useState(!graph);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/releases/${releaseId}`)
+    fetch(`/api/releases/${releaseId}/`)
       .then((res) => res.json())
       .then((data) => {
         const found = (data.packages_list ?? []).find(
-          (p: PackageInfo) => p.name === packageName
+          (p: PackageInfo) => p.name === packageName,
         );
         setPkg(found ?? null);
         setLoading(false);
@@ -426,7 +430,7 @@ export default function PackageDetailPage() {
     if (!releaseId || !packageName) return;
     setIssueLoading(true);
     fetch(
-      `http://127.0.0.1:8000/api/releases/${releaseId}/packages/${packageName}/issue`
+      `/api/releases/${releaseId}/packages/${packageName}/issue`,
     )
       .then((res) => {
         if (!res.ok) return null;
@@ -442,7 +446,7 @@ export default function PackageDetailPage() {
   useEffect(() => {
     if (!releaseId || !packageName) return;
     fetch(
-      `http://127.0.0.1:8000/api/releases/${releaseId}/packages/${packageName}/opam`
+      `/api/releases/${releaseId}/packages/${packageName}/opam`,
     )
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => setOpam(data))
@@ -530,11 +534,19 @@ export default function PackageDetailPage() {
             <span>Repository</span>
             <strong>
               {pkg.repo_url ? (
-                <a href={pkg.repo_url} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={pkg.repo_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {pkg.repo_url.replace("https://github.com/", "")}
                 </a>
               ) : opam?.homepage ? (
-                <a href={opam.homepage} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={opam.homepage}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {opam.homepage.replace("https://github.com/", "")}
                 </a>
               ) : (
@@ -591,7 +603,9 @@ export default function PackageDetailPage() {
                   >
                     <strong>#{issue.number}</strong>
                   </a>
-                  <span className={`pill ${issue.state === "open" ? "waiting" : "ready"}`}>
+                  <span
+                    className={`pill ${issue.state === "open" ? "waiting" : "ready"}`}
+                  >
                     {issue.state}
                   </span>
                 </div>
@@ -698,15 +712,15 @@ export default function PackageDetailPage() {
 
             {opamAuthors.length > 0 &&
               opamAuthors.join() !== opamMaintainers.join() && (
-              <>
-                <h3 style={{ marginTop: 12 }}>Authors</h3>
-                {opamAuthors.map((a, i) => (
-                  <div key={i} className="detail-info">
-                    <strong>{a}</strong>
-                  </div>
-                ))}
-              </>
-            )}
+                <>
+                  <h3 style={{ marginTop: 12 }}>Authors</h3>
+                  {opamAuthors.map((a, i) => (
+                    <div key={i} className="detail-info">
+                      <strong>{a}</strong>
+                    </div>
+                  ))}
+                </>
+              )}
           </section>
 
           <section className="side-card">
