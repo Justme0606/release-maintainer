@@ -1,3 +1,7 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** Release timeline component showing milestone progression. */
+
 import {
   Boxes,
   CheckCircle2,
@@ -16,6 +20,7 @@ interface ReleaseTimelineProps {
   steps?: TimelineStep[];
 }
 
+/** Map each milestone label to its Lucide icon. */
 const ICONS: Record<string, typeof Boxes> = {
   "Package Pick": Boxes,
   "Please Pick": GitBranch,

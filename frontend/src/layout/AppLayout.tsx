@@ -1,3 +1,7 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** Shell layout with sidebar navigation and content outlet. */
+
 import { Outlet, NavLink } from "react-router-dom";
 import { Rocket } from "lucide-react";
 

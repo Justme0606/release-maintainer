@@ -1,3 +1,7 @@
+# Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+# SPDX-License-Identifier: MIT
+"""KPI computation service for release package status tracking."""
+
 import asyncio
 import json
 import logging
@@ -12,6 +16,7 @@ from app.services.github_service import GithubService
 
 logger = logging.getLogger(__name__)
 
+# Target GitHub repository
 OWNER = "rocq-prover"
 REPO = "platform"
 
@@ -104,15 +109,23 @@ def _normalize_pkg_name(name: str) -> str:
     return name
 
 
+# Limit concurrent ``opam`` subprocess invocations
 MAX_CONCURRENT_OPAM = 8
 
 
 class KpiService:
+    """Service that computes all KPIs and dashboard data for a release.
+
+    Orchestrates data from the package-pick file, the GitHub tracking issue,
+    the opam CLI, and CI workflow runs.
+    """
+
     def __init__(self, github: GithubService):
         self.github = github
         self._opam_semaphore: asyncio.Semaphore | None = None
 
     def _get_opam_semaphore(self) -> asyncio.Semaphore:
+        """Lazily create a semaphore to cap concurrent opam subprocesses."""
         if self._opam_semaphore is None:
             self._opam_semaphore = asyncio.Semaphore(MAX_CONCURRENT_OPAM)
         return self._opam_semaphore
@@ -276,12 +289,17 @@ class KpiService:
 
         return {"nodes": nodes, "edges": edges}
 
+    # ------------------------------------------------------------------
+    #  Public zone computation methods
+    # ------------------------------------------------------------------
+
     async def compute_summary(
         self,
         package_pick_name: str,
         release_version: str,
         branch: str,
     ) -> dict:
+        """Compute the full dashboard summary (all zones combined)."""
         packages_list = await self._build_package_list(
             package_pick_name, release_version
         )
@@ -367,36 +385,51 @@ class KpiService:
         disabled = sum(1 for p in packages_list if p.get("disabled"))
         return ready, waiting, blocked, disabled
 
+    # ------------------------------------------------------------------
+    #  Core package list builder
+    # ------------------------------------------------------------------
+
     async def _build_package_list(
         self, package_pick_name: str, release_version: str
     ) -> list[dict]:
-        # 1. Parse package pick (includes disabled/commented-out packages)
+        """Build the full package list with status, versions and metadata.
+
+        This is the central pipeline that:
+        1. Parses the package-pick shell script
+        2. Reads the tracking issue (checkboxes + cross-references)
+        3. Fetches opam metadata (version, dev-repo)
+        4. Fetches the latest git tag for each package repository
+        5. Promotes ``waiting`` to ``blocked`` when past the deadline
+        6. Assembles all data into a list of package dicts
+        """
+
+        # --- Step 1: Parse the package-pick file ---
         content = await self.github.get_file_content(
             OWNER, REPO, f"package_picks/{package_pick_name}.sh"
         )
         pick_packages = _parse_package_pick(content)
 
-        # 2. Get tracking issue body + timeline
+        # --- Step 2: Build tracker map from the tracking issue ---
         issue_number = settings.tracking_issue_number
-        tracker_map: dict[str, dict] = {}  # normalized_name -> {status, issue_url, repo_owner, repo_name}
+        # Maps normalised package name -> {status, issue_url, repo_owner, repo_name}
+        tracker_map: dict[str, dict] = {}
 
         if issue_number:
             issue = await self.github.get_issue(OWNER, REPO, issue_number)
             body = issue.get("body", "") or ""
 
-            # Exclude Checklist section
+            # Exclude the "### Checklist" section (admin tasks, not packages)
             checklist_idx = body.find("### Checklist")
             if checklist_idx != -1:
                 body = body[:checklist_idx]
 
-            # 3a. Parse checkboxes (GitLab URLs)
-            # Pattern: - [x] or - [ ] followed by a URL containing a project name
+            # Step 2a: Parse checkboxes (GitLab-style URLs in markdown)
             for match in re.finditer(
                 r"- \[([ xX])\]\s+\[?([^\]\n]+)\]?\(?([^\)\n]*)\)?", body
             ):
                 checked = match.group(1).lower() == "x"
                 url = match.group(3) or match.group(2)
-                # Try to extract project name from GitLab URL like https://gitlab.inria.fr/iris/stdpp
+                # Extract project name from URL (e.g. https://gitlab.inria.fr/iris/stdpp)
                 url_match = re.search(r"https?://[^/]+/([^/]+/[^/\s)]+)", url)
                 if url_match:
                     project_path = url_match.group(1)
@@ -409,7 +442,7 @@ class KpiService:
                         "repo_name": None,
                     }
 
-            # 3b. Parse cross-referenced GitHub issues from timeline
+            # Step 2b: Parse cross-referenced GitHub issues from timeline
             timeline = await self.github.get_issue_timeline(
                 OWNER, REPO, issue_number
             )
@@ -421,7 +454,7 @@ class KpiService:
                 html_url = source_issue.get("html_url", "")
                 repo_url = source_issue.get("repository_url", "")
 
-                # Extract owner/repo from repository_url (https://api.github.com/repos/OWNER/REPO)
+                # Extract owner/repo from the API URL
                 repo_match = re.search(r"/repos/([^/]+)/([^/]+)$", repo_url)
                 if not repo_match:
                     continue
@@ -430,6 +463,7 @@ class KpiService:
                 repo_name = repo_match.group(2)
                 norm = _normalize_pkg_name(repo_name)
 
+                # Closed issue = ready, open issue = waiting
                 tracker_map[norm] = {
                     "status": "ready" if state == "closed" else "waiting",
                     "issue_url": html_url,
@@ -437,12 +471,12 @@ class KpiService:
                     "repo_name": repo_name,
                 }
 
-        # 4. Build opam info map (version + dev-repo) via opam show
+        # --- Step 3: Fetch opam metadata (version + dev-repo) ---
         pkg_names = [pkg["name"] for pkg in pick_packages]
         opam_info = await self._build_opam_info_map(pkg_names)
 
-        # 5. Fetch git tags — deduplicated, only for repos we know about
-        #    Use dev-repo from opam as fallback when tracker has no repo info
+        # --- Step 4: Fetch latest git tags ---
+        # Deduplicate repos; use opam dev-repo as fallback when tracker has no info
         unique_repos: dict[tuple[str, str], str | None] = {}
         pkg_repo_key: list[tuple[str, str] | None] = []
 
@@ -452,7 +486,7 @@ class KpiService:
             owner = entry.get("repo_owner")
             repo_name = entry.get("repo_name")
 
-            # Fallback: parse dev-repo from opam show
+            # Fallback: parse GitHub URL from opam dev-repo field
             if not owner or not repo_name:
                 dev_repo = opam_info.get(pkg["name"], {}).get("dev_repo", "")
                 dev_match = re.search(
@@ -469,7 +503,7 @@ class KpiService:
             else:
                 pkg_repo_key.append(None)
 
-        # Fetch tags concurrently
+        # Fetch the most recent tag for each unique repository
         async def _fetch_tags(key: tuple[str, str]) -> tuple[tuple[str, str], str | None]:
             try:
                 tags = await self.github.get_tags(key[0], key[1])
@@ -485,13 +519,13 @@ class KpiService:
         for key, tag in tag_results:
             unique_repos[key] = tag
 
-        # 6. Determine if past deadline (waiting → blocked)
+        # --- Step 5: Determine if past the release deadline ---
         deadline = settings.release_deadline
         past_deadline = False
         if deadline:
             past_deadline = date.today() >= date.fromisoformat(deadline)
 
-        # 7. Assemble results
+        # --- Step 6: Assemble the final package list ---
         results = []
         for i, pkg in enumerate(pick_packages):
             name = pkg["name"]
@@ -503,12 +537,13 @@ class KpiService:
             repo_key = pkg_repo_key[i]
 
             status = tracker_entry.get("status", "unknown")
+            # After the deadline, all waiting packages become blocked
             if status == "waiting" and past_deadline:
                 status = "blocked"
 
             repo_owner = tracker_entry.get("repo_owner")
             repo_name_val = tracker_entry.get("repo_name")
-            # Fallback repo_url from opam dev-repo
+            # Fallback: derive repo URL from opam dev-repo
             if not repo_owner or not repo_name_val:
                 dev_repo = opam_info.get(name, {}).get("dev_repo", "")
                 dev_match = re.search(
@@ -583,19 +618,26 @@ class KpiService:
         else:
             return checked, unchecked, 0
 
+    # ------------------------------------------------------------------
+    #  GitHub search helpers (issues / PRs / builds)
+    # ------------------------------------------------------------------
+
     async def _count_open_issues(self) -> int:
+        """Return the total number of open issues on the platform repo."""
         data = await self.github.search_issues(
             OWNER, REPO, "is:issue+is:open"
         )
         return data.get("total_count", 0)
 
     async def _count_open_pull_requests(self) -> int:
+        """Return the total number of open pull requests on the platform repo."""
         data = await self.github.search_issues(
             OWNER, REPO, "is:pr+is:open"
         )
         return data.get("total_count", 0)
 
     async def _compute_issues_by_state(self) -> dict:
+        """Return issue/PR counts grouped by state (open, closed, draft)."""
         open_data, closed_data, draft_data = await asyncio.gather(
             self.github.search_issues(OWNER, REPO, "is:issue+is:open"),
             self.github.search_issues(OWNER, REPO, "is:issue+is:closed"),
@@ -608,7 +650,7 @@ class KpiService:
         }
 
     async def _compute_builds_summary(self) -> dict:
-        """Count workflow run outcomes from the last 30 runs."""
+        """Aggregate workflow run outcomes from the last 30 runs."""
         data = await self.github.get_all_workflow_runs(OWNER, REPO)
         runs = data.get("workflow_runs", [])
 
@@ -629,11 +671,13 @@ class KpiService:
         return summary
 
     async def _get_ci_status(self, branch: str) -> list[dict]:
+        """Return the latest CI run status for each platform (Ubuntu, Macos, Windows)."""
         PLATFORMS = {"Ubuntu", "Macos", "Windows"}
 
         data = await self.github.get_workflow_runs(OWNER, REPO, branch)
         runs = data.get("workflow_runs", [])
 
+        # Keep only the most recent run for each workflow name
         latest_by_workflow: dict[str, dict] = {}
         for run in runs:
             name = run["name"]
@@ -651,10 +695,15 @@ class KpiService:
             if run["name"] in PLATFORMS
         ]
 
+    # ------------------------------------------------------------------
+    #  Activity feed
+    # ------------------------------------------------------------------
+
     async def _compute_recent_activity(self, branch: str) -> list[dict]:
+        """Build a unified activity feed from cross-refs, issues and CI runs."""
         events: list[dict] = []
 
-        # 1. Cross-refs from tracker timeline (already cached from earlier calls)
+        # 1. Cross-references from the tracking issue timeline
         issue_number = settings.tracking_issue_number
         if issue_number:
             timeline = await self.github.get_issue_timeline(
@@ -736,7 +785,16 @@ class KpiService:
         events.sort(key=_sort_key, reverse=True)
         return events[:15]
 
+    # ------------------------------------------------------------------
+    #  Release timeline
+    # ------------------------------------------------------------------
+
     async def _compute_timeline(self) -> list[dict]:
+        """Compute the release milestone timeline based on the tracking issue dates.
+
+        Milestones are derived from the tracking issue creation date and the
+        configured release deadline, using business-day offsets.
+        """
         issue_number = settings.tracking_issue_number
         deadline = settings.release_deadline
 

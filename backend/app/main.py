@@ -1,3 +1,7 @@
+# Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+# SPDX-License-Identifier: MIT
+"""FastAPI application entry point and lifespan configuration."""
+
 import logging
 from contextlib import asynccontextmanager
 
@@ -15,11 +19,12 @@ from app.services.release_cache_service import refresh_release
 
 logger = logging.getLogger(__name__)
 
+# Background scheduler used to trigger periodic data refreshes
 scheduler = AsyncIOScheduler()
 
 
 async def nightly_refresh():
-    """Refresh the in-progress release data."""
+    """Refresh the in-progress release data every night at 02:00."""
     logger.info("Nightly refresh: starting")
     github = GithubService()
     kpi_service = KpiService(github)
@@ -29,6 +34,7 @@ async def nightly_refresh():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Application lifespan: start the scheduler on startup, shut it down on exit."""
     scheduler.add_job(
         nightly_refresh,
         trigger="cron",
@@ -49,6 +55,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Allow requests from the Vite dev server
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -57,6 +64,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Register API routers
 app.include_router(health_router)
 
 app.include_router(

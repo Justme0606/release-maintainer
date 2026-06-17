@@ -1,3 +1,7 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** Bottom dashboard panels for milestones, links and alerts. */
+
 import { AlertTriangle, CalendarDays, Link2 } from "lucide-react";
 
 interface TimelineStep {

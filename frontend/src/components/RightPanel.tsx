@@ -1,3 +1,7 @@
+// Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
+// SPDX-License-Identifier: MIT
+/** Collapsible right panel displaying recent activity feed. */
+
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 
@@ -9,8 +13,10 @@ interface ActivityEvent {
   state: string;
 }
 
+/** Number of activity events shown per page. */
 const PAGE_SIZE = 4;
 
+/** Format a date string as a relative time (e.g. "3h ago", "2d ago"). */
 function formatRelativeDate(dateStr: string): string {
   if (!dateStr) return "";
   const now = Date.now();

@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: rocq-platform
+  namespace: argocd
+spec:
+  description: Rocq Platform applications
+
+  sourceRepos:
+    - https://github.com/Justme0606/*
+
+  destinations:
+    - namespace: rocq-platform
+      server: https://kubernetes.default.svc
+    - namespace: preprod-rocq-platform
+      server: https://kubernetes.default.svc
+
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
