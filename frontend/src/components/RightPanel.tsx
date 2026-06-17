@@ -39,20 +39,12 @@ interface IssuesByState {
   draft_prs: number;
 }
 
-interface BuildsSummary {
-  success: number;
-  failed: number;
-  running: number;
-  cancelled: number;
-}
-
 interface RightPanelProps {
   recentActivity?: ActivityEvent[];
   issuesByState?: IssuesByState;
-  buildsSummary?: BuildsSummary;
 }
 
-export default function RightPanel({ recentActivity = [], issuesByState, buildsSummary }: RightPanelProps) {
+export default function RightPanel({ recentActivity = [], issuesByState }: RightPanelProps) {
   const [page, setPage] = useState(0);
   const totalPages = Math.max(1, Math.ceil(recentActivity.length / PAGE_SIZE));
   const pageItems = recentActivity.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
@@ -119,36 +111,6 @@ export default function RightPanel({ recentActivity = [], issuesByState, buildsS
         })()}
       </SideCard>
 
-      <SideCard title="Builds Summary">
-        {(() => {
-          const success = buildsSummary?.success ?? 0;
-          const failed = buildsSummary?.failed ?? 0;
-          const running = buildsSummary?.running ?? 0;
-          const cancelled = buildsSummary?.cancelled ?? 0;
-          const total = success + failed + running + cancelled;
-          const pct = (v: number) => (total > 0 ? Math.round((v / total) * 100) : 0);
-          return (
-            <>
-              <Bar label="Success" value={`${success} (${pct(success)}%)`} percent={pct(success)} />
-              <Bar label="Failed" value={`${failed} (${pct(failed)}%)`} percent={pct(failed)} />
-              <Bar label="Running" value={`${running} (${pct(running)}%)`} percent={pct(running)} />
-              <Bar label="Cancelled" value={`${cancelled} (${pct(cancelled)}%)`} percent={pct(cancelled)} />
-            </>
-          );
-        })()}
-      </SideCard>
-
-      <SideCard title="Packages by Status">
-        <div className="status-line">
-          <i style={{ width: "83%" }} />
-          <b style={{ width: "12%" }} />
-          <em style={{ width: "5%" }} />
-        </div>
-
-        <Legend label="Ready" value="118 (83%)" />
-        <Legend label="Waiting" value="17 (12%)" />
-        <Legend label="Blocked" value="7 (5%)" />
-      </SideCard>
     </aside>
   );
 }
@@ -203,25 +165,3 @@ function Legend({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Bar({
-  label,
-  value,
-  percent,
-}: {
-  label: string;
-  value: string;
-  percent: number;
-}) {
-  return (
-    <div className="bar-row">
-      <div>
-        <span>{label}</span>
-        <strong>{value}</strong>
-      </div>
-
-      <div className="bar">
-        <i style={{ width: `${percent}%` }} />
-      </div>
-    </div>
-  );
-}

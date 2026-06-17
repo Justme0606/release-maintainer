@@ -69,39 +69,51 @@ class GithubService:
                 return json.loads(cached_value)
 
             async with httpx.AsyncClient() as client:
-                for attempt in range(MAX_RETRIES):
-                    response = await client.get(
-                        f"{GITHUB_API}{endpoint}",
-                        headers=self._headers(),
-                    )
+                response = await self._fetch_single(client, f"{GITHUB_API}{endpoint}")
+                data = response.json()
 
-                    # GitHub returns 429 or 403 when rate limit is exhausted
-                    is_rate_limited = response.status_code == 429 or (
-                        response.status_code == 403
-                        and response.headers.get("X-RateLimit-Remaining") == "0"
-                    )
-                    if is_rate_limited:
-                        retry_after = int(response.headers.get("Retry-After", 10))
-                        logger.warning(
-                            "Rate limited on %s, retrying in %ds (attempt %d/%d)",
-                            endpoint, retry_after, attempt + 1, MAX_RETRIES,
-                        )
-                        await asyncio.sleep(retry_after)
-                        continue
+                await redis_client.set(
+                    cache_key,
+                    json.dumps(data),
+                    ex=CACHE_TTL_SECONDS,
+                )
 
-                    response.raise_for_status()
+                return data
+
+    async def _get_all_pages(self, endpoint: str) -> list:
+        """Fetch all pages of a paginated GitHub API endpoint and return
+        the concatenated list of results."""
+        cache_key = f"github:paginated:{endpoint}"
+
+        cached_value = await redis_client.get(cache_key)
+        if cached_value:
+            return json.loads(cached_value)
+
+        async with self._get_semaphore():
+            cached_value = await redis_client.get(cache_key)
+            if cached_value:
+                return json.loads(cached_value)
+
+            all_items: list = []
+            url = f"{GITHUB_API}{endpoint}"
+
+            async with httpx.AsyncClient() as client:
+                while url:
+                    response = await self._fetch_single(client, url)
                     data = response.json()
+                    if isinstance(data, list):
+                        all_items.extend(data)
+                    else:
+                        all_items.append(data)
+                    url = self._parse_next_link(response.headers.get("Link"))
 
-                    await redis_client.set(
-                        cache_key,
-                        json.dumps(data),
-                        ex=CACHE_TTL_SECONDS,
-                    )
+            await redis_client.set(
+                cache_key,
+                json.dumps(all_items),
+                ex=CACHE_TTL_SECONDS,
+            )
 
-                    return data
-
-            # All retries exhausted on 429
-            response.raise_for_status()
+            return all_items
 
     # ------------------------------------------------------------------
     #  Repository endpoints

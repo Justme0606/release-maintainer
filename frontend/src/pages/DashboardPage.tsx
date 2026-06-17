@@ -145,14 +145,13 @@ export default function DashboardPage() {
           <ZoneLoader loading={loading.packages}>
             <PackageTable packages={release?.packages_list ?? []} />
           </ZoneLoader>
-          <BottomPanels />
+          <BottomPanels timeline={release?.timeline} />
         </section>
 
         <ZoneLoader loading={loading.activity}>
           <RightPanel
             recentActivity={release?.recent_activity ?? []}
             issuesByState={release?.issues_by_state}
-            buildsSummary={release?.builds_summary}
           />
         </ZoneLoader>
       </div>
