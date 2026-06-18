@@ -1,0 +1,6 @@
+apiVersion: v2
+name: release-maintainer
+description: Helm chart for Rocq release-maintainer frontend and backend
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

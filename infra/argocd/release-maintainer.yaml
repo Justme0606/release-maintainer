@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: release-maintainer
+  namespace: argocd
+spec:
+  project: rocq-platform
+
+  source:
+    repoURL: https://github.com/Justme0606/release-maintainer.git
+    targetRevision: main
+    path: infra/charts/release-maintainer
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rocq-platform
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,19 @@
+frontend:
+  image:
+    repository: ghcr.io/justme0606/release-maintainer-frontend
+    tag: latest
+    pullPolicy: Always
+  service:
+    port: 80
+
+backend:
+  image:
+    repository: ghcr.io/justme0606/release-maintainer-backend
+    tag: latest
+    pullPolicy: Always
+  service:
+    port: 8000
+
+ingress:
+  enabled: false
+  host: release-maintainer.local
