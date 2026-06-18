@@ -24,5 +24,16 @@ redis:
     port: 6379
 
 ingress:
-  enabled: false
-  host: release-maintainer.local
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: rocq-dashboard.web-together.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: release-maintainer-tls
+      hosts:
+        - rocq-dashboard.web-together.com

@@ -44,6 +44,11 @@ class GithubService:
             headers["Authorization"] = f"Bearer {self.token}"
 
         return headers
+    
+    async def _fetch_single(self, client, url: str):
+        response = await client.get(url)
+        response.raise_for_status()
+        return response
 
     # ------------------------------------------------------------------
     #  Core HTTP helpers
