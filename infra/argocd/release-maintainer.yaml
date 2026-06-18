@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/Justme0606/release-maintainer.git
     targetRevision: main
-    path: infra/argocd/release-maintainer
+    path: charts/release-maintainer
 
   destination:
     server: https://kubernetes.default.svc
