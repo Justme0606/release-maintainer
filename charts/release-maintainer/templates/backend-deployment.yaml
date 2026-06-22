@@ -21,3 +21,8 @@ spec:
           env:
             - name: REDIS_URL
               value: "redis://{{ .Release.Name }}-redis:{{ .Values.redis.service.port }}/0"
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: release-maintainer-secrets
+                  key: github_token
