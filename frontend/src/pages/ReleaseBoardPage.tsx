@@ -4,7 +4,7 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, ExternalLink, MessageSquare, GitBranch } from "lucide-react";
+import { Search, ExternalLink, MessageSquare } from "lucide-react";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 const apiUrl = (path: string) => `${API_BASE_URL}${path}`;
@@ -103,7 +103,14 @@ export default function ReleaseBoardPage() {
         <h1 style={{ margin: 0, fontSize: 24 }}>
           Release Board
           {releaseName && (
-            <span style={{ color: "#94a3b8", fontWeight: 400, marginLeft: 10, fontSize: 18 }}>
+            <span
+              style={{
+                color: "#94a3b8",
+                fontWeight: 400,
+                marginLeft: 10,
+                fontSize: 18,
+              }}
+            >
               {releaseName}
             </span>
           )}
@@ -125,16 +132,15 @@ export default function ReleaseBoardPage() {
         </div>
 
         <div className="filters">
-          <button
-            className={allVisible ? "active" : ""}
-            onClick={showAll}
-          >
+          <button className={allVisible ? "active" : ""} onClick={showAll}>
             All
           </button>
           {COLUMNS.map((col) => (
             <button
               key={col.key}
-              className={visibleColumns.has(col.key) && !allVisible ? "active" : ""}
+              className={
+                visibleColumns.has(col.key) && !allVisible ? "active" : ""
+              }
               onClick={() => toggleColumn(col.key)}
             >
               {col.label}
@@ -169,13 +175,17 @@ export default function ReleaseBoardPage() {
                     className="kanban-card"
                     onClick={() =>
                       releaseId
-                        ? navigate(`/releases/${releaseId}/packages/${pkg.name}`)
+                        ? navigate(
+                            `/releases/${releaseId}/packages/${pkg.name}`,
+                          )
                         : undefined
                     }
                   >
                     <div className="kanban-card-top">
                       <strong className="kanban-card-name">{pkg.name}</strong>
-                      <span className={`pill ${pkg.disabled ? "disabled" : pkg.status}`}>
+                      <span
+                        className={`pill ${pkg.disabled ? "disabled" : pkg.status}`}
+                      >
                         {pkg.disabled ? "disabled" : pkg.status}
                       </span>
                     </div>
