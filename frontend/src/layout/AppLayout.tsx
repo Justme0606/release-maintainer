@@ -26,10 +26,10 @@ export default function AppLayout() {
             Overview
           </NavLink>
           <NavLink
-            to="/package-pick"
+            to="/release-board"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
-            Package Pick
+            Release Board
           </NavLink>
           <a>Platforms & Tags</a>
           <a>Releases</a>
@@ -37,7 +37,12 @@ export default function AppLayout() {
 
         <div className="sidebar-footer">
           <a>Documentation</a>
-          <a>Help & Support</a>
+          <NavLink
+            to="/help"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Help & Support
+          </NavLink>
           <small>
             Rocq Platform Console
             <br />

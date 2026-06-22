@@ -6,8 +6,9 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { DepGraphProvider } from "./context/DepGraphContext";
 import AppLayout from "./layout/AppLayout";
 import DashboardPage from "./pages/DashboardPage";
+import HelpPage from "./pages/HelpPage";
 import PackageDetailPage from "./pages/PackageDetailPage";
-import PackagePickPage from "./pages/PackagePickPage";
+import ReleaseBoardPage from "./pages/ReleaseBoardPage";
 import "./App.css";
 
 function App() {
@@ -25,7 +26,8 @@ function App() {
               path="/releases/:releaseId/packages/:packageName"
               element={<PackageDetailPage />}
             />
-            <Route path="/package-pick" element={<PackagePickPage />} />
+            <Route path="/release-board" element={<ReleaseBoardPage />} />
+            <Route path="/help" element={<HelpPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

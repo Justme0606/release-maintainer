@@ -15,6 +15,7 @@ from app.db.redis import redis_client
 from app.services.github_service import GithubService
 
 logger = logging.getLogger(__name__)
+_DEBUG = settings.debug
 
 # Target GitHub repository
 OWNER = "rocq-prover"
@@ -148,7 +149,7 @@ class KpiService:
                     return []
                 return [l.strip() for l in stdout.decode().splitlines() if l.strip()]
             except Exception as exc:
-                logger.warning("opam list %s failed: %s", extra_args, exc)
+                logger.warning("opam list %s failed: %s", extra_args, exc, exc_info=_DEBUG)
                 return []
 
     async def run_opam_show(self, package_name: str) -> dict:
@@ -183,7 +184,7 @@ class KpiService:
 
                 return result
             except Exception as exc:
-                logger.warning("opam show %s failed: %s", package_name, exc)
+                logger.warning("opam show %s failed: %s", package_name, exc, exc_info=_DEBUG)
                 return {}
 
     async def _run_opam_show_field(self, package_name: str, field: str) -> str:
@@ -200,6 +201,7 @@ class KpiService:
                     return ""
                 return stdout.decode().strip().strip('"')
             except Exception:
+                logger.debug("opam show --field=%s %s failed", field, package_name, exc_info=True)
                 return ""
 
     async def _build_opam_info_map(
@@ -510,7 +512,7 @@ class KpiService:
                 if tags:
                     return key, tags[0].get("name")
             except Exception:
-                pass
+                logger.debug("Failed to fetch tags for %s/%s", key[0], key[1], exc_info=True)
             return key, None
 
         tag_results = await asyncio.gather(
@@ -754,7 +756,7 @@ class KpiService:
                     "state": "success" if state_str == "closed" else "info",
                 })
         except Exception:
-            logger.warning("Failed to fetch recent issues for activity feed")
+            logger.warning("Failed to fetch recent issues for activity feed", exc_info=_DEBUG)
 
         # 3. CI workflow runs (already cached from _get_ci_status)
         try:
@@ -776,7 +778,7 @@ class KpiService:
                     "state": run_state,
                 })
         except Exception:
-            logger.warning("Failed to fetch workflow runs for activity feed")
+            logger.warning("Failed to fetch workflow runs for activity feed", exc_info=_DEBUG)
 
         # Sort by date descending and limit
         def _sort_key(e: dict) -> str:

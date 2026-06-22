@@ -1166,32 +1166,174 @@ td small {
   background: #ef4444;
 }
 
-/* Package Pick page */
-.package-pick-page {
+/* Release Board — Kanban */
+.release-board-page {
   padding: 0 4px;
 }
 
-.editor-header {
-  display: inline-block;
-  padding: 8px 14px;
-  margin-bottom: 14px;
-  border-radius: 10px;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  color: #93c5fd;
-  font-family: monospace;
+.board-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.board-search {
+  min-width: 220px;
+}
+
+.kanban-container {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  align-items: flex-start;
+}
+
+.kanban-column {
+  flex: 1 1 0;
+  min-width: 240px;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.kanban-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-top: 3px solid;
+  border-radius: 16px 16px 0 0;
+}
+
+.kanban-column-title {
+  font-weight: 700;
   font-size: 14px;
 }
 
-.editor-container .cm-editor {
-  border-radius: 14px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  overflow: hidden;
-  max-height: calc(100vh - 160px);
+.kanban-column-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
 }
 
-.editor-container .cm-scroller {
-  overflow: auto;
+.kanban-column-body {
+  padding: 8px 10px 12px;
+  overflow-y: auto;
+  max-height: calc(100vh - 220px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.kanban-card {
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.kanban-card:hover {
+  border-color: rgba(96, 165, 250, 0.45);
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.kanban-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.kanban-card-name {
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kanban-card-reason {
+  display: block;
+  color: #94a3b8;
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+
+.kanban-card-fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.kanban-card-fields span {
+  display: block;
+  color: #64748b;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kanban-card-fields strong {
+  font-weight: 600;
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
+.kanban-card-links {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.kanban-card-links a {
+  display: flex;
+  align-items: center;
+  color: #93c5fd;
+  transition: color 0.15s;
+}
+
+.kanban-card-links a:hover {
+  color: #60a5fa;
+}
+
+.kanban-empty {
+  color: #64748b;
+  font-size: 13px;
+  text-align: center;
+  padding: 20px 0;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .kanban-container {
+    flex-direction: column;
+  }
+
+  .kanban-column {
+    max-width: 100%;
+  }
+
+  .kanban-column-body {
+    max-height: 400px;
+  }
 }
 
 @media (max-width: 900px) {
@@ -1274,4 +1416,192 @@ td small {
 .pagination button:disabled {
   opacity: 0.35;
   cursor: not-allowed;
+}
+
+/* Help & Support page */
+.help-layout {
+  display: grid;
+  gap: 18px;
+}
+
+.faq-list {
+  display: grid;
+  gap: 4px;
+}
+
+.faq-item {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 4px;
+  border: none;
+  background: none;
+  color: #f8fafc;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+
+.faq-toggle:hover {
+  color: #93c5fd;
+}
+
+.faq-toggle svg {
+  flex-shrink: 0;
+  color: #60a5fa;
+}
+
+.faq-answer {
+  padding: 0 4px 14px 30px;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+.faq-answer p {
+  margin: 0 0 8px;
+}
+
+.faq-answer ul {
+  margin: 4px 0;
+  padding-left: 18px;
+}
+
+.faq-answer a {
+  color: #93c5fd;
+}
+
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.glossary-item {
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.glossary-item .pill {
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.glossary-item p {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.workflow-steps {
+  display: grid;
+  gap: 2px;
+}
+
+.workflow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 8px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+.workflow-step:last-child {
+  border-bottom: none;
+}
+
+.workflow-step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.18);
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  color: #60a5fa;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.workflow-step strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.workflow-step span {
+  color: #94a3b8;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.link-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  color: #f8fafc;
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.link-card:hover {
+  border-color: rgba(96, 165, 250, 0.45);
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.link-card strong {
+  font-size: 15px;
+}
+
+.link-card span {
+  color: #94a3b8;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.link-card svg {
+  color: #60a5fa;
+  margin-top: auto;
+}
+
+.system-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.sidebar-footer a.active {
+  background: rgba(59, 130, 246, 0.18);
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .glossary-grid,
+  .links-grid,
+  .system-info-grid {
+    grid-template-columns: 1fr;
+  }
 }
