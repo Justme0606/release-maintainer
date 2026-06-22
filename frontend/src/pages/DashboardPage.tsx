@@ -14,6 +14,9 @@ import PackageTable from "../components/PackageTable";
 import RightPanel from "../components/RightPanel";
 import BottomPanels from "../components/BottomPanels";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
+const apiUrl = (path: string) => `${API_BASE_URL}${path}`;
+
 /** Overlay wrapper that shows a spinner while a dashboard zone is refreshing. */
 function ZoneLoader({
   loading,
@@ -59,7 +62,7 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    fetch(`/api/releases/${releaseId}/`)
+    fetch(apiUrl(`/api/releases/${releaseId}`))
       .then((res) => res.json())
       .then(updateRelease);
   }, [releaseId]);
@@ -68,13 +71,20 @@ export default function DashboardPage() {
   const handleRefresh = async () => {
     if (!releaseId || isRefreshing) return;
 
-    setLoading({ header: true, timeline: true, packages: true, activity: true });
+    setLoading({
+      header: true,
+      timeline: true,
+      packages: true,
+      activity: true,
+    });
 
     const refreshZone = async (zone: keyof ZoneLoading) => {
       try {
         const res = await fetch(
-          `/api/releases/${releaseId}/refresh/${zone}`,
-          { method: "POST" }
+          apiUrl(`/api/releases/${releaseId}/refresh/${zone}`),
+          {
+            method: "POST",
+          },
         );
         const data = await res.json();
 
@@ -109,7 +119,12 @@ export default function DashboardPage() {
       }
     };
 
-    const zones: (keyof ZoneLoading)[] = ["header", "timeline", "packages", "activity"];
+    const zones: (keyof ZoneLoading)[] = [
+      "header",
+      "timeline",
+      "packages",
+      "activity",
+    ];
     for (const zone of zones) {
       await refreshZone(zone);
     }

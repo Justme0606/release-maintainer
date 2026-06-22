@@ -1,25 +1,13 @@
 // Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
 // SPDX-License-Identifier: MIT
-/** Package detail page with dependency graph and issue details. */
+/** Package detail page with package relations and issue details. */
 
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { ExternalLink, GitBranch } from "lucide-react";
 import { useDepGraph } from "../context/DepGraphContext";
-import {
-  ReactFlow,
-  MiniMap,
-  Controls,
-  Handle,
-  Position,
-  type Node,
-  type Edge,
-  type NodeTypes,
-  type NodeProps,
-} from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
 
-import type { FullGraph, GraphNode } from "../context/DepGraphContext";
+import type { FullGraph } from "../context/DepGraphContext";
 
 interface PackageInfo {
   name: string;
@@ -74,219 +62,6 @@ interface OpamInfo {
   license?: string;
   "bug-reports"?: string;
   "dev-repo"?: string;
-}
-
-/* ------------------------------------------------------------------ */
-/*  Full release DAG — ReactFlow interactive graph                     */
-/* ------------------------------------------------------------------ */
-
-// Layout constants for the ReactFlow dependency graph
-const NODE_W = 200;   // Node width in pixels
-const NODE_H = 40;    // Node height in pixels
-const GAP_X = 80;     // Horizontal gap between columns
-const GAP_Y = 12;     // Vertical gap between nodes in a column
-const PAD_X = 24;     // Left padding
-const PAD_Y = 20;     // Top padding
-const MAX_PER_COL = 10; // Max nodes per visual column before splitting
-
-type DepNodeData = {
-  label: string;
-  status: string;
-  isHighlighted: boolean;
-  isRelated: boolean;
-  releaseId: string;
-};
-
-function DepNodeComponent({ data }: NodeProps<Node<DepNodeData>>) {
-  const navigate = useNavigate();
-
-  const cls = [
-    "dep-flow-node",
-    data.isHighlighted ? "highlighted" : "",
-    data.isRelated && !data.isHighlighted ? "related" : "",
-    !data.isRelated ? "dimmed" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  const statusColor =
-    data.status === "ready"
-      ? "#22c55e"
-      : data.status === "waiting"
-        ? "#f59e0b"
-        : data.status === "blocked"
-          ? "#ef4444"
-          : "#64748b";
-
-  return (
-    <div
-      className={cls}
-      style={{ borderLeftColor: statusColor }}
-      onClick={() =>
-        navigate(`/releases/${data.releaseId}/packages/${data.label}`)
-      }
-    >
-      <Handle type="target" position={Position.Left} />
-      <span className="dep-flow-label">{data.label}</span>
-      <Handle type="source" position={Position.Right} />
-    </div>
-  );
-}
-
-const nodeTypes: NodeTypes = { depNode: DepNodeComponent };
-
-function DependencyDAG({
-  graph,
-  highlighted,
-  releaseId,
-}: {
-  graph: FullGraph;
-  highlighted: string;
-  releaseId: string;
-}) {
-  // BFS in both directions to find all nodes connected to the highlighted package
-  const related = useMemo(() => {
-    const set = new Set<string>();
-    set.add(highlighted);
-
-    const childrenMap = new Map<string, Set<string>>();
-    for (const e of graph.edges) {
-      if (!childrenMap.has(e.from)) childrenMap.set(e.from, new Set());
-      childrenMap.get(e.from)!.add(e.to);
-    }
-    const queue = [highlighted];
-    while (queue.length) {
-      const cur = queue.shift()!;
-      for (const child of childrenMap.get(cur) ?? []) {
-        if (!set.has(child)) {
-          set.add(child);
-          queue.push(child);
-        }
-      }
-    }
-
-    const parentsMap = new Map<string, Set<string>>();
-    for (const e of graph.edges) {
-      if (!parentsMap.has(e.to)) parentsMap.set(e.to, new Set());
-      parentsMap.get(e.to)!.add(e.from);
-    }
-    const queue2 = [highlighted];
-    while (queue2.length) {
-      const cur = queue2.shift()!;
-      for (const parent of parentsMap.get(cur) ?? []) {
-        if (!set.has(parent)) {
-          set.add(parent);
-          queue2.push(parent);
-        }
-      }
-    }
-
-    return set;
-  }, [graph.edges, highlighted]);
-
-  const { nodes, edges } = useMemo(() => {
-    // Group nodes by depth
-    const depthGroups = new Map<number, GraphNode[]>();
-    for (const n of graph.nodes) {
-      const list = depthGroups.get(n.depth) ?? [];
-      list.push(n);
-      depthGroups.set(n.depth, list);
-    }
-
-    const sortedDepths = [...depthGroups.keys()].sort((a, b) => a - b);
-
-    // Split large groups into visual columns of MAX_PER_COL
-    const visualColumns: GraphNode[][] = [];
-    for (const depth of sortedDepths) {
-      const nodesInGroup = depthGroups.get(depth)!;
-      for (let i = 0; i < nodesInGroup.length; i += MAX_PER_COL) {
-        visualColumns.push(nodesInGroup.slice(i, i + MAX_PER_COL));
-      }
-    }
-
-    const rfNodes: Node<DepNodeData>[] = [];
-    for (let col = 0; col < visualColumns.length; col++) {
-      const nodesInCol = visualColumns[col];
-      const colX = PAD_X + col * (NODE_W + GAP_X);
-
-      for (let i = 0; i < nodesInCol.length; i++) {
-        const n = nodesInCol[i];
-        rfNodes.push({
-          id: n.name,
-          type: "depNode",
-          position: { x: colX, y: PAD_Y + i * (NODE_H + GAP_Y) },
-          data: {
-            label: n.name,
-            status: n.status ?? "unknown",
-            isHighlighted: n.name === highlighted,
-            isRelated: related.has(n.name),
-            releaseId,
-          },
-        });
-      }
-    }
-
-    const rfEdges: Edge[] = graph.edges.map((e, i) => {
-      const isRelated = related.has(e.from) && related.has(e.to);
-      return {
-        id: `e-${i}`,
-        source: e.from,
-        target: e.to,
-        type: "smoothstep",
-        style: {
-          stroke: isRelated ? "#3b82f6" : "rgba(148, 163, 184, 0.15)",
-          strokeWidth: isRelated ? 2.5 : 2,
-        },
-        animated: isRelated,
-      };
-    });
-
-    return { nodes: rfNodes, edges: rfEdges };
-  }, [graph.nodes, graph.edges, highlighted, related, releaseId]);
-
-  const onNodeClick = useCallback(() => {
-    // Navigation handled inside DepNodeComponent
-  }, []);
-
-  if (graph.nodes.length === 0) {
-    return <p className="dep-empty">No dependency data available.</p>;
-  }
-
-  return (
-    <div className="dep-graph" style={{ height: 500 }}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        onNodeClick={onNodeClick}
-        fitView
-        minZoom={0.3}
-        maxZoom={2}
-        nodesDraggable={false}
-        nodesConnectable={false}
-        defaultEdgeOptions={{ type: "smoothstep" }}
-        proOptions={{ hideAttribution: true }}
-      >
-        <MiniMap
-          nodeColor={(node) => {
-            const d = node.data as DepNodeData;
-            if (d.isHighlighted) return "#3b82f6";
-            if (!d.isRelated) return "rgba(148, 163, 184, 0.2)";
-            return d.status === "ready"
-              ? "#22c55e"
-              : d.status === "waiting"
-                ? "#f59e0b"
-                : d.status === "blocked"
-                  ? "#ef4444"
-                  : "#64748b";
-          }}
-          style={{ background: "rgba(15, 23, 42, 0.8)" }}
-          maskColor="rgba(0, 0, 0, 0.4)"
-        />
-        <Controls />
-      </ReactFlow>
-    </div>
-  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -400,6 +175,9 @@ function labelStatusClass(labelName: string): string {
   return "";
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
+const apiUrl = (path: string) => `${API_BASE_URL}${path}`;
+
 export default function PackageDetailPage() {
   const { releaseId, packageName } = useParams();
   const [pkg, setPkg] = useState<PackageInfo | null>(null);
@@ -411,10 +189,9 @@ export default function PackageDetailPage() {
   const [graph, setGraph] = useState<FullGraph | null>(() =>
     releaseId ? getGraph(releaseId) : null,
   );
-  const [graphLoading, setGraphLoading] = useState(!graph);
 
   useEffect(() => {
-    fetch(`/api/releases/${releaseId}/`)
+    fetch(apiUrl(`/api/releases/${releaseId}`))
       .then((res) => res.json())
       .then((data) => {
         const found = (data.packages_list ?? []).find(
@@ -429,9 +206,7 @@ export default function PackageDetailPage() {
   useEffect(() => {
     if (!releaseId || !packageName) return;
     setIssueLoading(true);
-    fetch(
-      `/api/releases/${releaseId}/packages/${packageName}/issue`,
-    )
+    fetch(apiUrl(`/api/releases/${releaseId}/packages/${packageName}/issue`))
       .then((res) => {
         if (!res.ok) return null;
         return res.json();
@@ -445,9 +220,7 @@ export default function PackageDetailPage() {
 
   useEffect(() => {
     if (!releaseId || !packageName) return;
-    fetch(
-      `/api/releases/${releaseId}/packages/${packageName}/opam`,
-    )
+    fetch(apiUrl(`/api/releases/${releaseId}/packages/${packageName}/opam`))
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => setOpam(data))
       .catch(() => setOpam(null));
@@ -458,16 +231,11 @@ export default function PackageDetailPage() {
     const cached = getGraph(releaseId);
     if (cached) {
       setGraph(cached);
-      setGraphLoading(false);
       return;
     }
-    setGraphLoading(true);
     fetchGraph(releaseId)
-      .then((g) => {
-        setGraph(g);
-        setGraphLoading(false);
-      })
-      .catch(() => setGraphLoading(false));
+      .then((g) => setGraph(g))
+      .catch(() => {});
   }, [releaseId]);
 
   if (loading) {
@@ -555,24 +323,6 @@ export default function PackageDetailPage() {
             </strong>
           </div>
         </div>
-      </section>
-
-      {/* Full dependency graph */}
-      <section className="panel" style={{ marginBottom: 18 }}>
-        <div className="panel-header">
-          <h2>Dependency Graph</h2>
-        </div>
-        {graphLoading ? (
-          <p className="dep-empty">Loading dependency graph...</p>
-        ) : graph ? (
-          <DependencyDAG
-            graph={graph}
-            highlighted={pkg.name}
-            releaseId={releaseId!}
-          />
-        ) : (
-          <p className="dep-empty">Failed to load dependency graph.</p>
-        )}
       </section>
 
       {/* Package relations */}

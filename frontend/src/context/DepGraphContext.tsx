@@ -66,7 +66,8 @@ export function DepGraphProvider({ children }: { children: ReactNode }) {
         return existingPromise;
       }
 
-      const promise = fetch(`/api/releases/${releaseId}/dependency-graph`)
+      const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
+      const promise = fetch(`${apiBase}/api/releases/${releaseId}/dependency-graph`)
         .then((res) => {
           if (!res.ok) {
             throw new Error(`Failed to fetch graph: ${res.status}`);

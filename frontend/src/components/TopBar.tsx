@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Settings } from "lucide-react";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
+const apiUrl = (path: string) => `${API_BASE_URL}${path}`;
+
 type ReleaseOption = {
   id: string;
   name: string;
@@ -16,7 +19,7 @@ export default function TopBar({ releaseId }: { releaseId: string }) {
   const [releases, setReleases] = useState<ReleaseOption[]>([]);
 
   useEffect(() => {
-    fetch("/api/releases/")
+    fetch(apiUrl("/api/releases/"))
       .then((res) => res.json())
       .then((data) => setReleases(data.releases ?? data))
       .catch((err) => console.error("Failed to fetch releases", err));

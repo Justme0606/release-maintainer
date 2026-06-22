@@ -10,6 +10,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.health import router as health_router
+from app.api.help import router as help_router
 from app.api.releases import router as releases_router
 from app.api.github import router as github_router
 from app.core.config import settings
@@ -17,6 +18,10 @@ from app.services.github_service import GithubService
 from app.services.kpi_service import KpiService
 from app.services.release_cache_service import refresh_release
 
+logging.basicConfig(
+    level=logging.DEBUG if settings.debug else logging.INFO,
+    format="%(asctime)s %(levelname)-8s [%(name)s] %(message)s",
+)
 logger = logging.getLogger(__name__)
 
 # Background scheduler used to trigger periodic data refreshes
@@ -77,4 +82,10 @@ app.include_router(
     releases_router,
     prefix="/api/releases",
     tags=["releases"],
+)
+
+app.include_router(
+    help_router,
+    prefix="/api/help",
+    tags=["help"],
 )

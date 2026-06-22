@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     # Redis connection (used as cache layer)
     redis_url: str = "redis://localhost:6379/0"
 
+    # Debug mode: enables verbose error logging with tracebacks
+    debug: bool = False
+
     # Release tracking configuration
     release_deadline: str | None = None          # ISO date string, e.g. "2026-06-30"
     tracking_issue_number: int | None = None     # GitHub issue number for the tracking issue
