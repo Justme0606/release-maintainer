@@ -5,9 +5,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, ExternalLink, MessageSquare } from "lucide-react";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
-const apiUrl = (path: string) => `${API_BASE_URL}${path}`;
+import { useRelease } from "../context/ReleaseContext";
 
 interface PackageInfo {
   name: string;
@@ -32,6 +30,7 @@ const COLUMNS: { key: Column; label: string; color: string }[] = [
 
 export default function ReleaseBoardPage() {
   const navigate = useNavigate();
+  const { fetchRelease } = useRelease();
   const [packages, setPackages] = useState<PackageInfo[]>([]);
   const [releaseId, setReleaseId] = useState<string | null>(null);
   const [releaseName, setReleaseName] = useState<string | null>(null);
@@ -42,8 +41,7 @@ export default function ReleaseBoardPage() {
   );
 
   useEffect(() => {
-    fetch(apiUrl("/api/releases/in-progress"))
-      .then((res) => res.json())
+    fetchRelease("in-progress")
       .then((data) => {
         setPackages(data.packages_list ?? []);
         setReleaseId(data.id ?? data.release_id ?? null);

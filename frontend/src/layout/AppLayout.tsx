@@ -43,12 +43,16 @@ export default function AppLayout() {
           >
             Help & Support
           </NavLink>
-          <small>
-            Rocq Platform Console
-            <br />
-            v0.1.0
-          </small>
         </div>
+
+        <small className="sidebar-version">
+          Rocq Platform Console v0.1.0
+          <br />
+          rev{" "}
+          <a href={__GIT_COMMIT_URL__} target="_blank" rel="noopener noreferrer">
+            {__GIT_COMMIT__}
+          </a>
+        </small>
       </aside>
 
       <main className="main">

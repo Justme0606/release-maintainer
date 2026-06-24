@@ -13,7 +13,7 @@ import httpx
 from app.db.redis import redis_client
 
 GITHUB_API = "https://api.github.com"
-CACHE_TTL_SECONDS = 300          # Cache responses for 5 minutes
+CACHE_TTL_SECONDS = 1800         # Cache responses for 30 minutes
 MAX_CONCURRENT_REQUESTS = 3      # Limit parallel HTTP calls to avoid rate-limiting
 MAX_RETRIES = 4                  # Retry count when hitting rate limits
 
