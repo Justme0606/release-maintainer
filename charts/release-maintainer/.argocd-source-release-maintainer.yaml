@@ -4,11 +4,11 @@ helm:
     value: ghcr.io/justme0606/release-maintainer-backend
     forcestring: true
   - name: backend.image.tag
-    value: latest@sha256:5f7a57704d6a747169c032c862148baee6380fc3046fa21b15ef97192fb9830d
+    value: latest@sha256:d62f6ea1627c67a8a61f9396c718ccd898d907218e212c2e24a5f0dec8ab1697
     forcestring: true
   - name: frontend.image.repository
     value: ghcr.io/justme0606/release-maintainer-frontend
     forcestring: true
   - name: frontend.image.tag
-    value: latest@sha256:7da199d208e772a399e57f10c544bc7ce7bc338cec5f6bab310e5604a7b7b02f
+    value: latest@sha256:683ade86582684db5ca2e31273263834e13ac9344c5465c7154c3bed0cdbd334
     forcestring: true
