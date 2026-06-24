@@ -1,7 +1,7 @@
 frontend:
   image:
     repository: ghcr.io/justme0606/release-maintainer-frontend
-    tag: latest
+    tag: sha-0eb5dc5
     pullPolicy: Always
   service:
     port: 80
@@ -9,7 +9,7 @@ frontend:
 backend:
   image:
     repository: ghcr.io/justme0606/release-maintainer-backend
-    tag: latest
+    tag: sha-0eb5dc5
     pullPolicy: Always
   service:
     port: 8000
