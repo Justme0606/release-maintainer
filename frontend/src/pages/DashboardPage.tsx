@@ -13,6 +13,7 @@ import ReleaseTimeline from "../components/ReleaseTimeline";
 import PackageTable from "../components/PackageTable";
 import RightPanel from "../components/RightPanel";
 import BottomPanels from "../components/BottomPanels";
+import { useRelease } from "../context/ReleaseContext";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 const apiUrl = (path: string) => `${API_BASE_URL}${path}`;
@@ -48,6 +49,7 @@ export default function DashboardPage() {
   const { releaseId } = useParams();
   const [release, setRelease] = useState<any>(null);
   const [lastRefreshedAt, setLastRefreshedAt] = useState<string | null>(null);
+  const { fetchRelease, invalidateRelease } = useRelease();
   const [loading, setLoading] = useState<ZoneLoading>({
     header: false,
     timeline: false,
@@ -62,14 +64,16 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    fetch(apiUrl(`/api/releases/${releaseId}`))
-      .then((res) => res.json())
-      .then(updateRelease);
+    if (!releaseId) return;
+    fetchRelease(releaseId).then(updateRelease);
   }, [releaseId]);
 
   /** Sequentially refresh each dashboard zone via its dedicated API endpoint. */
   const handleRefresh = async () => {
     if (!releaseId || isRefreshing) return;
+
+    // Invalidate the cached release so next navigation re-fetches fresh data
+    invalidateRelease(releaseId);
 
     setLoading({
       header: true,

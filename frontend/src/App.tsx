@@ -3,7 +3,9 @@
 /** Root application component with client-side routing. */
 
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { ApiCacheProvider } from "./context/ApiCacheContext";
 import { DepGraphProvider } from "./context/DepGraphContext";
+import { ReleaseProvider } from "./context/ReleaseContext";
 import AppLayout from "./layout/AppLayout";
 import DashboardPage from "./pages/DashboardPage";
 import HelpPage from "./pages/HelpPage";
@@ -13,6 +15,8 @@ import "./App.css";
 
 function App() {
   return (
+    <ReleaseProvider>
+    <ApiCacheProvider>
     <DepGraphProvider>
       <BrowserRouter>
         <Routes>
@@ -32,6 +36,8 @@ function App() {
         </Routes>
       </BrowserRouter>
     </DepGraphProvider>
+    </ApiCacheProvider>
+    </ReleaseProvider>
   );
 }
 

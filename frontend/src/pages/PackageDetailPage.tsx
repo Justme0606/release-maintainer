@@ -5,7 +5,9 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { ExternalLink, GitBranch } from "lucide-react";
+import { useApiCache } from "../context/ApiCacheContext";
 import { useDepGraph } from "../context/DepGraphContext";
+import { useRelease } from "../context/ReleaseContext";
 
 import type { FullGraph } from "../context/DepGraphContext";
 
@@ -175,9 +177,6 @@ function labelStatusClass(labelName: string): string {
   return "";
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
-const apiUrl = (path: string) => `${API_BASE_URL}${path}`;
-
 export default function PackageDetailPage() {
   const { releaseId, packageName } = useParams();
   const [pkg, setPkg] = useState<PackageInfo | null>(null);
@@ -186,13 +185,15 @@ export default function PackageDetailPage() {
   const [issueLoading, setIssueLoading] = useState(true);
   const [opam, setOpam] = useState<OpamInfo | null>(null);
   const { getGraph, fetchGraph } = useDepGraph();
+  const { fetchRelease } = useRelease();
+  const { fetchCached } = useApiCache();
   const [graph, setGraph] = useState<FullGraph | null>(() =>
     releaseId ? getGraph(releaseId) : null,
   );
 
   useEffect(() => {
-    fetch(apiUrl(`/api/releases/${releaseId}`))
-      .then((res) => res.json())
+    if (!releaseId) return;
+    fetchRelease(releaseId)
       .then((data) => {
         const found = (data.packages_list ?? []).find(
           (p: PackageInfo) => p.name === packageName,
@@ -206,11 +207,10 @@ export default function PackageDetailPage() {
   useEffect(() => {
     if (!releaseId || !packageName) return;
     setIssueLoading(true);
-    fetch(apiUrl(`/api/releases/${releaseId}/packages/${packageName}/issue`))
-      .then((res) => {
-        if (!res.ok) return null;
-        return res.json();
-      })
+    fetchCached(
+      `issue:${releaseId}:${packageName}`,
+      `/api/releases/${releaseId}/packages/${packageName}/issue`,
+    )
       .then((data) => {
         setIssue(data);
         setIssueLoading(false);
@@ -220,8 +220,10 @@ export default function PackageDetailPage() {
 
   useEffect(() => {
     if (!releaseId || !packageName) return;
-    fetch(apiUrl(`/api/releases/${releaseId}/packages/${packageName}/opam`))
-      .then((res) => (res.ok ? res.json() : null))
+    fetchCached(
+      `opam:${releaseId}:${packageName}`,
+      `/api/releases/${releaseId}/packages/${packageName}/opam`,
+    )
       .then((data) => setOpam(data))
       .catch(() => setOpam(null));
   }, [releaseId, packageName]);

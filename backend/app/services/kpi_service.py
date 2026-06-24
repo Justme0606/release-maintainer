@@ -152,10 +152,26 @@ class KpiService:
                 logger.warning("opam list %s failed: %s", extra_args, exc, exc_info=_DEBUG)
                 return []
 
+    OPAM_SHOW_TTL = 86400  # 24 hours
+
     async def run_opam_show(self, package_name: str) -> dict:
-        """Run ``opam show`` and return parsed metadata fields."""
+        """Run ``opam show`` and return parsed metadata fields.
+
+        Results are cached in Redis for 24 hours since opam metadata
+        changes infrequently.
+        """
+        cache_key = f"opam_show:{package_name}"
+        cached = await redis_client.get(cache_key)
+        if cached:
+            return json.loads(cached)
+
         fields = "maintainer,authors,synopsis,description,homepage,version,license,bug-reports,dev-repo"
         async with self._get_opam_semaphore():
+            # Double-check after acquiring semaphore
+            cached = await redis_client.get(cache_key)
+            if cached:
+                return json.loads(cached)
+
             try:
                 proc = await asyncio.create_subprocess_exec(
                     "opam", "show", package_name, f"--field={fields}",
@@ -181,6 +197,13 @@ class KpiService:
                             result[current_key] = val
                     elif current_key and line.startswith(" "):
                         result[current_key] += "\n" + line.strip().strip('"')
+
+                if result:
+                    await redis_client.set(
+                        cache_key,
+                        json.dumps(result),
+                        ex=self.OPAM_SHOW_TTL,
+                    )
 
                 return result
             except Exception as exc:
