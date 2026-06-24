@@ -10,5 +10,5 @@ helm:
     value: ghcr.io/justme0606/release-maintainer-frontend
     forcestring: true
   - name: frontend.image.tag
-    value: latest@sha256:166a0bd067ca720a468ada9e37f1ebd343e92769bc5a5212d0e4b6ecc291a285
+    value: latest@sha256:d2dfc5c78b25957c1add3396fa8fa56e724ac4387209705338c4f8905920330d
     forcestring: true
