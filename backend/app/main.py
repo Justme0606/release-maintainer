@@ -17,7 +17,6 @@ from app.api.public import router as public_router
 from app.api.releases import router as releases_router
 from app.api.github import router as github_router
 from app.core.config import settings
-from app.core.seed import seed_users
 from app.services.github_service import GithubService
 from app.services.kpi_service import KpiService
 from app.services.release_cache_service import refresh_release
@@ -43,10 +42,7 @@ async def nightly_refresh():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Application lifespan: seed users and start the scheduler on startup."""
-    # Seed predefined user accounts
-    await seed_users()
-
+    """Application lifespan: start the scheduler on startup."""
     scheduler.add_job(
         nightly_refresh,
         trigger="cron",

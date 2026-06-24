@@ -1,36 +1,58 @@
 # Copyright (c) 2026 Sylvain Borgogno <sylvain.borgogno@inria.fr>
 # SPDX-License-Identifier: MIT
-"""MongoDB repository for user CRUD operations."""
+"""In-memory user store loaded from SEED_USERS environment variable."""
 
-from app.db.mongo import database
+import json
+import logging
 
-COLLECTION = "users"
+import bcrypt
+
+from app.core.config import settings
+
+logger = logging.getLogger(__name__)
+
+# In-memory store: username -> {username, hashed_password, role}
+_users: dict[str, dict] = {}
 
 
-async def get_user_by_username(username: str):
-    """Fetch a single user document by username."""
-    return await database[COLLECTION].find_one(
-        {"username": username},
-        {"_id": 0},
-    )
+def _load_users():
+    """Parse SEED_USERS JSON and hash passwords into the in-memory store."""
+    try:
+        entries = json.loads(settings.seed_users)
+    except json.JSONDecodeError:
+        logger.error("Failed to parse SEED_USERS JSON")
+        return
+
+    for entry in entries:
+        username = entry.get("username")
+        password = entry.get("password")
+        role = entry.get("role", "maintainer")
+
+        if not username or not password:
+            logger.warning("Skipping seed entry with missing username or password")
+            continue
+
+        hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+        _users[username] = {
+            "username": username,
+            "hashed_password": hashed,
+            "role": role,
+        }
+        logger.info("Loaded user '%s' with role '%s'", username, role)
 
 
-async def list_users():
+# Load users at import time
+_load_users()
+
+
+def get_user_by_username(username: str) -> dict | None:
+    """Fetch a user by username from the in-memory store."""
+    return _users.get(username)
+
+
+def list_users() -> list[dict]:
     """Return all users (without password hashes)."""
-    users = []
-    cursor = database[COLLECTION].find(
-        {},
-        {"_id": 0, "hashed_password": 0},
-    )
-    async for user in cursor:
-        users.append(user)
-    return users
-
-
-async def upsert_user(user: dict):
-    """Insert or update a user document, matched by username."""
-    await database[COLLECTION].update_one(
-        {"username": user["username"]},
-        {"$set": user},
-        upsert=True,
-    )
+    return [
+        {"username": u["username"], "role": u["role"]}
+        for u in _users.values()
+    ]

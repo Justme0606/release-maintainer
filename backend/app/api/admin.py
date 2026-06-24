@@ -60,5 +60,5 @@ async def delete_release(release_id: str):
 @router.get("/users", dependencies=[Depends(require_admin)])
 async def get_users():
     """List all user accounts (admin only)."""
-    users = await list_users()
+    users = list_users()
     return users

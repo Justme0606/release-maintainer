@@ -15,7 +15,7 @@ router = APIRouter()
 @router.post("/login")
 async def login(credentials: LoginRequest):
     """Authenticate a user and set a JWT cookie."""
-    user = await get_user_by_username(credentials.username)
+    user = get_user_by_username(credentials.username)
     if not user or not verify_password(credentials.password, user["hashed_password"]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 

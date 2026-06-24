@@ -26,3 +26,13 @@ spec:
                 secretKeyRef:
                   name: release-maintainer-secrets
                   key: github_token
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: release-maintainer-secrets
+                  key: jwt_secret_key
+            - name: SEED_USERS
+              valueFrom:
+                secretKeyRef:
+                  name: release-maintainer-secrets
+                  key: seed_users
