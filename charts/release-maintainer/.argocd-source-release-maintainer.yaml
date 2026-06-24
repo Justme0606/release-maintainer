@@ -1,0 +1,14 @@
+helm:
+  parameters:
+  - name: backend.image.repository
+    value: ghcr.io/justme0606/release-maintainer-backend
+    forcestring: true
+  - name: backend.image.tag
+    value: latest@sha256:54cee1ffcc7dfb07d56467a78b11f215a560d9698fe75782a37c6de7fd58dbb9
+    forcestring: true
+  - name: frontend.image.repository
+    value: ghcr.io/justme0606/release-maintainer-frontend
+    forcestring: true
+  - name: frontend.image.tag
+    value: latest@sha256:7300a6f46f60ff6b968d792c57d4bc59e376e8adef7bc7f5daca190de6f7984b
+    forcestring: true
