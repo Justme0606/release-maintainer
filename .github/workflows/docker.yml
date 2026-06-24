@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - develop
+    paths-ignore:
+      - "charts/release-maintainer/.argocd-source-release-maintainer.yaml"
   workflow_dispatch:
 
 permissions:

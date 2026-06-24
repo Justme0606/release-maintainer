@@ -113,7 +113,7 @@ export default function PackageTable({ packages }: PackageTableProps) {
                 className={`clickable-row${pkg.disabled ? " disabled-row" : ""}`}
                 key={pkg.name}
                 onClick={() =>
-                  navigate(`/releases/${releaseId}/packages/${pkg.name}`)
+                  navigate(`/app/releases/${releaseId}/packages/${pkg.name}`)
                 }
               >
                 <td>

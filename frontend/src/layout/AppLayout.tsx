@@ -3,9 +3,12 @@
 /** Shell layout with sidebar navigation and content outlet. */
 
 import { Outlet, NavLink } from "react-router-dom";
-import { Rocket } from "lucide-react";
+import { Rocket, Shield } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 export default function AppLayout() {
+  const { user } = useAuth();
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -19,26 +22,35 @@ export default function AppLayout() {
 
         <nav>
           <NavLink
-            to="/"
+            to="/app"
             end
             className={({ isActive }) => (isActive ? "active" : "")}
           >
             Overview
           </NavLink>
           <NavLink
-            to="/release-board"
+            to="/app/release-board"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
             Release Board
           </NavLink>
           <a>Platforms & Tags</a>
           <a>Releases</a>
+          {user?.role === "admin" && (
+            <NavLink
+              to="/app/admin"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              <Shield size={16} style={{ marginRight: 6 }} />
+              Admin
+            </NavLink>
+          )}
         </nav>
 
         <div className="sidebar-footer">
           <a>Documentation</a>
           <NavLink
-            to="/help"
+            to="/app/help"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
             Help & Support

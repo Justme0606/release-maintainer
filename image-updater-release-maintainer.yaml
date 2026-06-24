@@ -1,0 +1,30 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: release-maintainer
+  namespace: argocd
+spec:
+  writeBackConfig:
+    method: "argocd"
+  applicationRefs:
+    - namePattern: "release-maintainer"
+      images:
+        - alias: "frontend"
+          imageName: "ghcr.io/justme0606/release-maintainer-frontend:latest"
+          commonUpdateSettings:
+            updateStrategy: "digest"
+            pullSecret: "pullsecret:argocd/ghcr-credentials"
+          manifestTargets:
+            helm:
+              name: "frontend.image.repository"
+              tag: "frontend.image.tag"
+
+        - alias: "backend"
+          imageName: "ghcr.io/justme0606/release-maintainer-backend:latest"
+          commonUpdateSettings:
+            updateStrategy: "digest"
+            pullSecret: "pullsecret:argocd/ghcr-credentials"
+          manifestTargets:
+            helm:
+              name: "backend.image.repository"
+              tag: "backend.image.tag"

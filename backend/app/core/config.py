@@ -32,6 +32,14 @@ class Settings(BaseSettings):
     release_deadline: str | None = None          # ISO date string, e.g. "2026-06-30"
     tracking_issue_number: int | None = None     # GitHub issue number for the tracking issue
 
+    # JWT authentication
+    jwt_secret_key: str = "change-me-in-production"
+    jwt_algorithm: str = "HS256"
+    jwt_expire_minutes: int = 480  # 8 hours
+
+    # Seed users as JSON string, e.g. [{"username":"admin","password":"pass","role":"admin"}]
+    seed_users: str = "[]"
+
     class Config:
         env_file = str(ENV_FILE)
 

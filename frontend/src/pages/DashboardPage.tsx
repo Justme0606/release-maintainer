@@ -88,6 +88,7 @@ export default function DashboardPage() {
           apiUrl(`/api/releases/${releaseId}/refresh/${zone}`),
           {
             method: "POST",
+            credentials: "include",
           },
         );
         const data = await res.json();

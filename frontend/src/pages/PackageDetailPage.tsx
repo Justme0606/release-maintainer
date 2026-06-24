@@ -112,7 +112,7 @@ function PackageRelations({
       <button
         key={item.name}
         className="rel-chip"
-        onClick={() => navigate(`/releases/${releaseId}/packages/${item.name}`)}
+        onClick={() => navigate(`/app/releases/${releaseId}/packages/${item.name}`)}
       >
         <span className={`rel-chip-bar ${item.status}`} />
         {item.name}
@@ -252,7 +252,7 @@ export default function PackageDetailPage() {
     return (
       <section className="panel">
         <h1>Package not found</h1>
-        <Link to="/">Back to dashboard</Link>
+        <Link to="/app">Back to dashboard</Link>
       </section>
     );
   }
@@ -265,7 +265,7 @@ export default function PackageDetailPage() {
   return (
     <>
       <div className="detail-header">
-        <Link to={`/releases/${releaseId}`} className="linkish">
+        <Link to={`/app/releases/${releaseId}`} className="linkish">
           ← Back to dashboard
         </Link>
 

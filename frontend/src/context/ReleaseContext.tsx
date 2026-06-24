@@ -48,7 +48,7 @@ export function ReleaseProvider({ children }: { children: ReactNode }) {
       if (existing) return existing;
 
       const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
-      const promise = fetch(`${apiBase}/api/releases/${releaseId}`)
+      const promise = fetch(`${apiBase}/api/releases/${releaseId}`, { credentials: "include" })
         .then((res) => {
           if (!res.ok) throw new Error(`Failed to fetch release: ${res.status}`);
           return res.json();

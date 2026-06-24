@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: MIT
 """Help & Support endpoints: static content and system health information."""
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from app.core.auth import get_current_user
 from app.core.config import settings
 from app.db.mongo import ping_mongo
 from app.db.redis import ping_redis
@@ -131,13 +132,13 @@ HELP_CONTENT = {
 
 
 @router.get("/")
-async def get_help_content():
+async def get_help_content(user: dict = Depends(get_current_user)):
     """Return static help content (FAQ, glossary, workflow, links)."""
     return HELP_CONTENT
 
 
 @router.get("/system-info")
-async def get_system_info():
+async def get_system_info(user: dict = Depends(get_current_user)):
     """Return application metadata and service health status."""
     mongo_status = "connected"
     try:

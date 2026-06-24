@@ -46,14 +46,14 @@ export default function HelpPage() {
   const [openFaq, setOpenFaq] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    fetch(apiUrl("/api/help/"))
+    fetch(apiUrl("/api/help/"), { credentials: "include" })
       .then((res) => res.json())
       .then(setContent)
       .catch((err) => console.error("Failed to fetch help content", err));
   }, []);
 
   useEffect(() => {
-    fetch(apiUrl("/api/help/system-info"))
+    fetch(apiUrl("/api/help/system-info"), { credentials: "include" })
       .then((res) => res.json())
       .then(setSystemInfo)
       .catch((err) => console.error("Failed to fetch system info", err));

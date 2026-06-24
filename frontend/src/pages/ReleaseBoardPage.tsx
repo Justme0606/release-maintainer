@@ -174,7 +174,7 @@ export default function ReleaseBoardPage() {
                     onClick={() =>
                       releaseId
                         ? navigate(
-                            `/releases/${releaseId}/packages/${pkg.name}`,
+                            `/app/releases/${releaseId}/packages/${pkg.name}`,
                           )
                         : undefined
                     }

@@ -48,7 +48,7 @@ export function ApiCacheProvider({ children }: { children: ReactNode }) {
       if (existing) return existing;
 
       const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
-      const promise = fetch(`${apiBase}${url}`)
+      const promise = fetch(`${apiBase}${url}`, { credentials: "include" })
         .then((res) => {
           if (!res.ok) return null;
           return res.json();
