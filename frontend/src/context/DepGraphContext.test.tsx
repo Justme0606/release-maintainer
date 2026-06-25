@@ -53,7 +53,9 @@ describe('DepGraphContext', () => {
       const graph = await result.current.fetchGraph('release-1')
 
       expect(graph).toEqual(mockGraph)
-      expect(result.current.getGraph('release-1')).toEqual(mockGraph)
+      await waitFor(() => {
+        expect(result.current.getGraph('release-1')).toEqual(mockGraph)
+      })
       expect(global.fetch).toHaveBeenCalledWith(
         'http://localhost:8000/api/releases/release-1/dependency-graph',
         { credentials: 'include' }
@@ -71,6 +73,11 @@ describe('DepGraphContext', () => {
       // First fetch
       await result.current.fetchGraph('release-1')
       expect(global.fetch).toHaveBeenCalledTimes(1)
+
+      // Wait for cache to be populated
+      await waitFor(() => {
+        expect(result.current.getGraph('release-1')).toEqual(mockGraph)
+      })
 
       // Second fetch should use cache
       const cachedGraph = await result.current.fetchGraph('release-1')
@@ -97,8 +104,10 @@ describe('DepGraphContext', () => {
       await result.current.fetchGraph('release-1')
       await result.current.fetchGraph('release-2')
 
-      expect(result.current.getGraph('release-1')).toEqual(mockGraph1)
-      expect(result.current.getGraph('release-2')).toEqual(mockGraph2)
+      await waitFor(() => {
+        expect(result.current.getGraph('release-1')).toEqual(mockGraph1)
+        expect(result.current.getGraph('release-2')).toEqual(mockGraph2)
+      })
       expect(global.fetch).toHaveBeenCalledTimes(2)
     })
 
@@ -185,6 +194,11 @@ describe('DepGraphContext', () => {
 
       await result.current.fetchGraph('release-1')
 
+      // Wait for cache to be populated
+      await waitFor(() => {
+        expect(result.current.getGraph('release-1')).toEqual(mockGraph)
+      })
+
       // After first fetch completes, second fetch should use cache
       await result.current.fetchGraph('release-1')
 
@@ -216,11 +230,15 @@ describe('DepGraphContext', () => {
       const { result } = renderHook(() => useDepGraph(), { wrapper })
 
       await result.current.fetchGraph('release-1')
-      expect(result.current.getGraph('release-1')).toEqual(mockGraph)
+      await waitFor(() => {
+        expect(result.current.getGraph('release-1')).toEqual(mockGraph)
+      })
 
       result.current.invalidateGraph('release-1')
 
-      expect(result.current.getGraph('release-1')).toBeNull()
+      await waitFor(() => {
+        expect(result.current.getGraph('release-1')).toBeNull()
+      })
     })
 
     it('should force refetch after invalidation', async () => {
@@ -241,14 +259,23 @@ describe('DepGraphContext', () => {
 
       // First fetch
       await result.current.fetchGraph('release-1')
-      expect(result.current.getGraph('release-1')).toEqual(mockGraph1)
+      await waitFor(() => {
+        expect(result.current.getGraph('release-1')).toEqual(mockGraph1)
+      })
 
       // Invalidate
       result.current.invalidateGraph('release-1')
 
+      // Wait for invalidation to complete
+      await waitFor(() => {
+        expect(result.current.getGraph('release-1')).toBeNull()
+      })
+
       // Second fetch should make a new request
       await result.current.fetchGraph('release-1')
-      expect(result.current.getGraph('release-1')).toEqual(mockGraph2)
+      await waitFor(() => {
+        expect(result.current.getGraph('release-1')).toEqual(mockGraph2)
+      })
       expect(global.fetch).toHaveBeenCalledTimes(2)
     })
 
@@ -268,8 +295,10 @@ describe('DepGraphContext', () => {
       // Invalidate only release-1
       result.current.invalidateGraph('release-1')
 
-      expect(result.current.getGraph('release-1')).toBeNull()
-      expect(result.current.getGraph('release-2')).toEqual(mockGraph2)
+      await waitFor(() => {
+        expect(result.current.getGraph('release-1')).toBeNull()
+        expect(result.current.getGraph('release-2')).toEqual(mockGraph2)
+      })
     })
   })
 
@@ -300,7 +329,9 @@ describe('DepGraphContext', () => {
       // Second attempt succeeds
       const graph = await result.current.fetchGraph('release-1')
       expect(graph).toBeTruthy()
-      expect(result.current.getGraph('release-1')).toBeTruthy()
+      await waitFor(() => {
+        expect(result.current.getGraph('release-1')).toBeTruthy()
+      })
     })
 
     it('should handle network errors', async () => {

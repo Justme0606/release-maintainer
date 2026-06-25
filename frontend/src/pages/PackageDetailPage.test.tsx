@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import { Route, Routes } from 'react-router-dom'
 import { renderWithProviders, createMockRelease, mockFetchResponse } from '../test/utils'
@@ -29,7 +29,7 @@ describe('PackageDetailPage', () => {
           element={<PackageDetailPage />}
         />
       </Routes>,
-      { initialEntries: [`/app/releases/${releaseId}/packages/${packageName}`] } as any
+      { initialEntries: [`/app/releases/${releaseId}/packages/${packageName}`] }
     )
   }
 

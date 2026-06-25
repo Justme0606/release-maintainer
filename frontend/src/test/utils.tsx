@@ -1,21 +1,25 @@
 import { ReactElement, ReactNode } from 'react'
 import { render, RenderOptions } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, MemoryRouter } from 'react-router-dom'
 import { AuthProvider } from '../context/AuthContext'
 import { ReleaseProvider } from '../context/ReleaseContext'
 import { DepGraphProvider } from '../context/DepGraphContext'
 
 interface AllProvidersProps {
   children: ReactNode
+  initialEntries?: string[]
 }
 
 /**
  * Wrapper component that provides all necessary contexts for testing.
  * Includes: Router, Auth, Release, and DepGraph contexts.
  */
-function AllProviders({ children }: AllProvidersProps) {
+function AllProviders({ children, initialEntries }: AllProvidersProps) {
+  const RouterComponent = initialEntries ? MemoryRouter : BrowserRouter
+  const routerProps = initialEntries ? { initialEntries } : {}
+
   return (
-    <BrowserRouter>
+    <RouterComponent {...routerProps}>
       <AuthProvider>
         <ReleaseProvider>
           <DepGraphProvider>
@@ -23,8 +27,12 @@ function AllProviders({ children }: AllProvidersProps) {
           </DepGraphProvider>
         </ReleaseProvider>
       </AuthProvider>
-    </BrowserRouter>
+    </RouterComponent>
   )
+}
+
+interface RenderWithProvidersOptions extends Omit<RenderOptions, 'wrapper'> {
+  initialEntries?: string[]
 }
 
 /**
@@ -33,9 +41,13 @@ function AllProviders({ children }: AllProvidersProps) {
  */
 export function renderWithProviders(
   ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
+  options?: RenderWithProvidersOptions
 ) {
-  return render(ui, { wrapper: AllProviders, ...options })
+  const { initialEntries, ...renderOptions } = options || {}
+  return render(ui, {
+    wrapper: ({ children }) => <AllProviders initialEntries={initialEntries}>{children}</AllProviders>,
+    ...renderOptions
+  })
 }
 
 /**
