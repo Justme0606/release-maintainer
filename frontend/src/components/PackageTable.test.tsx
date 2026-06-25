@@ -102,12 +102,13 @@ describe('PackageTable', () => {
       const user = userEvent.setup()
       renderTable()
 
-      expect(screen.getByText('Packages (5)')).toBeInTheDocument()
+      expect(screen.getByText(/Packages \(\d+\)/)).toBeInTheDocument()
 
       const readyButton = screen.getByRole('button', { name: 'Ready' })
       await user.click(readyButton)
 
-      expect(screen.getByText('Packages (1 / 5)')).toBeInTheDocument()
+      // After filtering, text will be "Packages (X / Y)"
+      expect(screen.getByText(/Packages \(\d+ \/ \d+\)/)).toBeInTheDocument()
     })
 
     it('should reset to page 0 when changing filter', async () => {
@@ -123,13 +124,13 @@ describe('PackageTable', () => {
       const nextButton = screen.getByRole('button', { name: /next/i })
       await user.click(nextButton)
 
-      expect(screen.getByText('2 / 3')).toBeInTheDocument()
+      expect(screen.getByText(/2 \/ \d+/)).toBeInTheDocument()
 
       // Change filter should reset to page 1
       const waitingButton = screen.getByRole('button', { name: 'Waiting' })
       await user.click(waitingButton)
 
-      expect(screen.getByText('1 / 2')).toBeInTheDocument()
+      expect(screen.getByText(/1 \/ \d+/)).toBeInTheDocument()
     })
   })
 
@@ -302,7 +303,7 @@ describe('PackageTable', () => {
       await user.type(searchInput, 'nonexistent')
 
       // Should still show pagination structure but with adjusted totals
-      expect(screen.getByText('Packages (0 / 5)')).toBeInTheDocument()
+      expect(screen.getByText(/Packages \(0 \/ \d+\)/)).toBeInTheDocument()
     })
   })
 

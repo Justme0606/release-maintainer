@@ -61,13 +61,17 @@ export default function DashboardPage() {
   const isRefreshing = Object.values(loading).some(Boolean);
 
   const updateRelease = (data: any) => {
-    setLastRefreshedAt(data.last_refreshed_at ?? null);
-    setRelease(data);
+    if (data) {
+      setLastRefreshedAt(data.last_refreshed_at ?? null);
+      setRelease(data);
+    }
   };
 
   useEffect(() => {
     if (!releaseId) return;
-    fetchRelease(releaseId).then(updateRelease);
+    fetchRelease(releaseId).then(updateRelease).catch(() => {
+      // Silently handle errors - component will show loading state
+    });
   }, [releaseId]);
 
   /** Sequentially refresh each dashboard zone via its dedicated API endpoint. */
