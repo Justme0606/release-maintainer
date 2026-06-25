@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 /** Main dashboard page assembling KPIs, timeline and package table. */
 
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 /** Authentication context: manages user session via JWT cookie. */
 
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useCallback,

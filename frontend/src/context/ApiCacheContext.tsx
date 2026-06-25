@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 /** Generic key-value API cache context with in-flight deduplication. */
 
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useCallback,

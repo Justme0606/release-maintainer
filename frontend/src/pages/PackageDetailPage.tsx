@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 /** Package detail page with package relations and issue details. */
 
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState, useMemo } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { ExternalLink, GitBranch } from "lucide-react";

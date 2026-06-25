@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 /** React context for caching release data in memory across navigations. */
 
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useCallback,

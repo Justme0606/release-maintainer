@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 /** React context for sharing dependency graph state across components. */
 
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useCallback,
