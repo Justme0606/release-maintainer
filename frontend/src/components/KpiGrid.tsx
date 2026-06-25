@@ -25,12 +25,16 @@ interface KpiGridProps {
 }
 
 export default function KpiGrid({ summary, openIssues, openPullRequests }: KpiGridProps) {
+  if (!summary) {
+    return null;
+  }
+
   return (
     <section className="kpi-grid">
-      <Kpi title="Packages" value={summary.packages} icon={<Boxes />} />
-      <Kpi title="Ready" value={summary.ready} icon={<CheckCircle2 />} />
-      <Kpi title="Waiting" value={summary.waiting} icon={<Clock />} />
-      <Kpi title="Blocked" value={summary.blocked} icon={<TriangleAlert />} />
+      <Kpi title="Packages" value={summary.packages ?? 0} icon={<Boxes />} />
+      <Kpi title="Ready" value={summary.ready ?? 0} icon={<CheckCircle2 />} />
+      <Kpi title="Waiting" value={summary.waiting ?? 0} icon={<Clock />} />
+      <Kpi title="Blocked" value={summary.blocked ?? 0} icon={<TriangleAlert />} />
       <Kpi title="Disabled" value={summary.disabled ?? 0} icon={<CircleOff />} />
       <Kpi title="Issues Open" value={openIssues} icon={<GitBranch />} href="https://github.com/rocq-prover/platform/issues" />
       <Kpi title="Pull Requests" value={openPullRequests} icon={<GitPullRequest />} href="https://github.com/rocq-prover/platform/pulls" />
