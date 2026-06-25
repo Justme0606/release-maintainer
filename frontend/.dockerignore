@@ -1,0 +1,31 @@
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+e2e/
+src/test/
+
+# Development files
+node_modules/
+dist/
+coverage/
+playwright-report/
+.env
+.env.local
+.env.*.local
+
+# CI/CD
+.github/
+
+# Documentation
+*.md
+!README.md
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
