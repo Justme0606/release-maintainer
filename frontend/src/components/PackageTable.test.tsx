@@ -1,17 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Route, Routes } from 'react-router-dom'
 import PackageTable from './PackageTable'
 import { renderWithProviders, createMockPackage } from '../test/utils'
 
-// Mock useNavigate
+// Mock useNavigate and useParams
 const mockNavigate = vi.fn()
+const mockParams = { releaseId: 'test-release' }
+
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
   return {
     ...actual,
     useNavigate: () => mockNavigate,
+    useParams: () => mockParams,
   }
 })
 
@@ -30,10 +32,7 @@ describe('PackageTable', () => {
 
   function renderTable(packages = defaultPackages) {
     return renderWithProviders(
-      <Routes>
-        <Route path="/app/releases/:releaseId" element={<PackageTable packages={packages} />} />
-      </Routes>,
-      { initialEntries: ['/app/releases/test-release'] } as any
+      <PackageTable packages={packages} />
     )
   }
 
