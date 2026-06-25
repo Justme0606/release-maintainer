@@ -44,6 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const result = fetch(apiUrl("/api/auth/me"), { credentials: "include" });
 
     if (!result || !result.then) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false);
       return;
     }
