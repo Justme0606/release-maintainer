@@ -44,3 +44,11 @@ urllib3==2.7.0
 uvicorn==0.48.0
 Werkzeug==3.1.8
 xmltodict==1.0.4
+
+# Testing dependencies
+pytest==8.3.5
+pytest-asyncio==0.25.4
+pytest-cov==6.1.1
+pytest-mock==3.15.2
+fakeredis==2.28.2
+mongomock-motor==0.0.36

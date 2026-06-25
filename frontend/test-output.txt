@@ -1,0 +1,4083 @@
+
+> frontend@0.0.0 test
+> vitest --run
+
+
+ RUN  v3.2.6 /home/sylvain/Documents/Inria/release-maintainer/frontend
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > Cache behavior > should fetch and cache release data
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/pages/PackageDetailPage.test.tsx > PackageDetailPage > Basic rendering > should render package detail page
+No routes matched location "/" 
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > Cache behavior > should return cached release without refetching
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/pages/PackageDetailPage.test.tsx > PackageDetailPage > Basic rendering > should extract releaseId and packageName from URL
+No routes matched location "/" 
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > Cache behavior > should cache multiple releases independently
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > Cache behavior > should cache multiple releases independently
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Graph caching > should fetch and cache graph data
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ❯ src/pages/PackageDetailPage.test.tsx (25 tests | 2 failed) 61ms
+   × PackageDetailPage > Basic rendering > should render package detail page 45ms
+     → Cannot read properties of undefined (reading 'then')
+   × PackageDetailPage > Basic rendering > should extract releaseId and packageName from URL 6ms
+     → Cannot read properties of undefined (reading 'then')
+   ✓ PackageDetailPage > Graph traversal logic > should compute dependencies correctly 1ms
+   ✓ PackageDetailPage > Graph traversal logic > should compute dependents (reverse dependencies) correctly 0ms
+   ✓ PackageDetailPage > Graph traversal logic > should handle circular dependencies gracefully 0ms
+   ✓ PackageDetailPage > Date formatting > should format relative dates correctly with formatTimeAgo 1ms
+   ✓ PackageDetailPage > Date formatting > should format absolute dates with formatDate 0ms
+   ✓ PackageDetailPage > Date formatting > should handle invalid dates gracefully 0ms
+   ✓ PackageDetailPage > Date formatting > should handle null or undefined dates 0ms
+   ✓ PackageDetailPage > Label status classification > should classify ready status correctly 0ms
+   ✓ PackageDetailPage > Label status classification > should classify waiting status correctly 0ms
+   ✓ PackageDetailPage > Label status classification > should classify blocked status correctly 0ms
+   ✓ PackageDetailPage > Label status classification > should classify unknown status correctly 0ms
+   ✓ PackageDetailPage > Label status classification > should classify disabled status correctly 0ms
+   ✓ PackageDetailPage > Label status classification > should handle missing or invalid status 0ms
+   ✓ PackageDetailPage > Package metadata > should display package version information 0ms
+   ✓ PackageDetailPage > Package metadata > should display issue URL if available 0ms
+   ✓ PackageDetailPage > Package metadata > should handle missing optional fields 0ms
+   ✓ PackageDetailPage > Package metadata > should display disabled reason for disabled packages 0ms
+   ✓ PackageDetailPage > Navigation > should navigate to dependency package when clicked 0ms
+   ✓ PackageDetailPage > Navigation > should navigate to dependent package when clicked 0ms
+   ✓ PackageDetailPage > Navigation > should navigate back to dashboard 0ms
+   ✓ PackageDetailPage > Edge cases > should handle package not found 0ms
+   ✓ PackageDetailPage > Edge cases > should handle empty dependency graph 0ms
+   ✓ PackageDetailPage > Edge cases > should handle package with no dependencies or dependents 0ms
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Graph caching > should return cached graph without refetching
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Graph caching > should cache graphs for multiple releases independently
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Graph caching > should cache graphs for multiple releases independently
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > In-flight request deduplication > should deduplicate concurrent requests for same release
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Graph caching > should handle missing nodes/edges in response
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Deduplication of concurrent requests > should deduplicate concurrent requests for same graph
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > In-flight request deduplication > should not deduplicate requests for different releases
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > In-flight request deduplication > should not deduplicate requests for different releases
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > In-flight request deduplication > should clean up in-flight tracking after successful fetch
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > In-flight request deduplication > should clean up in-flight tracking after successful fetch
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > Cache invalidation > should remove release from cache
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > Cache invalidation > should force refetch after invalidation
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Deduplication of concurrent requests > should not deduplicate requests for different releases
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Deduplication of concurrent requests > should not deduplicate requests for different releases
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > Cache invalidation > should not affect other cached releases
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > Cache invalidation > should not affect other cached releases
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > Cache invalidation > should not affect other cached releases
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Deduplication of concurrent requests > should clean up in-flight tracking after successful fetch
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Deduplication of concurrent requests > should clean up in-flight tracking after successful fetch
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Cache invalidation > should remove graph from cache
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/ReleaseContext.test.tsx > ReleaseContext > Error handling > should not cache failed fetches
+An update to ReleaseProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Cache invalidation > should force refetch after invalidation
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Cache invalidation > should not affect other cached graphs
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Cache invalidation > should not affect other cached graphs
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ❯ src/context/ReleaseContext.test.tsx (14 tests | 8 failed) 266ms
+   ✓ ReleaseContext > Cache behavior > should return null for uncached release 21ms
+   × ReleaseContext > Cache behavior > should fetch and cache release data 30ms
+     → expected null to deeply equal { id: 'release-1', …(7) }
+   × ReleaseContext > Cache behavior > should return cached release without refetching 7ms
+     → Cannot read properties of undefined (reading 'then')
+   × ReleaseContext > Cache behavior > should cache multiple releases independently 7ms
+     → expected null to deeply equal { id: 'release-1', …(7) }
+   ✓ ReleaseContext > In-flight request deduplication > should deduplicate concurrent requests for same release 67ms
+   ✓ ReleaseContext > In-flight request deduplication > should not deduplicate requests for different releases 67ms
+   × ReleaseContext > In-flight request deduplication > should clean up in-flight tracking after successful fetch 7ms
+     → expected "spy" to be called 1 times, but got 2 times
+   ✓ ReleaseContext > In-flight request deduplication > should clean up in-flight tracking after failed fetch 7ms
+   × ReleaseContext > Cache invalidation > should remove release from cache 18ms
+     → expected null to deeply equal { id: 'release-1', …(7) }
+   × ReleaseContext > Cache invalidation > should force refetch after invalidation 8ms
+     → expected undefined to be 'Old' // Object.is equality
+   × ReleaseContext > Cache invalidation > should not affect other cached releases 9ms
+     → expected null to deeply equal { id: 'release-2', …(7) }
+   ✓ ReleaseContext > Error handling > should throw error when fetch fails 5ms
+   × ReleaseContext > Error handling > should not cache failed fetches 6ms
+     → expected null to be truthy
+   ✓ ReleaseContext > Error handling > should handle network errors 4ms
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Cache invalidation > should not affect other cached graphs
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/DepGraphContext.test.tsx > DepGraphContext > Error handling > should not cache failed fetches
+An update to DepGraphProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ❯ src/context/DepGraphContext.test.tsx (15 tests | 8 failed) 258ms
+   ✓ DepGraphContext > Graph caching > should return null for uncached graph 33ms
+   × DepGraphContext > Graph caching > should fetch and cache graph data 32ms
+     → expected null to deeply equal { nodes: [ { …(3) }, …(2) ], …(1) }
+   × DepGraphContext > Graph caching > should return cached graph without refetching 15ms
+     → Cannot read properties of undefined (reading 'then')
+   × DepGraphContext > Graph caching > should cache graphs for multiple releases independently 10ms
+     → expected null to deeply equal { …(2) }
+   ✓ DepGraphContext > Graph caching > should handle missing nodes/edges in response 8ms
+   ✓ DepGraphContext > Deduplication of concurrent requests > should deduplicate concurrent requests for same graph 60ms
+   ✓ DepGraphContext > Deduplication of concurrent requests > should not deduplicate requests for different releases 57ms
+   × DepGraphContext > Deduplication of concurrent requests > should clean up in-flight tracking after successful fetch 5ms
+     → expected "spy" to be called 1 times, but got 2 times
+   ✓ DepGraphContext > Deduplication of concurrent requests > should clean up in-flight tracking after failed fetch 6ms
+   × DepGraphContext > Cache invalidation > should remove graph from cache 6ms
+     → expected null to deeply equal { nodes: [ { …(3) }, …(2) ], …(1) }
+   × DepGraphContext > Cache invalidation > should force refetch after invalidation 6ms
+     → expected null to deeply equal { nodes: [ { …(3) } ], edges: [] }
+   × DepGraphContext > Cache invalidation > should not affect other cached graphs 6ms
+     → expected null to deeply equal { nodes: [ { …(3) }, …(2) ], …(1) }
+   ✓ DepGraphContext > Error handling > should throw error when fetch fails 3ms
+   × DepGraphContext > Error handling > should not cache failed fetches 4ms
+     → expected null to be truthy
+   ✓ DepGraphContext > Error handling > should handle network errors 2ms
+stderr | src/context/AuthContext.test.tsx > AuthContext > Login > should successfully login with valid credentials
+An update to AuthProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should show all packages by default
+No routes matched location "/" 
+
+stderr | src/pages/DashboardPage.test.tsx > DashboardPage > Release loading > should fetch and display release data
+No routes matched location "/" 
+
+stderr | src/components/ProtectedRoute.test.tsx > ProtectedRoute > State transitions > should transition from loading to authenticated
+An update to AuthProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/ProtectedRoute.test.tsx > ProtectedRoute > State transitions > should transition from loading to authenticated
+An update to AuthProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/context/AuthContext.test.tsx > AuthContext > Logout > should successfully logout and clear user state
+An update to AuthProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/ProtectedRoute.test.tsx > ProtectedRoute > State transitions > should transition from loading to login redirect
+An update to AuthProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should filter packages by ready status
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should filter packages by waiting status
+No routes matched location "/" 
+
+ ❯ src/components/ProtectedRoute.test.tsx (14 tests | 3 failed) 316ms
+   × ProtectedRoute > Loading state > should show loading spinner while checking auth 117ms
+     → Unable to find an element with the role "img"
+
+There are no available roles.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mstyle[39m=[32m"display: grid; place-items: center; min-height: 100vh; color: rgb(96, 165, 250);"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"lucide lucide-loader-circle spin"[39m
+        [33mfill[39m=[32m"none"[39m
+        [33mheight[39m=[32m"32"[39m
+        [33mstroke[39m=[32m"currentColor"[39m
+        [33mstroke-linecap[39m=[32m"round"[39m
+        [33mstroke-linejoin[39m=[32m"round"[39m
+        [33mstroke-width[39m=[32m"2"[39m
+        [33mviewBox[39m=[32m"0 0 24 24"[39m
+        [33mwidth[39m=[32m"32"[39m
+        [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+      [36m>[39m
+        [36m<path[39m
+          [33md[39m=[32m"M21 12a9 9 0 1 1-6.219-8.56"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   ✓ ProtectedRoute > Authentication checks > should render children when user is authenticated 33ms
+   ✓ ProtectedRoute > Authentication checks > should redirect to login when user is not authenticated 27ms
+   ✓ ProtectedRoute > Authentication checks > should handle network errors by redirecting to login 19ms
+   ✓ ProtectedRoute > Role-based access control > should allow access when user has required role 13ms
+   ✓ ProtectedRoute > Role-based access control > should redirect when user lacks required role 18ms
+   ✓ ProtectedRoute > Role-based access control > should allow access when no role is required 10ms
+   ✓ ProtectedRoute > Role-based access control > should handle multiple role checks independently 7ms
+   × ProtectedRoute > State transitions > should transition from loading to authenticated 7ms
+     → Unable to find an element with the role "img"
+
+There are no available roles.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mstyle[39m=[32m"display: grid; place-items: center; min-height: 100vh; color: rgb(96, 165, 250);"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"lucide lucide-loader-circle spin"[39m
+        [33mfill[39m=[32m"none"[39m
+        [33mheight[39m=[32m"32"[39m
+        [33mstroke[39m=[32m"currentColor"[39m
+        [33mstroke-linecap[39m=[32m"round"[39m
+        [33mstroke-linejoin[39m=[32m"round"[39m
+        [33mstroke-width[39m=[32m"2"[39m
+        [33mviewBox[39m=[32m"0 0 24 24"[39m
+        [33mwidth[39m=[32m"32"[39m
+        [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+      [36m>[39m
+        [36m<path[39m
+          [33md[39m=[32m"M21 12a9 9 0 1 1-6.219-8.56"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   × ProtectedRoute > State transitions > should transition from loading to login redirect 11ms
+     → Unable to find an element with the role "img"
+
+There are no available roles.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mstyle[39m=[32m"display: grid; place-items: center; min-height: 100vh; color: rgb(96, 165, 250);"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"lucide lucide-loader-circle spin"[39m
+        [33mfill[39m=[32m"none"[39m
+        [33mheight[39m=[32m"32"[39m
+        [33mstroke[39m=[32m"currentColor"[39m
+        [33mstroke-linecap[39m=[32m"round"[39m
+        [33mstroke-linejoin[39m=[32m"round"[39m
+        [33mstroke-width[39m=[32m"2"[39m
+        [33mviewBox[39m=[32m"0 0 24 24"[39m
+        [33mwidth[39m=[32m"32"[39m
+        [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+      [36m>[39m
+        [36m<path[39m
+          [33md[39m=[32m"M21 12a9 9 0 1 1-6.219-8.56"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   ✓ ProtectedRoute > Replace navigation > should use replace navigation for login redirect 15ms
+   ✓ ProtectedRoute > Replace navigation > should use replace navigation for role redirect 13ms
+   ✓ ProtectedRoute > Edge cases > should handle empty requiredRole string 11ms
+   ✓ ProtectedRoute > Edge cases > should handle user with undefined role 11ms
+stderr | src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should filter packages by blocked status
+No routes matched location "/" 
+
+ ✓ src/components/ReleaseHeader.test.tsx (19 tests) 302ms
+stderr | src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should filter disabled packages
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should show disabled reason for disabled packages
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should update package count when filtering
+No routes matched location "/" 
+
+ ❯ src/components/RightPanel.test.tsx (19 tests | 3 failed) 440ms
+   ✓ RightPanel > Recent Activity > should show "No recent activity" when empty 112ms
+   ✓ RightPanel > Recent Activity > should display activity events 26ms
+   × RightPanel > Recent Activity > should paginate activity events 135ms
+     → Found multiple elements with the role "button" and name ""
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<button[39m
+  [33mdisabled[39m=[32m""[39m
+[36m>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"lucide lucide-chevron-left"[39m
+    [33mfill[39m=[32m"none"[39m
+    [33mheight[39m=[32m"14"[39m
+    [33mstroke[39m=[32m"currentColor"[39m
+    [33mstroke-linecap[39m=[32m"round"[39m
+    [33mstroke-linejoin[39m=[32m"round"[39m
+    [33mstroke-width[39m=[32m"2"[39m
+    [33mviewBox[39m=[32m"0 0 24 24"[39m
+    [33mwidth[39m=[32m"14"[39m
+    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+  [36m>[39m
+    [36m<path[39m
+      [33md[39m=[32m"m15 18-6-6 6-6"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</button>[39m
+
+Ignored nodes: comments, script, style
+[36m<button>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"lucide lucide-chevron-right"[39m
+    [33mfill[39m=[32m"none"[39m
+    [33mheight[39m=[32m"14"[39m
+    [33mstroke[39m=[32m"currentColor"[39m
+    [33mstroke-linecap[39m=[32m"round"[39m
+    [33mstroke-linejoin[39m=[32m"round"[39m
+    [33mstroke-width[39m=[32m"2"[39m
+    [33mviewBox[39m=[32m"0 0 24 24"[39m
+    [33mwidth[39m=[32m"14"[39m
+    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+  [36m>[39m
+    [36m<path[39m
+      [33md[39m=[32m"m9 18 6-6-6-6"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</button>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<aside[39m
+      [33mclass[39m=[32m"right-panel"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"side-card"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mRecent Activity[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"activity-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"activity-item info"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-circle"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"10"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"10"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<div>[39m
+              [36m<a[39m
+                [33mhref[39m=[32m"https://example.com/0"[39m
+                [33mrel[39m=[32m"noopener noreferrer"[39m
+                [33mtarget[39m=[32m"_blank"[39m
+              [36m>[39m
+                [36m<strong>[39m
+                  [0mEvent 0[0m
+                [36m</strong>[39m
+              [36m</a>[39m
+              [36m<span>[39m
+                [0m29mo ago[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"activity-item info"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-circle"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"10"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"10"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<div>[39m
+              [36m<a[39m
+                [33mhref[39m=[32m"https://example.com/1"[39m
+                [33mrel[39m=[32m"noopener noreferrer"[39m
+                [33mtarget[39m=[32m"_blank"[39m
+              [36m>[39m
+                [36m<strong>[39m
+                  [0mEvent 1[0m
+                [36m</strong>[39m
+              [36m</a>[39m
+              [36m<span>[39m
+                [0m29mo ago[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"activity-item info"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-circle"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"10"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"10"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<div>[39m
+              [36m<a[39m
+                [33mhref[39m=[32m"https://example.com/2"[39m
+                [33mrel[39m=[32m"noopener noreferrer"[39m
+                [33mtarget[39m=[32m"_blank"[39m
+              [36m>[39m
+                [36m<strong>[39m
+                  [0mEvent 2[0m
+                [36m</strong>[39m
+              [36m</a>[39m
+              [36m<span>[39m
+                [0m29mo ago[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"activity-item info"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-circle"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"10"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"10"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<div>[39m
+              [36m<a[39m
+                [33mhref[39m=[32m"https://example.com/3"[39m
+                [33mrel[39m=[32m"noopener noreferrer"[39m
+                [33mtarget[39m=[32m"_blank"[39m
+              [36m>[39m
+                [36m<strong>[39m
+                  [0mEvent 3[0m
+                [36m</strong>[39m
+              [36m</a>[39m
+              [36m<span>[39m
+                [0m29mo ago[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"activity-pagination"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mdisabled[39m=[32m""[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-chevron-left"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"14"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"14"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m15 18-6-6 6-6"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<span>[39m
+            [0m1[0m
+            [0m / [0m
+            [0m3[0m
+          [36m</span>[39m
+          [36m<button>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-chevron-right"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"14"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"14"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m9 18 6-6-6-6"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"side-card"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mIssues by State[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"donut"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [0m0[0m
+            [36m<br />[39m
+            [36m<span>[39m
+              [0mTotal[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mOpen[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mClosed[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mDraft PRs[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</aside>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   ✓ RightPanel > Recent Activity > should not show pagination for few events 13ms
+   ✓ RightPanel > formatRelativeDate edge cases > should show "just now" for very recent events 13ms
+   ✓ RightPanel > formatRelativeDate edge cases > should show minutes for events less than 1 hour old 11ms
+   ✓ RightPanel > formatRelativeDate edge cases > should show hours for events less than 1 day old 11ms
+   ✓ RightPanel > formatRelativeDate edge cases > should show days for events less than 30 days old 12ms
+   ✓ RightPanel > formatRelativeDate edge cases > should show months for events more than 30 days old 12ms
+   ✓ RightPanel > formatRelativeDate edge cases > should handle future dates gracefully 10ms
+   ✓ RightPanel > formatRelativeDate edge cases > should handle empty date string 6ms
+   ✓ RightPanel > Issues by State - Percentage calculations > should calculate percentages correctly 14ms
+   × RightPanel > Issues by State - Percentage calculations > should handle division by zero when no issues 14ms
+     → Found multiple elements with the text: /0 \(0%\)/
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m0 (0%)[0m
+[36m</strong>[39m
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m0 (0%)[0m
+[36m</strong>[39m
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m0 (0%)[0m
+[36m</strong>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<aside[39m
+      [33mclass[39m=[32m"right-panel"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"side-card"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mRecent Activity[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"activity-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"activity-item info"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-circle"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"10"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"10"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<div>[39m
+              [36m<strong>[39m
+                [0mNo recent activity[0m
+              [36m</strong>[39m
+              [36m<span />[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"side-card"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mIssues by State[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"donut"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [0m0[0m
+            [36m<br />[39m
+            [36m<span>[39m
+              [0mTotal[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mOpen[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mClosed[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mDraft PRs[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</aside>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   × RightPanel > Issues by State - Percentage calculations > should handle undefined issuesByState 8ms
+     → Found multiple elements with the text: /0 \(0%\)/
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m0 (0%)[0m
+[36m</strong>[39m
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m0 (0%)[0m
+[36m</strong>[39m
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m0 (0%)[0m
+[36m</strong>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<aside[39m
+      [33mclass[39m=[32m"right-panel"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"side-card"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mRecent Activity[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"activity-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"activity-item info"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-circle"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"10"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"10"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<div>[39m
+              [36m<strong>[39m
+                [0mNo recent activity[0m
+              [36m</strong>[39m
+              [36m<span />[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"side-card"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mIssues by State[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"donut"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [0m0[0m
+            [36m<br />[39m
+            [36m<span>[39m
+              [0mTotal[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mOpen[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mClosed[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mDraft PRs[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</aside>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   ✓ RightPanel > Issues by State - Percentage calculations > should ensure percentages sum to 100 8ms
+   ✓ RightPanel > Issues by State - Percentage calculations > should handle large numbers 8ms
+   ✓ RightPanel > Issues by State - Percentage calculations > should handle uneven distribution 7ms
+   ✓ RightPanel > Activity links > should render links for events with URLs 12ms
+   ✓ RightPanel > Activity links > should not render links for events without URLs 6ms
+stderr | src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should reset to page 0 when changing filter
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Search functionality > should filter packages by search term (case-insensitive)
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Search functionality > should handle lowercase search
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Search functionality > should handle partial matches
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Search functionality > should reset to page 0 when searching
+No routes matched location "/" 
+
+stderr | src/context/AuthContext.test.tsx > AuthContext > Context value memoization > should update memoized value when user state changes
+An update to AuthProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Search functionality > should combine search with filter
+No routes matched location "/" 
+
+ ❯ src/context/AuthContext.test.tsx (10 tests | 4 failed) 639ms
+   ✓ AuthContext > Session restoration > should restore user session on mount when authenticated 98ms
+   ✓ AuthContext > Session restoration > should set user to null when not authenticated 58ms
+   ✓ AuthContext > Session restoration > should handle network errors during session restoration 59ms
+   × AuthContext > Login > should successfully login with valid credentials 79ms
+     → expected null to deeply equal { username: 'alice', role: 'user' }
+   ✓ AuthContext > Login > should throw error on login failure with invalid credentials 59ms
+   ✓ AuthContext > Login > should handle login errors without detail field 55ms
+   × AuthContext > Logout > should successfully logout and clear user state 56ms
+     → expected { username: 'testuser', role: 'user' } to be null
+   × AuthContext > Logout > should clear user state even if logout request fails 56ms
+     → expected { username: 'testuser', role: 'user' } to be null
+   ✓ AuthContext > Context value memoization > should memoize context value correctly 56ms
+   × AuthContext > Context value memoization > should update memoized value when user state changes 60ms
+     → expected { user: null, loading: false, …(2) } not to be { user: null, loading: false, …(2) } // Object.is equality
+stderr | src/components/PackageTable.test.tsx > PackageTable > Pagination > should not show pagination for small package lists
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Pagination > should show pagination for large package lists
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Pagination > should navigate to next page
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Pagination > should navigate to previous page
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Pagination > should disable prev button on first page
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Pagination > should disable next button on last page
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Pagination > should handle edge case when filtered results become empty
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Package display > should display package information correctly
+No routes matched location "/" 
+
+stderr | src/components/PackageTable.test.tsx > PackageTable > Package display > should display em-dash for null values
+No routes matched location "/" 
+
+ ❯ src/components/PackageTable.test.tsx (22 tests | 21 failed) 381ms
+   × PackageTable > Filtering by status > should show all packages by default 98ms
+     → Unable to find an element with the text: pkg-ready. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Filtering by status > should filter packages by ready status 91ms
+     → Unable to find an accessible element with the role "button" and name "Ready"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Filtering by status > should filter packages by waiting status 19ms
+     → Unable to find an accessible element with the role "button" and name "Waiting"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Filtering by status > should filter packages by blocked status 16ms
+     → Unable to find an accessible element with the role "button" and name "Blocked"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Filtering by status > should filter disabled packages 16ms
+     → Unable to find an accessible element with the role "button" and name "Disabled"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Filtering by status > should show disabled reason for disabled packages 10ms
+     → Unable to find an element with the text: Not needed. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Filtering by status > should update package count when filtering 10ms
+     → Unable to find an element with the text: Packages (5). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Filtering by status > should reset to page 0 when changing filter 15ms
+     → Unable to find an accessible element with the role "button" and name `/next/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Search functionality > should filter packages by search term (case-insensitive) 12ms
+     → Unable to find an element with the placeholder text of: Search packages...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Search functionality > should handle lowercase search 10ms
+     → Unable to find an element with the placeholder text of: Search packages...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Search functionality > should handle partial matches 13ms
+     → Unable to find an element with the placeholder text of: Search packages...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Search functionality > should reset to page 0 when searching 15ms
+     → Unable to find an accessible element with the role "button" and name `/next/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Search functionality > should combine search with filter 7ms
+     → Unable to find an accessible element with the role "button" and name "Ready"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   ✓ PackageTable > Pagination > should not show pagination for small package lists 5ms
+   × PackageTable > Pagination > should show pagination for large package lists 6ms
+     → Unable to find an accessible element with the role "button" and name `/prev/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Pagination > should navigate to next page 6ms
+     → Unable to find an accessible element with the role "button" and name `/next/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Pagination > should navigate to previous page 6ms
+     → Unable to find an accessible element with the role "button" and name `/next/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Pagination > should disable prev button on first page 6ms
+     → Unable to find an accessible element with the role "button" and name `/prev/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Pagination > should disable next button on last page 6ms
+     → Unable to find an accessible element with the role "button" and name `/next/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Pagination > should handle edge case when filtered results become empty 4ms
+     → Unable to find an element with the placeholder text of: Search packages...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Package display > should display package information correctly 4ms
+     → Unable to find an element with the text: test-package. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+   × PackageTable > Package display > should display em-dash for null values 5ms
+     → Unable to find an accessible element with the role "table"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+stderr | src/pages/DashboardPage.test.tsx > DashboardPage > Release loading > should show loading state initially
+No routes matched location "/" 
+
+stderr | src/pages/DashboardPage.test.tsx > DashboardPage > Release loading > should handle fetch errors gracefully
+No routes matched location "/" 
+
+stderr | src/pages/DashboardPage.test.tsx > DashboardPage > Zone refresh functionality > should invalidate cache when refresh is triggered
+No routes matched location "/" 
+
+stderr | src/pages/DashboardPage.test.tsx > DashboardPage > Zone refresh functionality > should prevent multiple concurrent refreshes
+No routes matched location "/" 
+
+stderr | src/pages/DashboardPage.test.tsx > DashboardPage > State updates per zone > should merge header zone updates correctly
+No routes matched location "/" 
+
+stderr | src/pages/DashboardPage.test.tsx > DashboardPage > State updates per zone > should update packages zone independently
+No routes matched location "/" 
+
+stderr | src/pages/DashboardPage.test.tsx > DashboardPage > Cache invalidation > should invalidate release cache on refresh
+No routes matched location "/" 
+
+stderr | src/pages/DashboardPage.test.tsx > DashboardPage > Release ID changes > should refetch when releaseId param changes
+No routes matched location "/" 
+
+stderr | src/pages/DashboardPage.test.tsx > DashboardPage > Release ID changes > should refetch when releaseId param changes
+No routes matched location "/" 
+
+stderr | src/pages/DashboardPage.test.tsx > DashboardPage > Edge cases > should handle null release data
+No routes matched location "/" 
+
+stderr | src/pages/DashboardPage.test.tsx > DashboardPage > Edge cases > should handle missing last_refreshed_at
+No routes matched location "/" 
+
+ ❯ src/pages/DashboardPage.test.tsx (12 tests | 2 failed) 3215ms
+   × DashboardPage > Release loading > should fetch and display release data 3064ms
+     → Unable to find an element with the text: /Release 2024.1/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div />[39m
+  [36m</body>[39m
+[36m</html>[39m
+   ✓ DashboardPage > Release loading > should show loading state initially 5ms
+   ✓ DashboardPage > Release loading > should handle fetch errors gracefully 6ms
+   ✓ DashboardPage > Zone refresh functionality > should invalidate cache when refresh is triggered 8ms
+   ✓ DashboardPage > Zone refresh functionality > should prevent multiple concurrent refreshes 5ms
+   ✓ DashboardPage > State updates per zone > should merge header zone updates correctly 5ms
+   ✓ DashboardPage > State updates per zone > should update packages zone independently 4ms
+   ✓ DashboardPage > Cache invalidation > should invalidate release cache on refresh 4ms
+   ✓ DashboardPage > Release ID changes > should refetch when releaseId param changes 7ms
+   × DashboardPage > Edge cases > should handle missing releaseId gracefully 95ms
+     → 
+   ✓ DashboardPage > Edge cases > should handle null release data 3ms
+   ✓ DashboardPage > Edge cases > should handle missing last_refreshed_at 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  e2e/auth.spec.ts [ e2e/auth.spec.ts ]
+Error: Playwright Test did not expect test.describe() to be called here.
+Most common reasons include:
+- You are calling test.describe() in a configuration file.
+- You are calling test.describe() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+- You are calling test.describe() from an async test.describe() block. Only sync ones are supported.
+ ❯ _TestTypeImpl._currentSuite node_modules/playwright/lib/common/index.js:2257:13
+ ❯ _TestTypeImpl._describe node_modules/playwright/lib/common/index.js:2298:24
+ ❯ Function.describe node_modules/playwright/lib/common/index.js:1220:12
+ ❯ e2e/auth.spec.ts:3:6
+      1| import { test, expect } from '@playwright/test'
+      2| 
+      3| test.describe('Authentication', () => {
+       |      ^
+      4|   test('should show login page', async ({ page }) => {
+      5|     await page.goto('/login')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/54]⎯
+
+ FAIL  e2e/dashboard.spec.ts [ e2e/dashboard.spec.ts ]
+Error: Playwright Test did not expect test.describe() to be called here.
+Most common reasons include:
+- You are calling test.describe() in a configuration file.
+- You are calling test.describe() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+- You are calling test.describe() from an async test.describe() block. Only sync ones are supported.
+ ❯ _TestTypeImpl._currentSuite node_modules/playwright/lib/common/index.js:2257:13
+ ❯ _TestTypeImpl._describe node_modules/playwright/lib/common/index.js:2298:24
+ ❯ Function.describe node_modules/playwright/lib/common/index.js:1220:12
+ ❯ e2e/dashboard.spec.ts:3:6
+      1| import { test, expect } from '@playwright/test'
+      2| 
+      3| test.describe('Dashboard', () => {
+       |      ^
+      4|   test.beforeEach(async ({ page }) => {
+      5|     // Login before each test
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/54]⎯
+
+ FAIL  e2e/package-detail.spec.ts [ e2e/package-detail.spec.ts ]
+Error: Playwright Test did not expect test.describe() to be called here.
+Most common reasons include:
+- You are calling test.describe() in a configuration file.
+- You are calling test.describe() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+- You are calling test.describe() from an async test.describe() block. Only sync ones are supported.
+ ❯ _TestTypeImpl._currentSuite node_modules/playwright/lib/common/index.js:2257:13
+ ❯ _TestTypeImpl._describe node_modules/playwright/lib/common/index.js:2298:24
+ ❯ Function.describe node_modules/playwright/lib/common/index.js:1220:12
+ ❯ e2e/package-detail.spec.ts:3:6
+      1| import { test, expect } from '@playwright/test'
+      2| 
+      3| test.describe('Package Detail', () => {
+       |      ^
+      4|   test.beforeEach(async ({ page }) => {
+      5|     // Login before each test
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/54]⎯
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 51 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should show all packages by default
+TestingLibraryElementError: Unable to find an element with the text: pkg-ready. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:44:21
+     42|       renderTable()
+     43| 
+     44|       expect(screen.getByText('pkg-ready')).toBeInTheDocument()
+       |                     ^
+     45|       expect(screen.getByText('pkg-waiting')).toBeInTheDocument()
+     46|       expect(screen.getByText('pkg-blocked')).toBeInTheDocument()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should filter packages by ready status
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Ready"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:55:34
+     53|       renderTable()
+     54| 
+     55|       const readyButton = screen.getByRole('button', { name: 'Ready' })
+       |                                  ^
+     56|       await user.click(readyButton)
+     57| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should filter packages by waiting status
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Waiting"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:67:36
+     65|       renderTable()
+     66| 
+     67|       const waitingButton = screen.getByRole('button', { name: 'Waitin…
+       |                                    ^
+     68|       await user.click(waitingButton)
+     69| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should filter packages by blocked status
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Blocked"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:78:36
+     76|       renderTable()
+     77| 
+     78|       const blockedButton = screen.getByRole('button', { name: 'Blocke…
+       |                                    ^
+     79|       await user.click(blockedButton)
+     80| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should filter disabled packages
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Disabled"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:89:37
+     87|       renderTable()
+     88| 
+     89|       const disabledButton = screen.getByRole('button', { name: 'Disab…
+       |                                     ^
+     90|       await user.click(disabledButton)
+     91| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should show disabled reason for disabled packages
+TestingLibraryElementError: Unable to find an element with the text: Not needed. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:99:21
+     97|       renderTable()
+     98| 
+     99|       expect(screen.getByText('Not needed')).toBeInTheDocument()
+       |                     ^
+    100|     })
+    101| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should update package count when filtering
+TestingLibraryElementError: Unable to find an element with the text: Packages (5). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:106:21
+    104|       renderTable()
+    105| 
+    106|       expect(screen.getByText('Packages (5)')).toBeInTheDocument()
+       |                     ^
+    107| 
+    108|       const readyButton = screen.getByRole('button', { name: 'Ready' })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Filtering by status > should reset to page 0 when changing filter
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/next/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:124:33
+    122| 
+    123|       // Go to page 2
+    124|       const nextButton = screen.getByRole('button', { name: /next/i })
+       |                                 ^
+    125|       await user.click(nextButton)
+    126| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Search functionality > should filter packages by search term (case-insensitive)
+TestingLibraryElementError: Unable to find an element with the placeholder text of: Search packages...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:142:34
+    140|       renderTable()
+    141| 
+    142|       const searchInput = screen.getByPlaceholderText('Search packages…
+       |                                  ^
+    143|       await user.type(searchInput, 'READY')
+    144| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Search functionality > should handle lowercase search
+TestingLibraryElementError: Unable to find an element with the placeholder text of: Search packages...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:153:34
+    151|       renderTable()
+    152| 
+    153|       const searchInput = screen.getByPlaceholderText('Search packages…
+       |                                  ^
+    154|       await user.type(searchInput, 'waiting')
+    155| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Search functionality > should handle partial matches
+TestingLibraryElementError: Unable to find an element with the placeholder text of: Search packages...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:164:34
+    162|       renderTable()
+    163| 
+    164|       const searchInput = screen.getByPlaceholderText('Search packages…
+       |                                  ^
+    165|       await user.type(searchInput, 'pkg')
+    166| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Search functionality > should reset to page 0 when searching
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/next/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:182:33
+    180| 
+    181|       // Go to page 2
+    182|       const nextButton = screen.getByRole('button', { name: /next/i })
+       |                                 ^
+    183|       await user.click(nextButton)
+    184| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Search functionality > should combine search with filter
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Ready"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:204:34
+    202| 
+    203|       // Apply filter
+    204|       const readyButton = screen.getByRole('button', { name: 'Ready' })
+       |                                  ^
+    205|       await user.click(readyButton)
+    206| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Pagination > should show pagination for large package lists
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/prev/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:232:21
+    230|       renderTable(manyPackages)
+    231| 
+    232|       expect(screen.getByRole('button', { name: /prev/i })).toBeInTheD…
+       |                     ^
+    233|       expect(screen.getByRole('button', { name: /next/i })).toBeInTheD…
+    234|       expect(screen.getByText('1 / 3')).toBeInTheDocument()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Pagination > should navigate to next page
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/next/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:245:33
+    243|       renderTable(manyPackages)
+    244| 
+    245|       const nextButton = screen.getByRole('button', { name: /next/i })
+       |                                 ^
+    246|       await user.click(nextButton)
+    247| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Pagination > should navigate to previous page
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/next/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:260:33
+    258| 
+    259|       // Go to page 2
+    260|       const nextButton = screen.getByRole('button', { name: /next/i })
+       |                                 ^
+    261|       await user.click(nextButton)
+    262| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Pagination > should disable prev button on first page
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/prev/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:277:33
+    275|       renderTable(manyPackages)
+    276| 
+    277|       const prevButton = screen.getByRole('button', { name: /prev/i })
+       |                                 ^
+    278|       expect(prevButton).toBeDisabled()
+    279|     })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Pagination > should disable next button on last page
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/next/i`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:290:33
+    288| 
+    289|       // Go to last page
+    290|       const nextButton = screen.getByRole('button', { name: /next/i })
+       |                                 ^
+    291|       await user.click(nextButton)
+    292|       await user.click(nextButton)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Pagination > should handle edge case when filtered results become empty
+TestingLibraryElementError: Unable to find an element with the placeholder text of: Search packages...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:302:34
+    300|       renderTable()
+    301| 
+    302|       const searchInput = screen.getByPlaceholderText('Search packages…
+       |                                  ^
+    303|       await user.type(searchInput, 'nonexistent')
+    304| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Package display > should display package information correctly
+TestingLibraryElementError: Unable to find an element with the text: test-package. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:323:21
+    321|       renderTable([pkg])
+    322| 
+    323|       expect(screen.getByText('test-package')).toBeInTheDocument()
+       |                     ^
+    324|       expect(screen.getByText('2.0.0')).toBeInTheDocument()
+    325|       expect(screen.getByText('v2.0.0')).toBeInTheDocument()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/54]⎯
+
+ FAIL  src/components/PackageTable.test.tsx > PackageTable > Package display > should display em-dash for null values
+TestingLibraryElementError: Unable to find an accessible element with the role "table"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/PackageTable.test.tsx:341:28
+    339|       renderTable([pkg])
+    340| 
+    341|       const table = screen.getByRole('table')
+       |                            ^
+    342|       const rows = within(table).getAllByRole('row')
+    343|       const dataRow = rows[1] // Skip header row
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/54]⎯
+
+ FAIL  src/components/ProtectedRoute.test.tsx > ProtectedRoute > Loading state > should show loading spinner while checking auth
+TestingLibraryElementError: Unable to find an element with the role "img"
+
+There are no available roles.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mstyle[39m=[32m"display: grid; place-items: center; min-height: 100vh; color: rgb(96, 165, 250);"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"lucide lucide-loader-circle spin"[39m
+        [33mfill[39m=[32m"none"[39m
+        [33mheight[39m=[32m"32"[39m
+        [33mstroke[39m=[32m"currentColor"[39m
+        [33mstroke-linecap[39m=[32m"round"[39m
+        [33mstroke-linejoin[39m=[32m"round"[39m
+        [33mstroke-width[39m=[32m"2"[39m
+        [33mviewBox[39m=[32m"0 0 24 24"[39m
+        [33mwidth[39m=[32m"32"[39m
+        [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+      [36m>[39m
+        [36m<path[39m
+          [33md[39m=[32m"M21 12a9 9 0 1 1-6.219-8.56"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/ProtectedRoute.test.tsx:54:21
+     52| 
+     53|       // Loading spinner should be visible
+     54|       expect(screen.getByRole('img', { hidden: true })).toBeInTheDocum…
+       |                     ^
+     55|       expect(screen.queryByText('Protected Content')).not.toBeInTheDoc…
+     56|     })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/54]⎯
+
+ FAIL  src/components/ProtectedRoute.test.tsx > ProtectedRoute > State transitions > should transition from loading to authenticated
+TestingLibraryElementError: Unable to find an element with the role "img"
+
+There are no available roles.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mstyle[39m=[32m"display: grid; place-items: center; min-height: 100vh; color: rgb(96, 165, 250);"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"lucide lucide-loader-circle spin"[39m
+        [33mfill[39m=[32m"none"[39m
+        [33mheight[39m=[32m"32"[39m
+        [33mstroke[39m=[32m"currentColor"[39m
+        [33mstroke-linecap[39m=[32m"round"[39m
+        [33mstroke-linejoin[39m=[32m"round"[39m
+        [33mstroke-width[39m=[32m"2"[39m
+        [33mviewBox[39m=[32m"0 0 24 24"[39m
+        [33mwidth[39m=[32m"32"[39m
+        [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+      [36m>[39m
+        [36m<path[39m
+          [33md[39m=[32m"M21 12a9 9 0 1 1-6.219-8.56"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/ProtectedRoute.test.tsx:253:37
+    251| 
+    252|       // Initially loading
+    253|       const loadingSpinner = screen.getByRole('img', { hidden: true })
+       |                                     ^
+    254|       expect(loadingSpinner).toBeInTheDocument()
+    255| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/54]⎯
+
+ FAIL  src/components/ProtectedRoute.test.tsx > ProtectedRoute > State transitions > should transition from loading to login redirect
+TestingLibraryElementError: Unable to find an element with the role "img"
+
+There are no available roles.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mstyle[39m=[32m"display: grid; place-items: center; min-height: 100vh; color: rgb(96, 165, 250);"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"lucide lucide-loader-circle spin"[39m
+        [33mfill[39m=[32m"none"[39m
+        [33mheight[39m=[32m"32"[39m
+        [33mstroke[39m=[32m"currentColor"[39m
+        [33mstroke-linecap[39m=[32m"round"[39m
+        [33mstroke-linejoin[39m=[32m"round"[39m
+        [33mstroke-width[39m=[32m"2"[39m
+        [33mviewBox[39m=[32m"0 0 24 24"[39m
+        [33mwidth[39m=[32m"32"[39m
+        [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+      [36m>[39m
+        [36m<path[39m
+          [33md[39m=[32m"M21 12a9 9 0 1 1-6.219-8.56"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/ProtectedRoute.test.tsx:281:37
+    279| 
+    280|       // Initially loading
+    281|       const loadingSpinner = screen.getByRole('img', { hidden: true })
+       |                                     ^
+    282|       expect(loadingSpinner).toBeInTheDocument()
+    283| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/54]⎯
+
+ FAIL  src/components/RightPanel.test.tsx > RightPanel > Recent Activity > should paginate activity events
+TestingLibraryElementError: Found multiple elements with the role "button" and name ""
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<button[39m
+  [33mdisabled[39m=[32m""[39m
+[36m>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"lucide lucide-chevron-left"[39m
+    [33mfill[39m=[32m"none"[39m
+    [33mheight[39m=[32m"14"[39m
+    [33mstroke[39m=[32m"currentColor"[39m
+    [33mstroke-linecap[39m=[32m"round"[39m
+    [33mstroke-linejoin[39m=[32m"round"[39m
+    [33mstroke-width[39m=[32m"2"[39m
+    [33mviewBox[39m=[32m"0 0 24 24"[39m
+    [33mwidth[39m=[32m"14"[39m
+    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+  [36m>[39m
+    [36m<path[39m
+      [33md[39m=[32m"m15 18-6-6 6-6"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</button>[39m
+
+Ignored nodes: comments, script, style
+[36m<button>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"lucide lucide-chevron-right"[39m
+    [33mfill[39m=[32m"none"[39m
+    [33mheight[39m=[32m"14"[39m
+    [33mstroke[39m=[32m"currentColor"[39m
+    [33mstroke-linecap[39m=[32m"round"[39m
+    [33mstroke-linejoin[39m=[32m"round"[39m
+    [33mstroke-width[39m=[32m"2"[39m
+    [33mviewBox[39m=[32m"0 0 24 24"[39m
+    [33mwidth[39m=[32m"14"[39m
+    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+  [36m>[39m
+    [36m<path[39m
+      [33md[39m=[32m"m9 18 6-6-6-6"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</button>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<aside[39m
+      [33mclass[39m=[32m"right-panel"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"side-card"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mRecent Activity[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"activity-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"activity-item info"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-circle"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"10"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"10"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<div>[39m
+              [36m<a[39m
+                [33mhref[39m=[32m"https://example.com/0"[39m
+                [33mrel[39m=[32m"noopener noreferrer"[39m
+                [33mtarget[39m=[32m"_blank"[39m
+              [36m>[39m
+                [36m<strong>[39m
+                  [0mEvent 0[0m
+                [36m</strong>[39m
+              [36m</a>[39m
+              [36m<span>[39m
+                [0m29mo ago[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"activity-item info"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-circle"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"10"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"10"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<div>[39m
+              [36m<a[39m
+                [33mhref[39m=[32m"https://example.com/1"[39m
+                [33mrel[39m=[32m"noopener noreferrer"[39m
+                [33mtarget[39m=[32m"_blank"[39m
+              [36m>[39m
+                [36m<strong>[39m
+                  [0mEvent 1[0m
+                [36m</strong>[39m
+              [36m</a>[39m
+              [36m<span>[39m
+                [0m29mo ago[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"activity-item info"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-circle"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"10"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"10"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<div>[39m
+              [36m<a[39m
+                [33mhref[39m=[32m"https://example.com/2"[39m
+                [33mrel[39m=[32m"noopener noreferrer"[39m
+                [33mtarget[39m=[32m"_blank"[39m
+              [36m>[39m
+                [36m<strong>[39m
+                  [0mEvent 2[0m
+                [36m</strong>[39m
+              [36m</a>[39m
+              [36m<span>[39m
+                [0m29mo ago[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"activity-item info"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-circle"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"10"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"10"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<div>[39m
+              [36m<a[39m
+                [33mhref[39m=[32m"https://example.com/3"[39m
+                [33mrel[39m=[32m"noopener noreferrer"[39m
+                [33mtarget[39m=[32m"_blank"[39m
+              [36m>[39m
+                [36m<strong>[39m
+                  [0mEvent 3[0m
+                [36m</strong>[39m
+              [36m</a>[39m
+              [36m<span>[39m
+                [0m29mo ago[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"activity-pagination"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mdisabled[39m=[32m""[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-chevron-left"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"14"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"14"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m15 18-6-6 6-6"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<span>[39m
+            [0m1[0m
+            [0m / [0m
+            [0m3[0m
+          [36m</span>[39m
+          [36m<button>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-chevron-right"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"14"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"14"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m9 18 6-6-6-6"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"side-card"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mIssues by State[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"donut"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [0m0[0m
+            [36m<br />[39m
+            [36m<span>[39m
+              [0mTotal[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mOpen[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mClosed[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mDraft PRs[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</aside>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/RightPanel.test.tsx:56:33
+     54| 
+     55|       // Navigate to next page
+     56|       const nextButton = screen.getByRole('button', { name: '' })
+       |                                 ^
+     57|       await user.click(nextButton)
+     58| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/54]⎯
+
+ FAIL  src/components/RightPanel.test.tsx > RightPanel > Issues by State - Percentage calculations > should handle division by zero when no issues
+TestingLibraryElementError: Found multiple elements with the text: /0 \(0%\)/
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m0 (0%)[0m
+[36m</strong>[39m
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m0 (0%)[0m
+[36m</strong>[39m
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m0 (0%)[0m
+[36m</strong>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<aside[39m
+      [33mclass[39m=[32m"right-panel"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"side-card"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mRecent Activity[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"activity-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"activity-item info"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-circle"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"10"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"10"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<div>[39m
+              [36m<strong>[39m
+                [0mNo recent activity[0m
+              [36m</strong>[39m
+              [36m<span />[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"side-card"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mIssues by State[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"donut"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [0m0[0m
+            [36m<br />[39m
+            [36m<span>[39m
+              [0mTotal[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mOpen[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mClosed[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mDraft PRs[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</aside>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/RightPanel.test.tsx:236:21
+    234| 
+    235|       expect(screen.getByText('0')).toBeInTheDocument() // Total
+    236|       expect(screen.getByText(/0 \(0%\)/)).toBeInTheDocument() // Open
+       |                     ^
+    237|       expect(screen.getByText(/0 \(0%\)/)).toBeInTheDocument() // Clos…
+    238|       expect(screen.getByText(/0 \(0%\)/)).toBeInTheDocument() // Draft
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/54]⎯
+
+ FAIL  src/components/RightPanel.test.tsx > RightPanel > Issues by State - Percentage calculations > should handle undefined issuesByState
+TestingLibraryElementError: Found multiple elements with the text: /0 \(0%\)/
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m0 (0%)[0m
+[36m</strong>[39m
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m0 (0%)[0m
+[36m</strong>[39m
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m0 (0%)[0m
+[36m</strong>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<aside[39m
+      [33mclass[39m=[32m"right-panel"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"side-card"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mRecent Activity[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"activity-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"activity-item info"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-circle"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"10"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"10"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<div>[39m
+              [36m<strong>[39m
+                [0mNo recent activity[0m
+              [36m</strong>[39m
+              [36m<span />[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"side-card"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mIssues by State[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"donut"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [0m0[0m
+            [36m<br />[39m
+            [36m<span>[39m
+              [0mTotal[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mOpen[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mClosed[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"legend"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mDraft PRs[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m0 (0%)[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</aside>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/RightPanel.test.tsx:245:21
+    243| 
+    244|       expect(screen.getByText('0')).toBeInTheDocument() // Total
+    245|       expect(screen.getByText(/0 \(0%\)/)).toBeInTheDocument()
+       |                     ^
+    246|     })
+    247| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/54]⎯
+
+ FAIL  src/context/AuthContext.test.tsx > AuthContext > Login > should successfully login with valid credentials
+AssertionError: expected null to deeply equal { username: 'alice', role: 'user' }
+
+[32m- Expected:[39m 
+{
+  "role": "user",
+  "username": "alice",
+}
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/context/AuthContext.test.tsx:95:35
+     93|       await result.current.login('alice', 'password123')
+     94| 
+     95|       expect(result.current.user).toEqual(mockUser)
+       |                                   ^
+     96|       expect(global.fetch).toHaveBeenLastCalledWith(
+     97|         'http://localhost:8000/api/auth/login',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/54]⎯
+
+ FAIL  src/context/AuthContext.test.tsx > AuthContext > Logout > should successfully logout and clear user state
+AssertionError: expected { username: 'testuser', role: 'user' } to be null
+
+[32m- Expected:[39m 
+null
+
+[31m+ Received:[39m 
+{
+  "role": "user",
+  "username": "testuser",
+}
+
+ ❯ src/context/AuthContext.test.tsx:178:35
+    176|       await result.current.logout()
+    177| 
+    178|       expect(result.current.user).toBeNull()
+       |                                   ^
+    179|       expect(global.fetch).toHaveBeenLastCalledWith(
+    180|         'http://localhost:8000/api/auth/logout',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/54]⎯
+
+ FAIL  src/context/AuthContext.test.tsx > AuthContext > Logout > should clear user state even if logout request fails
+AssertionError: expected { username: 'testuser', role: 'user' } to be null
+
+[32m- Expected:[39m 
+null
+
+[31m+ Received:[39m 
+{
+  "role": "user",
+  "username": "testuser",
+}
+
+ ❯ src/context/AuthContext.test.tsx:207:35
+    205|       // Logout should not throw but still clear state
+    206|       await expect(result.current.logout()).rejects.toThrow()
+    207|       expect(result.current.user).toBeNull()
+       |                                   ^
+    208|     })
+    209|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/54]⎯
+
+ FAIL  src/context/AuthContext.test.tsx > AuthContext > Context value memoization > should update memoized value when user state changes
+AssertionError: expected { user: null, loading: false, …(2) } not to be { user: null, loading: false, …(2) } // Object.is equality
+
+[2mCompared values have no visual difference.[22m
+
+ ❯ src/context/AuthContext.test.tsx:255:34
+    253| 
+    254|       // Context value should have changed
+    255|       expect(result.current).not.toBe(beforeLogin)
+       |                                  ^
+    256|       expect(result.current.user).toEqual(mockUser)
+    257|     })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/54]⎯
+
+ FAIL  src/context/DepGraphContext.test.tsx > DepGraphContext > Graph caching > should fetch and cache graph data
+AssertionError: expected null to deeply equal { nodes: [ { …(3) }, …(2) ], …(1) }
+
+[32m- Expected:[39m 
+{
+  "edges": [
+    {
+      "from": "pkg-a",
+      "to": "pkg-b",
+    },
+    {
+      "from": "pkg-b",
+      "to": "pkg-c",
+    },
+  ],
+  "nodes": [
+    {
+      "depth": 0,
+      "name": "pkg-a",
+      "status": "ready",
+    },
+    {
+      "depth": 1,
+      "name": "pkg-b",
+      "status": "waiting",
+    },
+    {
+      "depth": 2,
+      "name": "pkg-c",
+      "status": "blocked",
+    },
+  ],
+}
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/context/DepGraphContext.test.tsx:56:52
+     54| 
+     55|       expect(graph).toEqual(mockGraph)
+     56|       expect(result.current.getGraph('release-1')).toEqual(mockGraph)
+       |                                                    ^
+     57|       expect(global.fetch).toHaveBeenCalledWith(
+     58|         'http://localhost:8000/api/releases/release-1/dependency-graph…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/54]⎯
+
+ FAIL  src/context/DepGraphContext.test.tsx > DepGraphContext > Graph caching > should return cached graph without refetching
+TypeError: Cannot read properties of undefined (reading 'then')
+ ❯ Object.fetchGraph src/context/DepGraphContext.tsx:70:112
+     68| 
+     69|       const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
+     70|       const promise = fetch(`${apiBase}/api/releases/${releaseId}/depe…
+       |                                                                                                                ^
+     71|         .then((res) => {
+     72|           if (!res.ok) {
+ ❯ src/context/DepGraphContext.test.tsx:76:48
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/54]⎯
+
+ FAIL  src/context/DepGraphContext.test.tsx > DepGraphContext > Graph caching > should cache graphs for multiple releases independently
+AssertionError: expected null to deeply equal { …(2) }
+
+[32m- Expected:[39m 
+{
+  "edges": [],
+  "nodes": [
+    {
+      "depth": 0,
+      "name": "pkg-1",
+      "status": "ready",
+    },
+  ],
+}
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/context/DepGraphContext.test.tsx:100:52
+     98|       await result.current.fetchGraph('release-2')
+     99| 
+    100|       expect(result.current.getGraph('release-1')).toEqual(mockGraph1)
+       |                                                    ^
+    101|       expect(result.current.getGraph('release-2')).toEqual(mockGraph2)
+    102|       expect(global.fetch).toHaveBeenCalledTimes(2)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/54]⎯
+
+ FAIL  src/context/DepGraphContext.test.tsx > DepGraphContext > Deduplication of concurrent requests > should clean up in-flight tracking after successful fetch
+AssertionError: expected "spy" to be called 1 times, but got 2 times
+ ❯ src/context/DepGraphContext.test.tsx:191:28
+    189|       await result.current.fetchGraph('release-1')
+    190| 
+    191|       expect(global.fetch).toHaveBeenCalledTimes(1)
+       |                            ^
+    192|     })
+    193| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/54]⎯
+
+ FAIL  src/context/DepGraphContext.test.tsx > DepGraphContext > Cache invalidation > should remove graph from cache
+AssertionError: expected null to deeply equal { nodes: [ { …(3) }, …(2) ], …(1) }
+
+[32m- Expected:[39m 
+{
+  "edges": [
+    {
+      "from": "pkg-a",
+      "to": "pkg-b",
+    },
+    {
+      "from": "pkg-b",
+      "to": "pkg-c",
+    },
+  ],
+  "nodes": [
+    {
+      "depth": 0,
+      "name": "pkg-a",
+      "status": "ready",
+    },
+    {
+      "depth": 1,
+      "name": "pkg-b",
+      "status": "waiting",
+    },
+    {
+      "depth": 2,
+      "name": "pkg-c",
+      "status": "blocked",
+    },
+  ],
+}
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/context/DepGraphContext.test.tsx:219:52
+    217| 
+    218|       await result.current.fetchGraph('release-1')
+    219|       expect(result.current.getGraph('release-1')).toEqual(mockGraph)
+       |                                                    ^
+    220| 
+    221|       result.current.invalidateGraph('release-1')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/54]⎯
+
+ FAIL  src/context/DepGraphContext.test.tsx > DepGraphContext > Cache invalidation > should force refetch after invalidation
+AssertionError: expected null to deeply equal { nodes: [ { …(3) } ], edges: [] }
+
+[32m- Expected:[39m 
+{
+  "edges": [],
+  "nodes": [
+    {
+      "depth": 0,
+      "name": "pkg-old",
+      "status": "ready",
+    },
+  ],
+}
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/context/DepGraphContext.test.tsx:244:52
+    242|       // First fetch
+    243|       await result.current.fetchGraph('release-1')
+    244|       expect(result.current.getGraph('release-1')).toEqual(mockGraph1)
+       |                                                    ^
+    245| 
+    246|       // Invalidate
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/54]⎯
+
+ FAIL  src/context/DepGraphContext.test.tsx > DepGraphContext > Cache invalidation > should not affect other cached graphs
+AssertionError: expected null to deeply equal { nodes: [ { …(3) }, …(2) ], …(1) }
+
+[32m- Expected:[39m 
+{
+  "edges": [
+    {
+      "from": "pkg-a",
+      "to": "pkg-b",
+    },
+    {
+      "from": "pkg-b",
+      "to": "pkg-c",
+    },
+  ],
+  "nodes": [
+    {
+      "depth": 0,
+      "name": "pkg-a",
+      "status": "ready",
+    },
+    {
+      "depth": 1,
+      "name": "pkg-b",
+      "status": "waiting",
+    },
+    {
+      "depth": 2,
+      "name": "pkg-c",
+      "status": "blocked",
+    },
+  ],
+}
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/context/DepGraphContext.test.tsx:272:52
+    270| 
+    271|       expect(result.current.getGraph('release-1')).toBeNull()
+    272|       expect(result.current.getGraph('release-2')).toEqual(mockGraph2)
+       |                                                    ^
+    273|     })
+    274|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/54]⎯
+
+ FAIL  src/context/DepGraphContext.test.tsx > DepGraphContext > Error handling > should not cache failed fetches
+AssertionError: expected null to be truthy
+
+[32m- Expected:[39m 
+true
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/context/DepGraphContext.test.tsx:303:52
+    301|       const graph = await result.current.fetchGraph('release-1')
+    302|       expect(graph).toBeTruthy()
+    303|       expect(result.current.getGraph('release-1')).toBeTruthy()
+       |                                                    ^
+    304|     })
+    305| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/54]⎯
+
+ FAIL  src/context/ReleaseContext.test.tsx > ReleaseContext > Cache behavior > should fetch and cache release data
+AssertionError: expected null to deeply equal { id: 'release-1', …(7) }
+
+[32m- Expected:[39m 
+{
+  "activity": [
+    {
+      "from": "waiting",
+      "package": "package-1",
+      "timestamp": "2024-01-15T10:00:00Z",
+      "to": "ready",
+      "type": "status_change",
+    },
+  ],
+  "description": "A test release for unit tests",
+  "header": {
+    "blocked_packages": 1,
+    "ci_status": "passing",
+    "disabled_packages": 0,
+    "progress": 70,
+    "ready_packages": 7,
+    "total_packages": 10,
+    "waiting_packages": 2,
+  },
+  "id": "release-1",
+  "last_refreshed_at": "2026-06-25T11:23:53.039Z",
+  "name": "Test Release 2024.1",
+  "packages": [
+    {
+      "disabled": false,
+      "disabled_reason": null,
+      "git_tag": "v1.0.0",
+      "issue_url": "https://github.com/org/repo/issues/1",
+      "name": "package-1",
+      "opam_version": "1.0.0",
+      "pick_version": "1.0.0",
+      "status": "ready",
+    },
+    {
+      "disabled": false,
+      "disabled_reason": null,
+      "git_tag": "v1.0.0",
+      "issue_url": "https://github.com/org/repo/issues/1",
+      "name": "package-2",
+      "opam_version": "1.0.0",
+      "pick_version": "1.0.0",
+      "status": "waiting",
+    },
+    {
+      "disabled": false,
+      "disabled_reason": null,
+      "git_tag": "v1.0.0",
+      "issue_url": "https://github.com/org/repo/issues/1",
+      "name": "package-3",
+      "opam_version": "1.0.0",
+      "pick_version": "1.0.0",
+      "status": "blocked",
+    },
+  ],
+  "timeline": [
+    {
+      "date": "2024-01-15",
+      "events": [
+        {
+          "package": "package-1",
+          "time": "10:00",
+          "type": "package_ready",
+        },
+      ],
+    },
+  ],
+}
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/context/ReleaseContext.test.tsx:41:54
+     39| 
+     40|       expect(release).toEqual(mockRelease)
+     41|       expect(result.current.getRelease('release-1')).toEqual(mockRelea…
+       |                                                      ^
+     42|       expect(global.fetch).toHaveBeenCalledWith(
+     43|         'http://localhost:8000/api/releases/release-1',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/54]⎯
+
+ FAIL  src/context/ReleaseContext.test.tsx > ReleaseContext > Cache behavior > should return cached release without refetching
+TypeError: Cannot read properties of undefined (reading 'then')
+ ❯ Object.fetchRelease src/context/ReleaseContext.tsx:51:95
+     49| 
+     50|       const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
+     51|       const promise = fetch(`${apiBase}/api/releases/${releaseId}`, { …
+       |                                                                                               ^
+     52|         .then((res) => {
+     53|           if (!res.ok) throw new Error(`Failed to fetch release: ${res…
+ ❯ src/context/ReleaseContext.test.tsx:61:50
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/54]⎯
+
+ FAIL  src/context/ReleaseContext.test.tsx > ReleaseContext > Cache behavior > should cache multiple releases independently
+AssertionError: expected null to deeply equal { id: 'release-1', …(7) }
+
+[32m- Expected:[39m 
+{
+  "activity": [
+    {
+      "from": "waiting",
+      "package": "package-1",
+      "timestamp": "2024-01-15T10:00:00Z",
+      "to": "ready",
+      "type": "status_change",
+    },
+  ],
+  "description": "A test release for unit tests",
+  "header": {
+    "blocked_packages": 1,
+    "ci_status": "passing",
+    "disabled_packages": 0,
+    "progress": 70,
+    "ready_packages": 7,
+    "total_packages": 10,
+    "waiting_packages": 2,
+  },
+  "id": "release-1",
+  "last_refreshed_at": "2026-06-25T11:23:53.076Z",
+  "name": "Release 1",
+  "packages": [
+    {
+      "disabled": false,
+      "disabled_reason": null,
+      "git_tag": "v1.0.0",
+      "issue_url": "https://github.com/org/repo/issues/1",
+      "name": "package-1",
+      "opam_version": "1.0.0",
+      "pick_version": "1.0.0",
+      "status": "ready",
+    },
+    {
+      "disabled": false,
+      "disabled_reason": null,
+      "git_tag": "v1.0.0",
+      "issue_url": "https://github.com/org/repo/issues/1",
+      "name": "package-2",
+      "opam_version": "1.0.0",
+      "pick_version": "1.0.0",
+      "status": "waiting",
+    },
+    {
+      "disabled": false,
+      "disabled_reason": null,
+      "git_tag": "v1.0.0",
+      "issue_url": "https://github.com/org/repo/issues/1",
+      "name": "package-3",
+      "opam_version": "1.0.0",
+      "pick_version": "1.0.0",
+      "status": "blocked",
+    },
+  ],
+  "timeline": [
+    {
+      "date": "2024-01-15",
+      "events": [
+        {
+          "package": "package-1",
+          "time": "10:00",
+          "type": "package_ready",
+        },
+      ],
+    },
+  ],
+}
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/context/ReleaseContext.test.tsx:79:54
+     77|       await result.current.fetchRelease('release-2')
+     78| 
+     79|       expect(result.current.getRelease('release-1')).toEqual(mockRelea…
+       |                                                      ^
+     80|       expect(result.current.getRelease('release-2')).toEqual(mockRelea…
+     81|       expect(global.fetch).toHaveBeenCalledTimes(2)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/54]⎯
+
+ FAIL  src/context/ReleaseContext.test.tsx > ReleaseContext > In-flight request deduplication > should clean up in-flight tracking after successful fetch
+AssertionError: expected "spy" to be called 1 times, but got 2 times
+ ❯ src/context/ReleaseContext.test.tsx:158:28
+    156|       await result.current.fetchRelease('release-1')
+    157| 
+    158|       expect(global.fetch).toHaveBeenCalledTimes(1)
+       |                            ^
+    159|     })
+    160| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/54]⎯
+
+ FAIL  src/context/ReleaseContext.test.tsx > ReleaseContext > Cache invalidation > should remove release from cache
+AssertionError: expected null to deeply equal { id: 'release-1', …(7) }
+
+[32m- Expected:[39m 
+{
+  "activity": [
+    {
+      "from": "waiting",
+      "package": "package-1",
+      "timestamp": "2024-01-15T10:00:00Z",
+      "to": "ready",
+      "type": "status_change",
+    },
+  ],
+  "description": "A test release for unit tests",
+  "header": {
+    "blocked_packages": 1,
+    "ci_status": "passing",
+    "disabled_packages": 0,
+    "progress": 70,
+    "ready_packages": 7,
+    "total_packages": 10,
+    "waiting_packages": 2,
+  },
+  "id": "release-1",
+  "last_refreshed_at": "2026-06-25T11:23:53.233Z",
+  "name": "Test Release 2024.1",
+  "packages": [
+    {
+      "disabled": false,
+      "disabled_reason": null,
+      "git_tag": "v1.0.0",
+      "issue_url": "https://github.com/org/repo/issues/1",
+      "name": "package-1",
+      "opam_version": "1.0.0",
+      "pick_version": "1.0.0",
+      "status": "ready",
+    },
+    {
+      "disabled": false,
+      "disabled_reason": null,
+      "git_tag": "v1.0.0",
+      "issue_url": "https://github.com/org/repo/issues/1",
+      "name": "package-2",
+      "opam_version": "1.0.0",
+      "pick_version": "1.0.0",
+      "status": "waiting",
+    },
+    {
+      "disabled": false,
+      "disabled_reason": null,
+      "git_tag": "v1.0.0",
+      "issue_url": "https://github.com/org/repo/issues/1",
+      "name": "package-3",
+      "opam_version": "1.0.0",
+      "pick_version": "1.0.0",
+      "status": "blocked",
+    },
+  ],
+  "timeline": [
+    {
+      "date": "2024-01-15",
+      "events": [
+        {
+          "package": "package-1",
+          "time": "10:00",
+          "type": "package_ready",
+        },
+      ],
+    },
+  ],
+}
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/context/ReleaseContext.test.tsx:186:54
+    184| 
+    185|       await result.current.fetchRelease('release-1')
+    186|       expect(result.current.getRelease('release-1')).toEqual(mockRelea…
+       |                                                      ^
+    187| 
+    188|       result.current.invalidateRelease('release-1')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/54]⎯
+
+ FAIL  src/context/ReleaseContext.test.tsx > ReleaseContext > Cache invalidation > should force refetch after invalidation
+AssertionError: expected undefined to be 'Old' // Object.is equality
+
+[32m- Expected:[39m 
+"Old"
+
+[31m+ Received:[39m 
+undefined
+
+ ❯ src/context/ReleaseContext.test.tsx:205:60
+    203|       // First fetch
+    204|       await result.current.fetchRelease('release-1')
+    205|       expect(result.current.getRelease('release-1')?.name).toBe('Old')
+       |                                                            ^
+    206| 
+    207|       // Invalidate
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/54]⎯
+
+ FAIL  src/context/ReleaseContext.test.tsx > ReleaseContext > Cache invalidation > should not affect other cached releases
+AssertionError: expected null to deeply equal { id: 'release-2', …(7) }
+
+[32m- Expected:[39m 
+{
+  "activity": [
+    {
+      "from": "waiting",
+      "package": "package-1",
+      "timestamp": "2024-01-15T10:00:00Z",
+      "to": "ready",
+      "type": "status_change",
+    },
+  ],
+  "description": "A test release for unit tests",
+  "header": {
+    "blocked_packages": 1,
+    "ci_status": "passing",
+    "disabled_packages": 0,
+    "progress": 70,
+    "ready_packages": 7,
+    "total_packages": 10,
+    "waiting_packages": 2,
+  },
+  "id": "release-2",
+  "last_refreshed_at": "2026-06-25T11:23:53.258Z",
+  "name": "Test Release 2024.1",
+  "packages": [
+    {
+      "disabled": false,
+      "disabled_reason": null,
+      "git_tag": "v1.0.0",
+      "issue_url": "https://github.com/org/repo/issues/1",
+      "name": "package-1",
+      "opam_version": "1.0.0",
+      "pick_version": "1.0.0",
+      "status": "ready",
+    },
+    {
+      "disabled": false,
+      "disabled_reason": null,
+      "git_tag": "v1.0.0",
+      "issue_url": "https://github.com/org/repo/issues/1",
+      "name": "package-2",
+      "opam_version": "1.0.0",
+      "pick_version": "1.0.0",
+      "status": "waiting",
+    },
+    {
+      "disabled": false,
+      "disabled_reason": null,
+      "git_tag": "v1.0.0",
+      "issue_url": "https://github.com/org/repo/issues/1",
+      "name": "package-3",
+      "opam_version": "1.0.0",
+      "pick_version": "1.0.0",
+      "status": "blocked",
+    },
+  ],
+  "timeline": [
+    {
+      "date": "2024-01-15",
+      "events": [
+        {
+          "package": "package-1",
+          "time": "10:00",
+          "type": "package_ready",
+        },
+      ],
+    },
+  ],
+}
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/context/ReleaseContext.test.tsx:233:54
+    231| 
+    232|       expect(result.current.getRelease('release-1')).toBeNull()
+    233|       expect(result.current.getRelease('release-2')).toEqual(mockRelea…
+       |                                                      ^
+    234|     })
+    235|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/54]⎯
+
+ FAIL  src/context/ReleaseContext.test.tsx > ReleaseContext > Error handling > should not cache failed fetches
+AssertionError: expected null to be truthy
+
+[32m- Expected:[39m 
+true
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/context/ReleaseContext.test.tsx:266:54
+    264|       const release = await result.current.fetchRelease('release-1')
+    265|       expect(release).toBeTruthy()
+    266|       expect(result.current.getRelease('release-1')).toBeTruthy()
+       |                                                      ^
+    267|     })
+    268| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/54]⎯
+
+ FAIL  src/pages/DashboardPage.test.tsx > DashboardPage > Release loading > should fetch and display release data
+TestingLibraryElementError: Unable to find an element with the text: /Release 2024.1/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div />[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ src/pages/DashboardPage.test.tsx:38:13
+     36| 
+     37|       // Wait for release to be fetched and displayed
+     38|       await waitFor(() => {
+       |             ^
+     39|         expect(screen.getByText(/Release 2024.1/)).toBeInTheDocument()
+     40|       }, { timeout: 3000 })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[51/54]⎯
+
+ FAIL  src/pages/DashboardPage.test.tsx > DashboardPage > Edge cases > should handle missing releaseId gracefully
+{
+  stack: 'AggregateError: \n' +
+    '    at aggregateErrors (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react/cjs/react.development.js:551:11)\n' +
+    '    at process.env.NODE_ENV.exports.act (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react/cjs/react.development.js:897:24)\n' +
+    '    at /home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/@testing-library/react/dist/act-compat.js:46:25\n' +
+    '    at renderRoot (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/@testing-library/react/dist/pure.js:189:26)\n' +
+    '    at render (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/@testing-library/react/dist/pure.js:291:10)\n' +
+    '    at renderWithProviders (/home/sylvain/Documents/Inria/release-maintainer/frontend/src/test/utils.tsx:38:10)\n' +
+    '    at /home/sylvain/Documents/Inria/release-maintainer/frontend/src/pages/DashboardPage.test.tsx:206:29\n' +
+    '    at file:///home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n' +
+    '    at file:///home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n' +
+    '    at file:///home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20',
+  errors: [
+    {
+      stack: "TypeError: Cannot read properties of undefined (reading 'then')\n" +
+        '    at /home/sylvain/Documents/Inria/release-maintainer/frontend/src/components/TopBar.tsx:26:63\n' +
+        '    at Object.react_stack_bottom_frame (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)\n' +
+        '    at runWithFiberInDEV (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)\n' +
+        '    at commitHookEffectListMount (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)\n' +
+        '    at commitHookPassiveMountEffects (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)\n' +
+        '    at commitPassiveMountOnFiber (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)\n' +
+        '    at recursivelyTraversePassiveMountEffects (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)\n' +
+        '    at commitPassiveMountOnFiber (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)\n' +
+        '    at recursivelyTraversePassiveMountEffects (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)\n' +
+        '    at commitPassiveMountOnFiber (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)',
+      message: "Cannot read properties of undefined (reading 'then')",
+      constructor: 'Function<TypeError>',
+      name: 'TypeError',
+      toString: 'Function<toString>'
+    },
+    {
+      stack: "TypeError: Cannot read properties of undefined (reading 'then')\n" +
+        '    at /home/sylvain/Documents/Inria/release-maintainer/frontend/src/context/AuthContext.tsx:43:61\n' +
+        '    at Object.react_stack_bottom_frame (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)\n' +
+        '    at runWithFiberInDEV (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)\n' +
+        '    at commitHookEffectListMount (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)\n' +
+        '    at commitHookPassiveMountEffects (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)\n' +
+        '    at commitPassiveMountOnFiber (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)\n' +
+        '    at recursivelyTraversePassiveMountEffects (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)\n' +
+        '    at commitPassiveMountOnFiber (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)\n' +
+        '    at recursivelyTraversePassiveMountEffects (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)\n' +
+        '    at commitPassiveMountOnFiber (/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)',
+      message: "Cannot read properties of undefined (reading 'then')",
+      constructor: 'Function<TypeError>',
+      name: 'TypeError',
+      toString: 'Function<toString>'
+    }
+  ],
+  message: '',
+  constructor: 'Function<AggregateError>',
+  name: 'AggregateError',
+  toString: 'Function<toString>',
+  stacks: [
+    {
+      method: 'aggregateErrors',
+      file: '/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react/cjs/react.development.js',
+      line: 551,
+      column: 11
+    },
+    {
+      method: 'process.env.NODE_ENV.exports.act',
+      file: '/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/react/cjs/react.development.js',
+      line: 897,
+      column: 24
+    },
+    {
+      method: '',
+      file: '/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/@testing-library/react/dist/act-compat.js',
+      line: 46,
+      column: 25
+    },
+    {
+      method: 'renderRoot',
+      file: '/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/@testing-library/react/dist/pure.js',
+      line: 189,
+      column: 26
+    },
+    {
+      method: 'render',
+      file: '/home/sylvain/Documents/Inria/release-maintainer/frontend/node_modules/@testing-library/react/dist/pure.js',
+      line: 291,
+      column: 10
+    },
+    {
+      method: 'renderWithProviders',
+      file: '/home/sylvain/Documents/Inria/release-maintainer/frontend/src/test/utils.tsx',
+      line: 38,
+      column: 10
+    },
+    {
+      method: '',
+      file: '/home/sylvain/Documents/Inria/release-maintainer/frontend/src/pages/DashboardPage.test.tsx',
+      line: 206,
+      column: 29
+    }
+  ]
+}
+ ❯ aggregateErrors node_modules/react/cjs/react.development.js:551:11
+ ❯ process.env.NODE_ENV.exports.act node_modules/react/cjs/react.development.js:897:24
+ ❯ node_modules/@testing-library/react/dist/act-compat.js:46:25
+ ❯ renderRoot node_modules/@testing-library/react/dist/pure.js:189:26
+ ❯ render node_modules/@testing-library/react/dist/pure.js:291:10
+ ❯ renderWithProviders src/test/utils.tsx:38:10
+     36|   options?: Omit<RenderOptions, 'wrapper'>
+     37| ) {
+     38|   return render(ui, { wrapper: AllProviders, ...options })
+       |          ^
+     39| }
+     40| 
+ ❯ src/pages/DashboardPage.test.tsx:206:29
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[52/54]⎯
+
+ FAIL  src/pages/PackageDetailPage.test.tsx > PackageDetailPage > Basic rendering > should render package detail page
+ FAIL  src/pages/PackageDetailPage.test.tsx > PackageDetailPage > Basic rendering > should extract releaseId and packageName from URL
+TypeError: Cannot read properties of undefined (reading 'then')
+ ❯ src/context/AuthContext.tsx:43:61
+     41|   // Restore session on mount
+     42|   useEffect(() => {
+     43|     fetch(apiUrl("/api/auth/me"), { credentials: "include" })
+       |                                                             ^
+     44|       .then((res) => {
+     45|         if (!res.ok) throw new Error("Not authenticated");
+ ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25989:20
+ ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ commitHookEffectListMount node_modules/react-dom/cjs/react-dom-client.development.js:13249:29
+ ❯ commitHookPassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13336:11
+ ❯ commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15484:13
+ ❯ recursivelyTraversePassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:15439:11
+ ❯ commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15718:11
+ ❯ recursivelyTraversePassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:15439:11
+ ❯ commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15718:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[53/54]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 20 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: window is not defined
+ ❯ resolveUpdatePriority node_modules/react-dom/cjs/react-dom-client.development.js:1308:7
+ ❯ requestUpdateLane node_modules/react-dom/cjs/react-dom-client.development.js:16345:11
+ ❯ dispatchSetState node_modules/react-dom/cjs/react-dom-client.development.js:9126:14
+ ❯ src/context/AuthContext.tsx:50:22
+     48|       .then((data) => setUser({ username: data.username, role: data.ro…
+     49|       .catch(() => setUser(null))
+     50|       .finally(() => setLoading(false));
+       |                      ^
+     51|   }, []);
+     52| 
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in "src/components/PackageTable.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+This error was caught after test environment was torn down. Make sure to cancel any running tasks before test finishes:
+- cancel timeouts using clearTimeout and clearInterval
+- wait for promises to resolve using the await keyword
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  11 failed | 1 passed (12)
+      Tests  51 failed | 99 passed (150)
+     Errors  20 errors
+   Start at  13:23:51
+   Duration  5.12s (transform 906ms, setup 2.23s, collect 2.92s, tests 5.88s, environment 7.99s, prepare 1.67s)
+

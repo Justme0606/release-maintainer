@@ -8,6 +8,7 @@ on:
     paths-ignore:
       - "charts/release-maintainer/.argocd-source-release-maintainer.yaml"
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
