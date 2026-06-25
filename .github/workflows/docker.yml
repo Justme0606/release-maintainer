@@ -1,12 +1,6 @@
 name: Build and Push Docker images
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-    paths-ignore:
-      - "charts/release-maintainer/.argocd-source-release-maintainer.yaml"
   workflow_dispatch:
   workflow_call:
 
