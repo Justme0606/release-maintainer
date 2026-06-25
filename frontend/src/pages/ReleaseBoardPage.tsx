@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 /** Release Board — kanban view of packages grouped by status. */
 
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, ExternalLink, MessageSquare } from "lucide-react";

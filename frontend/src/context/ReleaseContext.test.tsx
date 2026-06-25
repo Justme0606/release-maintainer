@@ -38,7 +38,9 @@ describe('ReleaseContext', () => {
       const release = await result.current.fetchRelease('release-1')
 
       expect(release).toEqual(mockRelease)
-      expect(result.current.getRelease('release-1')).toEqual(mockRelease)
+      await waitFor(() => {
+        expect(result.current.getRelease('release-1')).toEqual(mockRelease)
+      })
       expect(global.fetch).toHaveBeenCalledWith(
         'http://localhost:8000/api/releases/release-1',
         { credentials: 'include' }
@@ -56,6 +58,11 @@ describe('ReleaseContext', () => {
       // First fetch
       await result.current.fetchRelease('release-1')
       expect(global.fetch).toHaveBeenCalledTimes(1)
+
+      // Wait for cache to be populated
+      await waitFor(() => {
+        expect(result.current.getRelease('release-1')).toEqual(mockRelease)
+      })
 
       // Second fetch should use cache
       const cachedRelease = await result.current.fetchRelease('release-1')
@@ -76,8 +83,10 @@ describe('ReleaseContext', () => {
       await result.current.fetchRelease('release-1')
       await result.current.fetchRelease('release-2')
 
-      expect(result.current.getRelease('release-1')).toEqual(mockRelease1)
-      expect(result.current.getRelease('release-2')).toEqual(mockRelease2)
+      await waitFor(() => {
+        expect(result.current.getRelease('release-1')).toEqual(mockRelease1)
+        expect(result.current.getRelease('release-2')).toEqual(mockRelease2)
+      })
       expect(global.fetch).toHaveBeenCalledTimes(2)
     })
   })
@@ -152,6 +161,11 @@ describe('ReleaseContext', () => {
 
       await result.current.fetchRelease('release-1')
 
+      // Wait for cache to be populated
+      await waitFor(() => {
+        expect(result.current.getRelease('release-1')).toEqual(mockRelease)
+      })
+
       // After first fetch completes, second fetch should use cache
       await result.current.fetchRelease('release-1')
 
@@ -183,11 +197,15 @@ describe('ReleaseContext', () => {
       const { result } = renderHook(() => useRelease(), { wrapper })
 
       await result.current.fetchRelease('release-1')
-      expect(result.current.getRelease('release-1')).toEqual(mockRelease)
+      await waitFor(() => {
+        expect(result.current.getRelease('release-1')).toEqual(mockRelease)
+      })
 
       result.current.invalidateRelease('release-1')
 
-      expect(result.current.getRelease('release-1')).toBeNull()
+      await waitFor(() => {
+        expect(result.current.getRelease('release-1')).toBeNull()
+      })
     })
 
     it('should force refetch after invalidation', async () => {
@@ -202,14 +220,23 @@ describe('ReleaseContext', () => {
 
       // First fetch
       await result.current.fetchRelease('release-1')
-      expect(result.current.getRelease('release-1')?.name).toBe('Old')
+      await waitFor(() => {
+        expect(result.current.getRelease('release-1')?.name).toBe('Old')
+      })
 
       // Invalidate
       result.current.invalidateRelease('release-1')
 
+      // Wait for invalidation to complete
+      await waitFor(() => {
+        expect(result.current.getRelease('release-1')).toBeNull()
+      })
+
       // Second fetch should make a new request
       await result.current.fetchRelease('release-1')
-      expect(result.current.getRelease('release-1')?.name).toBe('New')
+      await waitFor(() => {
+        expect(result.current.getRelease('release-1')?.name).toBe('New')
+      })
       expect(global.fetch).toHaveBeenCalledTimes(2)
     })
 
@@ -229,8 +256,10 @@ describe('ReleaseContext', () => {
       // Invalidate only release-1
       result.current.invalidateRelease('release-1')
 
-      expect(result.current.getRelease('release-1')).toBeNull()
-      expect(result.current.getRelease('release-2')).toEqual(mockRelease2)
+      await waitFor(() => {
+        expect(result.current.getRelease('release-1')).toBeNull()
+        expect(result.current.getRelease('release-2')).toEqual(mockRelease2)
+      })
     })
   })
 
@@ -262,8 +291,13 @@ describe('ReleaseContext', () => {
 
       // Second attempt succeeds
       const release = await result.current.fetchRelease('release-1')
-      expect(release).toBeTruthy()
-      expect(result.current.getRelease('release-1')).toBeTruthy()
+      expect(release).toBeDefined()
+      expect(release.id).toBe('release-1')
+
+      // Now it should be cached
+      await waitFor(() => {
+        expect(result.current.getRelease('release-1')).toBeTruthy()
+      })
     })
 
     it('should handle network errors', async () => {

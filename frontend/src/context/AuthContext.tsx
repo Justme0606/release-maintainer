@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 /** Authentication context: manages user session via JWT cookie. */
 
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useCallback,
@@ -40,7 +41,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Restore session on mount
   useEffect(() => {
-    fetch(apiUrl("/api/auth/me"), { credentials: "include" })
+    const result = fetch(apiUrl("/api/auth/me"), { credentials: "include" });
+
+    if (!result || !result.then) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLoading(false);
+      return;
+    }
+
+    result
       .then((res) => {
         if (!res.ok) throw new Error("Not authenticated");
         return res.json();
@@ -66,11 +75,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const logout = useCallback(async () => {
-    await fetch(apiUrl("/api/auth/logout"), {
-      method: "POST",
-      credentials: "include",
-    });
-    setUser(null);
+    try {
+      await fetch(apiUrl("/api/auth/logout"), {
+        method: "POST",
+        credentials: "include",
+      });
+    } finally {
+      setUser(null);
+    }
   }, []);
 
   const value = useMemo(

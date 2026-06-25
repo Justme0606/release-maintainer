@@ -17,7 +17,7 @@ class TestLogin:
         mock_user = {
             "username": "testuser",
             "role": "user",
-            "hashed_password": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5TBL1aWXb0fZa"  # "password123"
+            "hashed_password": "$2b$12$ZuYCJAzbCcz5VwAdIDDw5O5QKpIX3OdDDXBPJK131KLQDhVrU.6Km"  # "password123"
         }
 
         with patch("app.api.auth.get_user_by_username", return_value=mock_user):
@@ -48,7 +48,7 @@ class TestLogin:
         mock_user = {
             "username": "testuser",
             "role": "user",
-            "hashed_password": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5TBL1aWXb0fZa"
+            "hashed_password": "$2b$12$ZuYCJAzbCcz5VwAdIDDw5O5QKpIX3OdDDXBPJK131KLQDhVrU.6Km"
         }
 
         with patch("app.api.auth.get_user_by_username", return_value=mock_user):
@@ -74,7 +74,7 @@ class TestLogin:
         mock_user = {
             "username": "testuser",
             "role": "user",
-            "hashed_password": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5TBL1aWXb0fZa"
+            "hashed_password": "$2b$12$ZuYCJAzbCcz5VwAdIDDw5O5QKpIX3OdDDXBPJK131KLQDhVrU.6Km"
         }
 
         with patch("app.api.auth.get_user_by_username", return_value=mock_user):
@@ -102,7 +102,8 @@ class TestLogout:
         # Check that cookie is deleted
         cookie = response.cookies.get("access_token")
         # Deleted cookies have empty value or max-age=0
-        assert cookie == "" or "max-age=0" in str(response.headers.get("set-cookie", ""))
+        set_cookie_header = str(response.headers.get("set-cookie", "")).lower()
+        assert cookie == "" or "max-age=0" in set_cookie_header
 
     async def test_logout_without_session(self, client: AsyncClient):
         """Test logout when no session exists."""
@@ -210,7 +211,7 @@ class TestAuthIntegration:
         mock_user = {
             "username": "testuser",
             "role": "user",
-            "hashed_password": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5TBL1aWXb0fZa"
+            "hashed_password": "$2b$12$ZuYCJAzbCcz5VwAdIDDw5O5QKpIX3OdDDXBPJK131KLQDhVrU.6Km"
         }
 
         # Step 1: Login

@@ -25,7 +25,10 @@ export default function TopBar({ releaseId }: { releaseId: string }) {
   useEffect(() => {
     fetch(apiUrl("/api/releases/"), { credentials: "include" })
       .then((res) => res.json())
-      .then((data) => setReleases(data.releases ?? data))
+      .then((data) => {
+        const releasesList = data.releases ?? data;
+        setReleases(Array.isArray(releasesList) ? releasesList : []);
+      })
       .catch((err) => console.error("Failed to fetch releases", err));
   }, []);
 

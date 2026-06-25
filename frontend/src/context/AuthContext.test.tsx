@@ -92,7 +92,9 @@ describe('AuthContext', () => {
 
       await result.current.login('alice', 'password123')
 
-      expect(result.current.user).toEqual(mockUser)
+      await waitFor(() => {
+        expect(result.current.user).toEqual(mockUser)
+      })
       expect(global.fetch).toHaveBeenLastCalledWith(
         'http://localhost:8000/api/auth/login',
         {
@@ -175,7 +177,9 @@ describe('AuthContext', () => {
 
       await result.current.logout()
 
-      expect(result.current.user).toBeNull()
+      await waitFor(() => {
+        expect(result.current.user).toBeNull()
+      })
       expect(global.fetch).toHaveBeenLastCalledWith(
         'http://localhost:8000/api/auth/logout',
         {
@@ -202,9 +206,12 @@ describe('AuthContext', () => {
       // Mock failed logout
       vi.mocked(global.fetch).mockRejectedValueOnce(new Error('Network error'))
 
-      // Logout should not throw but still clear state
+      // Logout should throw but still clear state
       await expect(result.current.logout()).rejects.toThrow()
-      expect(result.current.user).toBeNull()
+
+      await waitFor(() => {
+        expect(result.current.user).toBeNull()
+      })
     })
   })
 
@@ -252,8 +259,10 @@ describe('AuthContext', () => {
       await result.current.login('user', 'pass')
 
       // Context value should have changed
-      expect(result.current).not.toBe(beforeLogin)
-      expect(result.current.user).toEqual(mockUser)
+      await waitFor(() => {
+        expect(result.current).not.toBe(beforeLogin)
+        expect(result.current.user).toEqual(mockUser)
+      })
     })
   })
 })

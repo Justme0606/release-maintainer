@@ -37,7 +37,7 @@ class TestVerifyPassword:
     def test_verify_with_known_hash(self):
         """Test password verification with a known bcrypt hash."""
         # Pre-computed hash for "password123"
-        known_hash = "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5TBL1aWXb0fZa"
+        known_hash = "$2b$12$ZuYCJAzbCcz5VwAdIDDw5O5QKpIX3OdDDXBPJK131KLQDhVrU.6Km"
 
         assert verify_password("password123", known_hash) is True
         assert verify_password("wrongpassword", known_hash) is False
@@ -69,7 +69,6 @@ class TestCreateAccessToken:
         data = {"sub": "testuser"}
         before = datetime.now(timezone.utc)
         token = create_access_token(data)
-        after = datetime.now(timezone.utc)
 
         payload = jwt.decode(
             token,
@@ -78,10 +77,12 @@ class TestCreateAccessToken:
         )
 
         exp_time = datetime.fromtimestamp(payload["exp"], tz=timezone.utc)
-        expected_min = before + timedelta(minutes=settings.jwt_expire_minutes)
-        expected_max = after + timedelta(minutes=settings.jwt_expire_minutes)
+        expected_expire = before + timedelta(minutes=settings.jwt_expire_minutes)
 
-        assert expected_min <= exp_time <= expected_max
+        # Token should expire in the future, within a 2 second window
+        # (to account for execution time and timestamp precision)
+        time_diff = abs((exp_time - expected_expire).total_seconds())
+        assert time_diff <= 2
 
     def test_create_token_preserves_data(self):
         """Test that token preserves all provided data."""

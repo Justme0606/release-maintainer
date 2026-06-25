@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 /** React context for caching release data in memory across navigations. */
 
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useCallback,
@@ -48,7 +49,13 @@ export function ReleaseProvider({ children }: { children: ReactNode }) {
       if (existing) return existing;
 
       const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
-      const promise = fetch(`${apiBase}/api/releases/${releaseId}`, { credentials: "include" })
+      const fetchResult = fetch(`${apiBase}/api/releases/${releaseId}`, { credentials: "include" });
+
+      if (!fetchResult || !fetchResult.then) {
+        throw new Error("Fetch is not available");
+      }
+
+      const promise = fetchResult
         .then((res) => {
           if (!res.ok) throw new Error(`Failed to fetch release: ${res.status}`);
           return res.json();

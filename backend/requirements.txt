@@ -47,8 +47,8 @@ xmltodict==1.0.4
 
 # Testing dependencies
 pytest==8.3.5
-pytest-asyncio==0.25.4
-pytest-cov==6.1.1
-pytest-mock==3.15.2
-fakeredis==2.28.2
+pytest-asyncio==0.24.0
+pytest-cov==6.0.0
+pytest-mock==3.14.0
+fakeredis==2.24.0
 mongomock-motor==0.0.36

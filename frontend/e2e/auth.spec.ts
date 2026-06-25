@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Authentication', () => {
+test.describe('Authentication', { tag: '@e2e' }, () => {
   test('should show login page', async ({ page }) => {
     await page.goto('/login')
 

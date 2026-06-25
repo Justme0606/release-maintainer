@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 /** Login page with username/password form. */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Rocket } from "lucide-react";

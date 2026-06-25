@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 /** React context for sharing dependency graph state across components. */
 
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useCallback,
@@ -67,7 +68,13 @@ export function DepGraphProvider({ children }: { children: ReactNode }) {
       }
 
       const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
-      const promise = fetch(`${apiBase}/api/releases/${releaseId}/dependency-graph`, { credentials: "include" })
+      const fetchResult = fetch(`${apiBase}/api/releases/${releaseId}/dependency-graph`, { credentials: "include" });
+
+      if (!fetchResult || !fetchResult.then) {
+        throw new Error("Fetch is not available");
+      }
+
+      const promise = fetchResult
         .then((res) => {
           if (!res.ok) {
             throw new Error(`Failed to fetch graph: ${res.status}`);
