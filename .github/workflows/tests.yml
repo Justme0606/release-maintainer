@@ -9,6 +9,10 @@ on:
     branches: [main, develop]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   frontend-tests:
     runs-on: ubuntu-latest
