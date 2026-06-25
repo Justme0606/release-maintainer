@@ -41,11 +41,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Restore session on mount
   useEffect(() => {
+    let isMounted = true;
+
     const result = fetch(apiUrl("/api/auth/me"), { credentials: "include" });
 
     if (!result || !result.then) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setLoading(false);
+      if (isMounted) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setLoading(false);
+      }
       return;
     }
 
@@ -54,9 +58,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!res.ok) throw new Error("Not authenticated");
         return res.json();
       })
-      .then((data) => setUser({ username: data.username, role: data.role }))
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (isMounted) {
+          setUser({ username: data.username, role: data.role });
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setUser(null);
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const login = useCallback(async (username: string, password: string) => {

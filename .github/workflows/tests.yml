@@ -54,7 +54,7 @@ jobs:
   frontend-e2e:
     runs-on: ubuntu-latest
     needs: frontend-tests
-    if: false  # Temporarily disabled - needs full backend setup
+    if: false # Temporarily disabled - needs full backend setup
     defaults:
       run:
         working-directory: ./frontend
@@ -199,7 +199,7 @@ jobs:
 
   # Only build Docker images if all tests pass
   docker-build:
-    needs: [frontend-tests, frontend-e2e, backend-tests]
+    needs: [frontend-tests, backend-tests]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
     uses: ./.github/workflows/docker.yml
     secrets: inherit
