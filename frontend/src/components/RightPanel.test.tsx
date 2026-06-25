@@ -52,9 +52,9 @@ describe('RightPanel', () => {
       expect(screen.getByText('Event 3')).toBeInTheDocument()
       expect(screen.queryByText('Event 4')).not.toBeInTheDocument()
 
-      // Navigate to next page
-      const nextButton = screen.getByRole('button', { name: '' })
-      await user.click(nextButton)
+      // Navigate to next page - get all buttons and click the last one (next button)
+      const buttons = screen.getAllByRole('button')
+      await user.click(buttons[buttons.length - 1])
 
       expect(screen.getByText('Event 4')).toBeInTheDocument()
       expect(screen.queryByText('Event 0')).not.toBeInTheDocument()
@@ -233,16 +233,15 @@ describe('RightPanel', () => {
       )
 
       expect(screen.getByText('0')).toBeInTheDocument() // Total
-      expect(screen.getByText(/0 \(0%\)/)).toBeInTheDocument() // Open
-      expect(screen.getByText(/0 \(0%\)/)).toBeInTheDocument() // Closed
-      expect(screen.getByText(/0 \(0%\)/)).toBeInTheDocument() // Draft
+      // All three will be "0 (0%)" - just check there are 3 of them
+      expect(screen.getAllByText(/0 \(0%\)/).length).toBe(3)
     })
 
     it('should handle undefined issuesByState', () => {
       render(<RightPanel />)
 
       expect(screen.getByText('0')).toBeInTheDocument() // Total
-      expect(screen.getByText(/0 \(0%\)/)).toBeInTheDocument()
+      expect(screen.getAllByText(/0 \(0%\)/).length).toBeGreaterThan(0)
     })
 
     it('should ensure percentages sum to 100', () => {
