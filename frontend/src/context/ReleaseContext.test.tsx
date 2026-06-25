@@ -262,8 +262,13 @@ describe('ReleaseContext', () => {
 
       // Second attempt succeeds
       const release = await result.current.fetchRelease('release-1')
-      expect(release).toBeTruthy()
-      expect(result.current.getRelease('release-1')).toBeTruthy()
+      expect(release).toBeDefined()
+      expect(release.id).toBe('release-1')
+
+      // Now it should be cached
+      await waitFor(() => {
+        expect(result.current.getRelease('release-1')).toBeTruthy()
+      })
     })
 
     it('should handle network errors', async () => {

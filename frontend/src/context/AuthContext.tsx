@@ -41,7 +41,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Restore session on mount
   useEffect(() => {
-    fetch(apiUrl("/api/auth/me"), { credentials: "include" })
+    const result = fetch(apiUrl("/api/auth/me"), { credentials: "include" });
+
+    if (!result || !result.then) {
+      setLoading(false);
+      return;
+    }
+
+    result
       .then((res) => {
         if (!res.ok) throw new Error("Not authenticated");
         return res.json();
