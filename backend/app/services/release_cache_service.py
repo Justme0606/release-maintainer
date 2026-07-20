@@ -57,6 +57,7 @@ async def _compute_releases(github: GithubService) -> dict:
             "status": "released",
         }
         for release in releases
+        if not release["draft"]
     ]
 
     # The in-progress release is always shown first
@@ -72,6 +73,34 @@ async def _compute_releases(github: GithubService) -> dict:
         },
         *published_releases,
     ]
+
+
+async def _find_package_pick(release_tag: str, github: GithubService) -> tuple[str, str] | None:
+    """Find the package-pick file matching a release tag.
+
+    Returns (package_pick_name, rocq_version) or None.
+    E.g. "2025.08.3" -> ("package-pick-9.0~2025.08", "Rocq 9.0")
+    """
+    parts = release_tag.split(".")
+    if len(parts) < 2:
+        return None
+    date_prefix = f"{parts[0]}.{parts[1]}"
+
+    try:
+        files = await github.list_directory(OWNER, REPO, "package_picks")
+    except Exception:
+        logger.warning("Failed to list package_picks/ directory", exc_info=True)
+        return None
+
+    for f in files:
+        name = f["name"]
+        if name.endswith(f"~{date_prefix}.sh"):
+            pick_name = name.removesuffix(".sh")
+            version_part = pick_name.replace("package-pick-", "").split("~")[0]
+            return pick_name, f"Rocq {version_part}"
+
+    logger.warning("No package-pick found for release %s (searched ~%s.sh)", release_tag, date_prefix)
+    return None
 
 
 async def _compute_release(
@@ -92,14 +121,14 @@ async def _compute_release(
 
         return {
             "id": "in-progress",
-            "name": "2026.01",
+            "name": "2026.06",
             "description": "Release cycle in progress targeting Rocq 9.1.0",
             "published_at": None,
             "draft": False,
             "prerelease": True,
             "status": "in_progress",
             "platform": {
-                "version": "2026.01",
+                "version": "2026.06",
                 "status": "in_progress",
                 "package_pick": package_pick_name,
                 "repository": repo["full_name"],
@@ -135,6 +164,42 @@ async def _compute_release(
     if release is None:
         return None
 
+    # Find and load the matching package-pick
+    pick_info = await _find_package_pick(release_id, github)
+    if pick_info:
+        package_pick_name, rocq_version = pick_info
+        packages_list = await kpi_service._build_package_list(
+            package_pick_name, rocq_version, skip_tracking=True
+        )
+        ready, waiting, blocked, disabled = kpi_service._count_package_statuses(packages_list)
+    else:
+        packages_list = []
+        package_pick_name = None
+        rocq_version = "unknown"
+        ready = waiting = blocked = disabled = 0
+
+    # Build timeline from sibling releases in the same family (e.g. 2025.08.x)
+    family_prefix = ".".join(release_id.split(".")[:2])  # "2025.08"
+    siblings = sorted(
+        [r for r in releases if r["tag_name"].startswith(family_prefix + ".")],
+        key=lambda r: r["published_at"] or r["created_at"],
+    )
+    timeline = [
+        {
+            "label": r["tag_name"],
+            "date": (r["published_at"] or r["created_at"])[:10],
+            "state": "done",
+        }
+        for r in siblings
+    ]
+    # Add a "Final Release" step with the publication date of the current release
+    if release["published_at"]:
+        timeline.append({
+            "label": "Final Release",
+            "date": release["published_at"][:10],
+            "state": "done",
+        })
+
     return {
         "id": release["tag_name"],
         "name": release["tag_name"],
@@ -146,20 +211,28 @@ async def _compute_release(
         "platform": {
             "version": release["tag_name"],
             "status": "released",
-            "package_pick": None,
+            "package_pick": package_pick_name,
             "repository": repo["full_name"],
             "default_branch": repo["default_branch"],
-            "open_issues": summary["open_issues"],
+            "open_issues": 0,
+            "open_pull_requests": 0,
         },
         "rocq": {
-            "version": "unknown",
+            "version": rocq_version,
         },
         "summary": {
-            "packages": 0,
-            "ready": 0,
-            "waiting": 0,
-            "blocked": 0,
+            "packages": len(packages_list),
+            "ready": ready,
+            "waiting": waiting,
+            "blocked": blocked,
+            "disabled": disabled,
         },
+        "ci_status": [],
+        "issues_by_state": {"open": 0, "closed": 0, "draft_prs": 0},
+        "builds_summary": {"success": 0, "failed": 0, "running": 0, "cancelled": 0},
+        "timeline": timeline,
+        "packages_list": packages_list,
+        "recent_activity": [],
     }
 
 

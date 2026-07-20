@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, RefreshCw } from "lucide-react";
 
 interface PackageInfo {
   name: string;
@@ -19,6 +19,8 @@ interface PackageInfo {
 
 interface PackageTableProps {
   packages: PackageInfo[];
+  onRefresh?: () => void;
+  refreshing?: boolean;
 }
 
 /** Number of packages displayed per page. */
@@ -36,7 +38,7 @@ const FILTERS: { value: Filter; label: string }[] = [
   { value: "unknown", label: "Unknown" },
 ];
 
-export default function PackageTable({ packages }: PackageTableProps) {
+export default function PackageTable({ packages, onRefresh, refreshing }: PackageTableProps) {
   const navigate = useNavigate();
   const { releaseId } = useParams();
   const [page, setPage] = useState(0);
@@ -91,6 +93,17 @@ export default function PackageTable({ packages }: PackageTableProps) {
               onChange={(e) => handleSearch(e.target.value)}
             />
           </div>
+          {onRefresh && (
+            <button
+              className="refresh-btn"
+              onClick={onRefresh}
+              disabled={refreshing}
+              title="Refresh packages (may take a moment due to API rate limits)"
+            >
+              <RefreshCw size={14} className={refreshing ? "spin" : ""} />
+              Refresh
+            </button>
+          )}
         </div>
       </div>
 

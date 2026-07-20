@@ -66,22 +66,56 @@ interface OpamInfo {
   license?: string;
   "bug-reports"?: string;
   "dev-repo"?: string;
+  depends?: string;
 }
 
 /* ------------------------------------------------------------------ */
 /*  Package relations — depends on / required by                       */
 /* ------------------------------------------------------------------ */
 
+interface OpamDep {
+  name: string;
+  constraint: string | null;
+}
+
+/** Parse an opam depends string into a list of {name, constraint} objects.
+ *  Extracts package names outside `{}` and their associated constraints. */
+function parseOpamDepends(raw: string): OpamDep[] {
+  const deps: OpamDep[] = [];
+  // Split into lines, each line is one dependency entry
+  for (const line of raw.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    // Extract package name (first quoted string)
+    const nameMatch = trimmed.match(/^"([^"]+)"/);
+    if (!nameMatch) continue;
+    // Extract constraint (content inside {})
+    const constraintMatch = trimmed.match(/\{(.+)\}/);
+    deps.push({
+      name: nameMatch[1],
+      constraint: constraintMatch ? constraintMatch[1].trim() : null,
+    });
+  }
+  return deps.sort((a, b) => a.name.localeCompare(b.name));
+}
+
 function PackageRelations({
   graph,
   packageName,
   releaseId,
+  opamDepends,
 }: {
   graph: FullGraph;
   packageName: string;
   releaseId: string;
+  opamDepends?: string;
 }) {
   const navigate = useNavigate();
+
+  const pickNames = useMemo(
+    () => new Set(graph.nodes.map((n) => n.name)),
+    [graph],
+  );
 
   const { dependsOn, requiredBy } = useMemo(() => {
     const statusMap = new Map<string, string>();
@@ -107,9 +141,12 @@ function PackageRelations({
     return { dependsOn: deps, requiredBy: rdeps };
   }, [graph, packageName]);
 
-  if (dependsOn.length === 0 && requiredBy.length === 0) return null;
+  const opamDeps = useMemo(() => {
+    if (!opamDepends) return [];
+    return parseOpamDepends(opamDepends).filter((d) => d.name !== packageName);
+  }, [opamDepends, packageName]);
 
-  const renderList = (items: { name: string; status: string }[]) =>
+  const renderPickList = (items: { name: string; status: string }[]) =>
     items.map((item) => (
       <button
         key={item.name}
@@ -121,6 +158,29 @@ function PackageRelations({
       </button>
     ));
 
+  const renderOpamList = (items: OpamDep[]) =>
+    items.map((dep) => {
+      const inPick = pickNames.has(dep.name);
+      return inPick ? (
+        <button
+          key={dep.name}
+          className="rel-chip"
+          onClick={() => navigate(`/app/releases/${releaseId}/packages/${dep.name}`)}
+        >
+          <span className="rel-chip-bar ready" />
+          {dep.name}
+          {dep.constraint && <span className="rel-constraint">{dep.constraint}</span>}
+        </button>
+      ) : (
+        <span key={dep.name} className="rel-chip rel-chip-external">
+          {dep.name}
+          {dep.constraint && <span className="rel-constraint">{dep.constraint}</span>}
+        </span>
+      );
+    });
+
+  const hasPickRelations = dependsOn.length > 0 || requiredBy.length > 0;
+
   return (
     <section className="panel" style={{ marginBottom: 18 }}>
       <div className="panel-header">
@@ -130,17 +190,30 @@ function PackageRelations({
         {dependsOn.length > 0 && (
           <div className="rel-col">
             <h3 className="rel-heading">
-              Depends on <span className="rel-count">{dependsOn.length}</span>
+              Depends on (pick) <span className="rel-count">{dependsOn.length}</span>
             </h3>
-            <div className="rel-list">{renderList(dependsOn)}</div>
+            <div className="rel-list">{renderPickList(dependsOn)}</div>
           </div>
         )}
         {requiredBy.length > 0 && (
           <div className="rel-col">
             <h3 className="rel-heading">
-              Required by <span className="rel-count">{requiredBy.length}</span>
+              Required by (pick) <span className="rel-count">{requiredBy.length}</span>
             </h3>
-            <div className="rel-list">{renderList(requiredBy)}</div>
+            <div className="rel-list">{renderPickList(requiredBy)}</div>
+          </div>
+        )}
+        {opamDeps.length > 0 && (
+          <div className="rel-col">
+            <h3 className="rel-heading">
+              Dependencies (opam) <span className="rel-count">{opamDeps.length}</span>
+            </h3>
+            <div className="rel-list">{renderOpamList(opamDeps)}</div>
+          </div>
+        )}
+        {!hasPickRelations && opamDeps.length === 0 && (
+          <div style={{ padding: "16px 20px", opacity: 0.7, fontSize: "0.95rem" }}>
+            No known dependencies for this package.
           </div>
         )}
       </div>
@@ -330,12 +403,43 @@ export default function PackageDetailPage() {
       </section>
 
       {/* Package relations */}
-      {graph && graph.edges.length > 0 && (
+      {graph ? (
         <PackageRelations
           graph={graph}
           packageName={pkg.name}
           releaseId={releaseId!}
+          opamDepends={opam?.depends}
         />
+      ) : opam?.depends ? (
+        <section className="panel" style={{ marginBottom: 18 }}>
+          <div className="panel-header">
+            <h2>Package Relations</h2>
+          </div>
+          <div className="rel-grid">
+            <div className="rel-col">
+              <h3 className="rel-heading">
+                Dependencies (opam) <span className="rel-count">{parseOpamDepends(opam.depends).length}</span>
+              </h3>
+              <div className="rel-list">
+                {parseOpamDepends(opam.depends).map((dep) => (
+                  <span key={dep.name} className="rel-chip rel-chip-external">
+                    {dep.name}
+                    {dep.constraint && <span className="rel-constraint">{dep.constraint}</span>}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section className="panel" style={{ marginBottom: 18 }}>
+          <div className="panel-header">
+            <h2>Package Relations</h2>
+          </div>
+          <div style={{ padding: "16px 20px", opacity: 0.7, fontSize: "0.95rem" }}>
+            Loading dependency graph...
+          </div>
+        </section>
       )}
 
       <div className="dashboard-layout">

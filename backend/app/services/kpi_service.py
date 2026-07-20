@@ -165,7 +165,7 @@ class KpiService:
         if cached:
             return json.loads(cached)
 
-        fields = "maintainer,authors,synopsis,description,homepage,version,license,bug-reports,dev-repo"
+        fields = "maintainer,authors,synopsis,description,homepage,version,license,bug-reports,dev-repo,depends"
         async with self._get_opam_semaphore():
             # Double-check after acquiring semaphore
             cached = await redis_client.get(cache_key)
@@ -184,19 +184,26 @@ class KpiService:
 
                 result: dict[str, str] = {}
                 current_key = None
+                # Fields where the raw format (quotes + constraints) must be preserved
+                _raw_fields = {"depends"}
                 for line in stdout.decode().splitlines():
                     if not line.strip():
                         continue
                     match = re.match(r"^(\S[\w-]*)\s+(.*)", line)
                     if match:
                         current_key = match.group(1)
-                        val = match.group(2).strip().strip('"')
+                        val = match.group(2).strip()
+                        if current_key not in _raw_fields:
+                            val = val.strip('"')
                         if current_key in result:
                             result[current_key] += "\n" + val
                         else:
                             result[current_key] = val
                     elif current_key and line.startswith(" "):
-                        result[current_key] += "\n" + line.strip().strip('"')
+                        val = line.strip()
+                        if current_key not in _raw_fields:
+                            val = val.strip('"')
+                        result[current_key] += "\n" + val
 
                 if result:
                     await redis_client.set(
@@ -415,7 +422,8 @@ class KpiService:
     # ------------------------------------------------------------------
 
     async def _build_package_list(
-        self, package_pick_name: str, release_version: str
+        self, package_pick_name: str, release_version: str,
+        skip_tracking: bool = False,
     ) -> list[dict]:
         """Build the full package list with status, versions and metadata.
 
@@ -435,7 +443,7 @@ class KpiService:
         pick_packages = _parse_package_pick(content)
 
         # --- Step 2: Build tracker map from the tracking issue ---
-        issue_number = settings.tracking_issue_number
+        issue_number = None if skip_tracking else settings.tracking_issue_number
         # Maps normalised package name -> {status, issue_url, repo_owner, repo_name}
         tracker_map: dict[str, dict] = {}
 
@@ -561,10 +569,13 @@ class KpiService:
             tracker_entry = tracker_map.get(norm, {})
             repo_key = pkg_repo_key[i]
 
-            status = tracker_entry.get("status", "unknown")
-            # After the deadline, all waiting packages become blocked
-            if status == "waiting" and past_deadline:
-                status = "blocked"
+            if skip_tracking:
+                status = "ready"
+            else:
+                status = tracker_entry.get("status", "unknown")
+                # After the deadline, all waiting packages become blocked
+                if status == "waiting" and past_deadline:
+                    status = "blocked"
 
             repo_owner = tracker_entry.get("repo_owner")
             repo_name_val = tracker_entry.get("repo_name")

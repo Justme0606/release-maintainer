@@ -55,9 +55,10 @@ export default function ReleaseHeader({
   onRefresh,
   refreshing,
 }: ReleaseHeaderProps) {
+  const isReleased = release?.status === "released";
   const packages = release?.summary?.packages ?? 0;
   const ready = release?.summary?.ready ?? 0;
-  const progress = packages > 0 ? Math.round((ready / packages) * 100) : 0;
+  const progress = isReleased ? 100 : packages > 0 ? Math.round((ready / packages) * 100) : 0;
 
   return (
     <section className="release-header">

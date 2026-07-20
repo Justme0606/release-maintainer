@@ -14,6 +14,7 @@ from app.db.redis import redis_client
 
 GITHUB_API = "https://api.github.com"
 CACHE_TTL_SECONDS = 1800         # Cache responses for 30 minutes
+TAGS_CACHE_TTL_SECONDS = 86400   # Cache git tags for 24 hours (they rarely change)
 MAX_CONCURRENT_REQUESTS = 3      # Limit parallel HTTP calls to avoid rate-limiting
 MAX_RETRIES = 4                  # Retry count when hitting rate limits
 
@@ -46,7 +47,7 @@ class GithubService:
         return headers
     
     async def _fetch_single(self, client, url: str):
-        response = await client.get(url)
+        response = await client.get(url, headers=self._headers())
         response.raise_for_status()
         return response
 
@@ -129,8 +130,33 @@ class GithubService:
         return await self._get(f"/repos/{owner}/{repo}")
 
     async def get_tags(self, owner: str, repo: str):
-        """List tags for a repository (most recent first)."""
-        return await self._get(f"/repos/{owner}/{repo}/tags")
+        """List tags for a repository (most recent first).
+
+        Uses a longer cache TTL (24h) since tags rarely change once published.
+        """
+        cache_key = f"github:/repos/{owner}/{repo}/tags"
+
+        cached_value = await redis_client.get(cache_key)
+        if cached_value:
+            return json.loads(cached_value)
+
+        async with self._get_semaphore():
+            # Double-check cache after acquiring semaphore
+            cached_value = await redis_client.get(cache_key)
+            if cached_value:
+                return json.loads(cached_value)
+
+            async with httpx.AsyncClient() as client:
+                response = await self._fetch_single(client, f"{GITHUB_API}/repos/{owner}/{repo}/tags")
+                data = response.json()
+
+                await redis_client.set(
+                    cache_key,
+                    json.dumps(data),
+                    ex=TAGS_CACHE_TTL_SECONDS,  # Use longer TTL for tags
+                )
+
+                return data
 
     async def get_releases(self, owner: str, repo: str):
         """List published releases for a repository."""
@@ -140,6 +166,10 @@ class GithubService:
         """Download and decode a single file from a repository."""
         data = await self._get(f"/repos/{owner}/{repo}/contents/{path}")
         return base64.b64decode(data["content"]).decode("utf-8")
+
+    async def list_directory(self, owner: str, repo: str, path: str) -> list[dict]:
+        """List files in a repository directory."""
+        return await self._get(f"/repos/{owner}/{repo}/contents/{path}")
 
     async def get_tree(self, owner: str, repo: str, tree_sha: str, recursive: bool = False) -> dict:
         """Return a git tree. Use ``recursive=True`` to get nested entries."""

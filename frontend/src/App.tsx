@@ -15,7 +15,6 @@ import HelpPage from "./pages/HelpPage";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import PackageDetailPage from "./pages/PackageDetailPage";
-import ReleaseBoardPage from "./pages/ReleaseBoardPage";
 import "./App.css";
 
 function App() {
@@ -51,7 +50,6 @@ function App() {
               path="releases/:releaseId/packages/:packageName"
               element={<PackageDetailPage />}
             />
-            <Route path="release-board" element={<ReleaseBoardPage />} />
             <Route path="help" element={<HelpPage />} />
             <Route
               path="admin"
