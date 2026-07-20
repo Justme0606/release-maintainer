@@ -25,32 +25,31 @@ export default function CreateDraftReleaseModal({
   const [loadingTemplate, setLoadingTemplate] = useState(false);
   const [error, setError] = useState("");
 
-  // Load template when modal opens
+  // Load template when modal opens, reset form when it closes
   useEffect(() => {
-    if (isOpen) {
-      // Load template
+    const run = async () => {
+      if (!isOpen) {
+        setName("");
+        setDescription("");
+        setError("");
+        return;
+      }
       setLoadingTemplate(true);
-      fetch(apiUrl("/api/admin/releases/draft-template"), {
-        credentials: "include",
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setName(data.title || "");
-          setDescription(data.description || "");
-        })
-        .catch((err) => {
-          console.error("Failed to load template", err);
-          setError("Failed to load template. You can still create manually.");
-        })
-        .finally(() => {
-          setLoadingTemplate(false);
+      try {
+        const res = await fetch(apiUrl("/api/admin/releases/draft-template"), {
+          credentials: "include",
         });
-    } else {
-      // Reset form when modal closes
-      setName("");
-      setDescription("");
-      setError("");
-    }
+        const data = await res.json();
+        setName(data.title || "");
+        setDescription(data.description || "");
+      } catch (err) {
+        console.error("Failed to load template", err);
+        setError("Failed to load template. You can still create manually.");
+      } finally {
+        setLoadingTemplate(false);
+      }
+    };
+    run();
   }, [isOpen]);
 
   if (!isOpen) return null;

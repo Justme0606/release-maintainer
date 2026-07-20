@@ -71,16 +71,19 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!releaseId) return;
     // Reset state so the user sees loading overlays while fetching new data
-    setRelease(null);
-    setLoading({ header: true, timeline: true, packages: true, activity: true });
-    fetchRelease(releaseId)
-      .then(updateRelease)
-      .catch(() => {
+    const load = async () => {
+      setRelease(null);
+      setLoading({ header: true, timeline: true, packages: true, activity: true });
+      try {
+        const data = await fetchRelease(releaseId);
+        updateRelease(data);
+      } catch {
         // Silently handle errors - component will show loading state
-      })
-      .finally(() => {
+      } finally {
         setLoading({ header: false, timeline: false, packages: false, activity: false });
-      });
+      }
+    };
+    load();
   }, [releaseId]);
 
   /** Sequentially refresh each dashboard zone via its dedicated API endpoint. */
