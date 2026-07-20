@@ -29,6 +29,9 @@ const ICONS: Record<string, typeof Boxes> = {
   "Final Release": CheckCircle2,
 };
 
+/** Default icon for published release timeline steps (version tags). */
+const DEFAULT_ICON = Rocket;
+
 function formatDate(iso: string) {
   const d = new Date(iso + "T00:00:00");
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -43,7 +46,7 @@ export default function ReleaseTimeline({ steps }: ReleaseTimelineProps) {
 
       <div className="horizontal-timeline">
         {(steps ?? []).map((item) => {
-          const Icon = ICONS[item.label] ?? Boxes;
+          const Icon = ICONS[item.label] ?? DEFAULT_ICON;
 
           return (
             <div className={`timeline-step ${item.state}`} key={item.label}>

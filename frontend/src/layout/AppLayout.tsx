@@ -28,12 +28,6 @@ export default function AppLayout() {
           >
             Overview
           </NavLink>
-          <NavLink
-            to="/app/release-board"
-            className={({ isActive }) => (isActive ? "active" : "")}
-          >
-            Release Board
-          </NavLink>
           <a>Platforms & Tags</a>
           <a>Releases</a>
           {user?.role === "admin" && (

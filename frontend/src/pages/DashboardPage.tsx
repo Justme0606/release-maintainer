@@ -59,6 +59,7 @@ export default function DashboardPage() {
     activity: false,
   });
   const isRefreshing = Object.values(loading).some(Boolean);
+  const isInProgress = releaseId === "in-progress";
 
   const updateRelease = (data: any) => {
     if (data) {
@@ -69,9 +70,17 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!releaseId) return;
-    fetchRelease(releaseId).then(updateRelease).catch(() => {
-      // Silently handle errors - component will show loading state
-    });
+    // Reset state so the user sees loading overlays while fetching new data
+    setRelease(null);
+    setLoading({ header: true, timeline: true, packages: true, activity: true });
+    fetchRelease(releaseId)
+      .then(updateRelease)
+      .catch(() => {
+        // Silently handle errors - component will show loading state
+      })
+      .finally(() => {
+        setLoading({ header: false, timeline: false, packages: false, activity: false });
+      });
   }, [releaseId]);
 
   /** Sequentially refresh each dashboard zone via its dedicated API endpoint. */
@@ -84,7 +93,7 @@ export default function DashboardPage() {
     setLoading({
       header: true,
       timeline: true,
-      packages: true,
+      packages: false,  // Packages are not refreshed by default
       activity: true,
     });
 
@@ -130,10 +139,10 @@ export default function DashboardPage() {
       }
     };
 
+    // Packages zone excluded from global refresh to preserve API rate limits
     const zones: (keyof ZoneLoading)[] = [
       "header",
       "timeline",
-      "packages",
       "activity",
     ];
     for (const zone of zones) {
@@ -141,9 +150,43 @@ export default function DashboardPage() {
     }
   };
 
+  /** Refresh only the packages zone. */
+  const handleRefreshPackages = async () => {
+    if (!releaseId || loading.packages) return;
+
+    invalidateRelease(releaseId);
+    setLoading((prev) => ({ ...prev, packages: true }));
+
+    try {
+      const res = await fetch(
+        apiUrl(`/api/releases/${releaseId}/refresh/packages`),
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
+      const data = await res.json();
+
+      setRelease((prev: any) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          packages_list: data.packages_list,
+          summary: { ...prev.summary, ...data.summary },
+        };
+      });
+    } finally {
+      setLoading((prev) => ({ ...prev, packages: false }));
+    }
+  };
+
   return (
     <>
-      <TopBar releaseId={releaseId ?? "latest"} />
+      <TopBar
+        releaseId={releaseId ?? "latest"}
+        rocqVersion={release?.rocq?.version}
+        status={release?.status}
+      />
 
       <div className="dashboard-layout">
         <section className="dashboard-main">
@@ -153,7 +196,7 @@ export default function DashboardPage() {
                 release={release}
                 ciStatus={release?.ci_status}
                 lastRefreshedAt={lastRefreshedAt}
-                onRefresh={handleRefresh}
+                onRefresh={isInProgress ? handleRefresh : undefined}
                 refreshing={isRefreshing}
               />
               {release && (
@@ -169,7 +212,11 @@ export default function DashboardPage() {
             <ReleaseTimeline steps={release?.timeline} />
           </ZoneLoader>
           <ZoneLoader loading={loading.packages}>
-            <PackageTable packages={release?.packages_list ?? []} />
+            <PackageTable
+              packages={release?.packages_list ?? []}
+              onRefresh={isInProgress ? handleRefreshPackages : undefined}
+              refreshing={loading.packages}
+            />
           </ZoneLoader>
           <BottomPanels timeline={release?.timeline} />
         </section>
