@@ -3,6 +3,10 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ .Release.Name }}-redis
+  annotations:
+    # The data is deleted with the PVC (reclaimPolicy Delete), so never let
+    # Argo CD prune it, e.g. if persistence is later switched off.
+    argocd.argoproj.io/sync-options: Prune=false
 spec:
   accessModes:
     - ReadWriteOnce
