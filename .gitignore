@@ -50,3 +50,14 @@ frontend/dist/
 
 # Docker
 mongodb_data/
+
+# -----------------------------------------------------------------------------
+# Test & coverage artefacts
+# -----------------------------------------------------------------------------
+.coverage
+coverage.xml
+htmlcov/
+coverage/
+.pytest_cache/
+playwright-report/
+test-results/
