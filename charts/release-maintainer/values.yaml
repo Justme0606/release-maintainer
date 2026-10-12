@@ -25,7 +25,11 @@ redis:
   persistence:
     # Redis holds every assembled dashboard payload. Losing it is not fatal,
     # but a cold start replays hundreds of GitHub calls to rebuild it.
-    enabled: true
+    #
+    # Off by default: a PVC that cannot bind (no default StorageClass) leaves
+    # the pod Pending. Check `kubectl get storageclass`, then set this to true
+    # and, if no class is marked (default), fill in storageClassName.
+    enabled: false
     size: 1Gi
     # Leave empty to use the cluster's default StorageClass.
     storageClassName: ""
@@ -42,7 +46,13 @@ mongodb:
   persistence:
     # MongoDB stores the admin-edited release documents. With persistence
     # disabled they live in an emptyDir and are lost when the pod restarts.
-    enabled: true
+    #
+    # Off by default, and this one matters more than Redis: the backend's
+    # readiness probe pings MongoDB, so a PVC that cannot bind keeps the pod
+    # Pending, the backend never becomes Ready and the ingress returns 503.
+    # Check `kubectl get storageclass`, then set this to true and, if no class
+    # is marked (default), fill in storageClassName.
+    enabled: false
     size: 1Gi
     # Leave empty to use the cluster's default StorageClass.
     storageClassName: ""
