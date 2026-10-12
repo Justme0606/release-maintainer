@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { ReleaseProvider, useRelease } from './ReleaseContext'
 import { createMockRelease, mockFetchResponse, mockFetchError } from '../test/utils'
 
