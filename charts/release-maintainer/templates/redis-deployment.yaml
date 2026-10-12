@@ -5,6 +5,9 @@ metadata:
   name: {{ .Release.Name }}-redis
 spec:
   replicas: 1
+  strategy:
+    # A single ReadWriteOnce volume cannot be mounted by two pods at once
+    type: Recreate
   selector:
     matchLabels:
       app: {{ .Release.Name }}-redis
@@ -17,6 +20,20 @@ spec:
         - name: redis
           image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
           imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
+          {{- if .Values.redis.persistence.enabled }}
+          args: ["redis-server", "--appendonly", "yes"]
+          {{- end }}
           ports:
             - containerPort: 6379
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+        {{- if .Values.redis.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-redis
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
 {{- end }}

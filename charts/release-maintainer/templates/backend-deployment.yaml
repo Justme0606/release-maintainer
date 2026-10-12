@@ -21,6 +21,25 @@ spec:
           env:
             - name: REDIS_URL
               value: "redis://{{ .Release.Name }}-redis:{{ .Values.redis.service.port }}/0"
+            - name: MONGO_URL
+              value: "mongodb://{{ .Release.Name }}-mongodb:{{ .Values.mongodb.service.port }}"
+            - name: MONGO_DB
+              value: {{ .Values.mongodb.database | quote }}
+            # The app is served over HTTPS through the ingress
+            - name: COOKIE_SECURE
+              value: {{ .Values.cookieSecure | quote }}
+            {{- with .Values.releaseCycle.trackingIssueNumber }}
+            # Without this the tracking issue is never read and every package
+            # is reported with an "unknown" status.
+            - name: TRACKING_ISSUE_NUMBER
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.releaseCycle.deadline }}
+            # Without this the milestone timeline is empty and "waiting"
+            # packages are never promoted to "blocked".
+            - name: RELEASE_DEADLINE
+              value: {{ . | quote }}
+            {{- end }}
             - name: GITHUB_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -36,3 +55,19 @@ spec:
                 secretKeyRef:
                   name: release-maintainer-secrets
                   key: seed_users
+          # /health pings MongoDB and Redis, so it gates traffic on the
+          # dependencies being reachable. Liveness stays a plain TCP check so a
+          # dependency blip cannot restart-loop the backend.
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            failureThreshold: 3

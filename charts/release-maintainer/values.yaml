@@ -22,6 +22,43 @@ redis:
     pullPolicy: IfNotPresent
   service:
     port: 6379
+  persistence:
+    # Redis holds every assembled dashboard payload. Losing it is not fatal,
+    # but a cold start replays hundreds of GitHub calls to rebuild it.
+    enabled: true
+    size: 1Gi
+    # Leave empty to use the cluster's default StorageClass.
+    storageClassName: ""
+
+mongodb:
+  enabled: true
+  image:
+    repository: mongo
+    tag: "7"
+    pullPolicy: IfNotPresent
+  service:
+    port: 27017
+  database: rocq_dashboard
+  persistence:
+    # MongoDB stores the admin-edited release documents. With persistence
+    # disabled they live in an emptyDir and are lost when the pod restarts.
+    enabled: true
+    size: 1Gi
+    # Leave empty to use the cluster's default StorageClass.
+    storageClassName: ""
+
+# Mark the session cookie Secure. Keep true wherever the ingress terminates
+# TLS; set false only if you expose the app over plain HTTP.
+cookieSecure: true
+
+# Current release cycle. Both values are read by the backend at request time;
+# leaving either empty degrades the dashboard (see backend-deployment.yaml).
+releaseCycle:
+  # Number of the tracking issue in rocq-prover/platform that lists the
+  # packages to update, e.g. 1234. Update it at the start of each cycle.
+  trackingIssueNumber: ""
+  # Validation deadline as an ISO date, e.g. "2026-06-30".
+  deadline: ""
 
 ingress:
   enabled: true

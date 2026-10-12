@@ -1,0 +1,36 @@
+{{- if .Values.mongodb.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-mongodb
+spec:
+  replicas: 1
+  strategy:
+    # A single ReadWriteOnce volume cannot be mounted by two pods at once
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-mongodb
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+          imagePullPolicy: {{ .Values.mongodb.image.pullPolicy }}
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+      volumes:
+        - name: data
+        {{- if .Values.mongodb.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-mongodb
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+{{- end }}
