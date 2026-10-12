@@ -127,26 +127,33 @@ def mock_github() -> MagicMock:
     return github_mock
 
 
+async def _client_authenticated_as(app: FastAPI, username: str, role: str):
+    """Build a client carrying the session cookie the app actually reads.
+
+    Authentication is a httpOnly ``access_token`` cookie, not a bearer header:
+    a client sending ``Authorization`` would silently get 401 everywhere.
+    """
+    token = create_access_token({"sub": username, "role": role})
+    transport = ASGITransport(app=app)
+    return AsyncClient(
+        transport=transport,
+        base_url="http://testserver",
+        cookies={"access_token": token},
+    )
+
+
 @pytest.fixture
-def auth_headers() -> dict:
-    """
-    Create authentication headers with a valid JWT token for testing.
-
-    Use this fixture when testing endpoints that require authentication.
-    """
-    token = create_access_token({"sub": "testuser", "role": "user"})
-    return {"Authorization": f"Bearer {token}"}
+async def auth_client(app: FastAPI) -> AsyncGenerator[AsyncClient, None]:
+    """Client authenticated as a maintainer, for endpoints behind a login."""
+    async with await _client_authenticated_as(app, "testuser", "maintainer") as ac:
+        yield ac
 
 
 @pytest.fixture
-def admin_auth_headers() -> dict:
-    """
-    Create authentication headers with an admin JWT token for testing.
-
-    Use this fixture when testing admin-only endpoints.
-    """
-    token = create_access_token({"sub": "admin", "role": "admin"})
-    return {"Authorization": f"Bearer {token}"}
+async def admin_client(app: FastAPI) -> AsyncGenerator[AsyncClient, None]:
+    """Client authenticated as an admin, for endpoints behind ``require_admin``."""
+    async with await _client_authenticated_as(app, "admin", "admin") as ac:
+        yield ac
 
 
 @pytest.fixture
