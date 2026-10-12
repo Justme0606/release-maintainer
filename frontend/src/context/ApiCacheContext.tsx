@@ -34,6 +34,14 @@ const ApiCacheContext = createContext<ApiCacheContextValue>({
 export function ApiCacheProvider({ children }: { children: ReactNode }) {
   const [cache, setCache] = useState<Record<string, CacheEntry>>({});
   const inflight = useRef<Record<string, Promise<CacheEntry> | undefined>>({});
+  // Mirror of `cache` readable without being a dependency, so fetchCached
+  // keeps a stable identity across writes (see ReleaseContext).
+  const cacheRef = useRef(cache);
+
+  const writeCache = useCallback((key: string, data: CacheEntry) => {
+    cacheRef.current = { ...cacheRef.current, [key]: data };
+    setCache(cacheRef.current);
+  }, []);
 
   const getCached = useCallback(
     (key: string) => cache[key] ?? null,
@@ -42,7 +50,7 @@ export function ApiCacheProvider({ children }: { children: ReactNode }) {
 
   const fetchCached = useCallback(
     async (key: string, url: string): Promise<CacheEntry> => {
-      const cached = cache[key];
+      const cached = cacheRef.current[key];
       if (cached) return cached;
 
       const existing = inflight.current[key];
@@ -55,7 +63,7 @@ export function ApiCacheProvider({ children }: { children: ReactNode }) {
           return res.json();
         })
         .then((data) => {
-          setCache((prev) => ({ ...prev, [key]: data }));
+          writeCache(key, data);
           delete inflight.current[key];
           return data;
         })
@@ -67,15 +75,14 @@ export function ApiCacheProvider({ children }: { children: ReactNode }) {
       inflight.current[key] = promise;
       return promise;
     },
-    [cache],
+    [writeCache],
   );
 
   const invalidate = useCallback((key: string) => {
-    setCache((prev) => {
-      const next = { ...prev };
-      delete next[key];
-      return next;
-    });
+    const next = { ...cacheRef.current };
+    delete next[key];
+    cacheRef.current = next;
+    setCache(next);
   }, []);
 
   return (

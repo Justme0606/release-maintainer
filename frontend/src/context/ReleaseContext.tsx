@@ -34,6 +34,15 @@ const ReleaseContext = createContext<ReleaseContextValue>({
 export function ReleaseProvider({ children }: { children: ReactNode }) {
   const [cache, setCache] = useState<Record<string, ReleaseData>>({});
   const inflight = useRef<Record<string, Promise<ReleaseData> | undefined>>({});
+  // Mirror of `cache` readable without being a dependency, so fetchRelease
+  // keeps a stable identity. Otherwise every cache write returns a new
+  // function and re-triggers the effects that call it.
+  const cacheRef = useRef(cache);
+
+  const writeCache = useCallback((releaseId: string, data: ReleaseData) => {
+    cacheRef.current = { ...cacheRef.current, [releaseId]: data };
+    setCache(cacheRef.current);
+  }, []);
 
   const getRelease = useCallback(
     (releaseId: string) => cache[releaseId] ?? null,
@@ -42,7 +51,7 @@ export function ReleaseProvider({ children }: { children: ReactNode }) {
 
   const fetchRelease = useCallback(
     async (releaseId: string): Promise<ReleaseData> => {
-      const cached = cache[releaseId];
+      const cached = cacheRef.current[releaseId];
       if (cached) return cached;
 
       const existing = inflight.current[releaseId];
@@ -61,7 +70,7 @@ export function ReleaseProvider({ children }: { children: ReactNode }) {
           return res.json();
         })
         .then((data) => {
-          setCache((prev) => ({ ...prev, [releaseId]: data }));
+          writeCache(releaseId, data);
           delete inflight.current[releaseId];
           return data;
         })
@@ -73,15 +82,14 @@ export function ReleaseProvider({ children }: { children: ReactNode }) {
       inflight.current[releaseId] = promise;
       return promise;
     },
-    [cache],
+    [writeCache],
   );
 
   const invalidateRelease = useCallback((releaseId: string) => {
-    setCache((prev) => {
-      const next = { ...prev };
-      delete next[releaseId];
-      return next;
-    });
+    const next = { ...cacheRef.current };
+    delete next[releaseId];
+    cacheRef.current = next;
+    setCache(next);
   }, []);
 
   return (
