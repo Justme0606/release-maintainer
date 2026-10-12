@@ -54,7 +54,11 @@ jobs:
   frontend-e2e:
     runs-on: ubuntu-latest
     needs: frontend-tests
-    if: false # Temporarily disabled - needs full backend setup
+    # Disabled. e2e/auth.spec.ts should pass now that SEED_USERS is seeded
+    # below, but dashboard.spec.ts and package-detail.spec.ts assert on real
+    # release content, which needs a seeded tracking issue and package-pick
+    # rather than live GitHub data. Flip to `true` once those are fixtured.
+    if: false
     defaults:
       run:
         working-directory: ./frontend
@@ -120,6 +124,9 @@ jobs:
           REDIS_URL: redis://localhost:6379
           JWT_SECRET_KEY: test-secret-key-for-ci
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The specs all log in as admin/admin123; without this no user
+          # exists and every test fails in its beforeEach.
+          SEED_USERS: '[{"username":"admin","password":"admin123","role":"admin"}]'
 
       - name: Wait for backend to be ready
         run: |
