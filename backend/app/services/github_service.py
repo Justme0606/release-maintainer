@@ -6,7 +6,8 @@ import asyncio
 import base64
 import json
 import logging
-import os
+import time
+import weakref
 
 import httpx
 
@@ -16,9 +17,32 @@ GITHUB_API = "https://api.github.com"
 CACHE_TTL_SECONDS = 1800         # Cache responses for 30 minutes
 TAGS_CACHE_TTL_SECONDS = 86400   # Cache git tags for 24 hours (they rarely change)
 MAX_CONCURRENT_REQUESTS = 3      # Limit parallel HTTP calls to avoid rate-limiting
-MAX_RETRIES = 4                  # Retry count when hitting rate limits
+MAX_RETRIES = 4                  # Attempts per request when hitting rate limits
+
+# GitHub signals both its primary and secondary rate limits with these codes
+RATE_LIMIT_STATUS_CODES = frozenset({403, 429})
+# Never block a request longer than this. The primary rate limit can reset up
+# to an hour away, which is far too long to hold a connection for.
+MAX_RETRY_WAIT_SECONDS = 60.0
 
 logger = logging.getLogger(__name__)
+
+# One semaphore per event loop, shared by every GithubService instance: the
+# routers each build their own, and the cap has to be process-wide to be
+# worth anything. Keyed weakly so test loops do not leak.
+_semaphores: "weakref.WeakKeyDictionary[asyncio.AbstractEventLoop, asyncio.Semaphore]" = (
+    weakref.WeakKeyDictionary()
+)
+
+
+def _get_request_semaphore() -> asyncio.Semaphore:
+    """Return the shared GitHub request semaphore for the running event loop."""
+    loop = asyncio.get_running_loop()
+    semaphore = _semaphores.get(loop)
+    if semaphore is None:
+        semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
+        _semaphores[loop] = semaphore
+    return semaphore
 
 
 class GithubService:
@@ -27,13 +51,10 @@ class GithubService:
     def __init__(self):
         from app.core.config import settings
         self.token = settings.github_token
-        self._semaphore: asyncio.Semaphore | None = None
 
     def _get_semaphore(self) -> asyncio.Semaphore:
-        """Lazily create a semaphore (must be in an async context)."""
-        if self._semaphore is None:
-            self._semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
-        return self._semaphore
+        """Return the process-wide request semaphore (must be in an async context)."""
+        return _get_request_semaphore()
 
     def _headers(self) -> dict:
         """Build HTTP headers for GitHub API requests."""
@@ -46,10 +67,84 @@ class GithubService:
 
         return headers
     
+    @staticmethod
+    def _rate_limit_delay(response, attempt: int) -> float | None:
+        """Seconds to wait before retrying, or ``None`` if not worth retrying.
+
+        Handles both GitHub rate limits: the secondary one sends ``Retry-After``,
+        the primary one exhausts ``X-RateLimit-Remaining`` and gives the reset
+        timestamp. A wait longer than :data:`MAX_RETRY_WAIT_SECONDS` is reported
+        as not retryable so the caller fails fast instead of hanging.
+        """
+        if response.status_code not in RATE_LIMIT_STATUS_CODES:
+            return None
+
+        delay: float | None = None
+
+        retry_after = response.headers.get("retry-after")
+        if retry_after:
+            try:
+                delay = float(retry_after)
+            except ValueError:
+                delay = None
+
+        if delay is None and response.headers.get("x-ratelimit-remaining") == "0":
+            reset = response.headers.get("x-ratelimit-reset")
+            try:
+                delay = max(float(reset) - time.time(), 0.0) if reset else None
+            except ValueError:
+                delay = None
+
+        if delay is None:
+            # A 403/429 with no usable header is most likely the secondary
+            # limit; back off exponentially rather than giving up immediately.
+            delay = float(2 ** attempt)
+
+        return delay if delay <= MAX_RETRY_WAIT_SECONDS else None
+
     async def _fetch_single(self, client, url: str):
-        response = await client.get(url, headers=self._headers())
-        response.raise_for_status()
-        return response
+        """GET *url*, retrying while GitHub is rate-limiting us."""
+        for attempt in range(MAX_RETRIES):
+            response = await client.get(url, headers=self._headers())
+
+            delay = self._rate_limit_delay(response, attempt)
+            if delay is None or attempt == MAX_RETRIES - 1:
+                response.raise_for_status()
+                return response
+
+            logger.warning(
+                "GitHub rate-limited %s (HTTP %s); retrying in %.1fs (attempt %d/%d)",
+                url, response.status_code, delay, attempt + 1, MAX_RETRIES,
+            )
+            await asyncio.sleep(delay)
+
+        # Unreachable: the loop always returns or raises on its last attempt.
+        raise RuntimeError("retry loop exited without a response")
+
+    @staticmethod
+    def _parse_next_link(link_header: str | None) -> str | None:
+        """Extract the ``next`` URL from a GitHub RFC 8288 Link header."""
+        if not link_header:
+            return None
+
+        for link in link_header.split(","):
+            parts = [part.strip() for part in link.split(";")]
+            if len(parts) < 2:
+                continue
+
+            relations = {
+                part.removeprefix("rel=").strip('"')
+                for part in parts[1:]
+                if part.startswith("rel=")
+            }
+            if "next" not in relations:
+                continue
+
+            target = parts[0]
+            if target.startswith("<") and target.endswith(">"):
+                return target[1:-1]
+
+        return None
 
     # ------------------------------------------------------------------
     #  Core HTTP helpers
@@ -159,8 +254,10 @@ class GithubService:
                 return data
 
     async def get_releases(self, owner: str, repo: str):
-        """List published releases for a repository."""
-        return await self._get(f"/repos/{owner}/{repo}/releases")
+        """List all releases for a repository, newest first."""
+        return await self._get_all_pages(
+            f"/repos/{owner}/{repo}/releases?per_page=100"
+        )
 
     async def get_file_content(self, owner: str, repo: str, path: str) -> str:
         """Download and decode a single file from a repository."""

@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: MIT
 """Cached release data aggregation and background refresh service."""
 
-import asyncio
 import json
 import logging
+import re
 import time
 from datetime import datetime, timezone
 
@@ -18,10 +18,23 @@ logger = logging.getLogger(__name__)
 OWNER = "rocq-prover"
 REPO = "platform"
 
-# Concurrency guard: prevents overlapping cache-clear + refresh cycles
-_refresh_lock = asyncio.Lock()
 _last_cache_clear: float = 0.0
 _CACHE_CLEAR_COOLDOWN = 5.0  # seconds between consecutive cache clears
+_CACHE_SCHEMA_VERSION = 2
+_RELEASE_LIST_CACHE_TTL_SECONDS = 1800
+_IN_PROGRESS_CACHE_TTL_SECONDS = 21600
+# Published releases are immutable, but an unbounded entry would outlive the
+# schema version that produced it. A long TTL keeps the cache self-cleaning.
+_PUBLISHED_CACHE_TTL_SECONDS = 30 * 86400
+
+_PACKAGE_PICK_FILE_RE = re.compile(
+    r"^package-pick-(?P<rocq_version>\d+(?:\.\d+){1,2})"
+    r"~(?P<pick_version>\d{4}\.\d{2})\.sh$"
+)
+_PACKAGE_PICK_REFERENCE_RE = re.compile(
+    r"(?P<rocq_version>\d+(?:\.\d+){1,2})"
+    r"~(?P<pick_version>\d{4}\.\d{2})"
+)
 
 
 # ------------------------------------------------------------------
@@ -30,21 +43,133 @@ _CACHE_CLEAR_COOLDOWN = 5.0  # seconds between consecutive cache clears
 
 def _release_key(release_id: str) -> str:
     """Redis key storing the full JSON payload of a release."""
-    return f"release_data:{release_id}"
+    return f"release_data:v{_CACHE_SCHEMA_VERSION}:{release_id}"
 
 
 def _refreshed_at_key(release_id: str) -> str:
     """Redis key storing the ISO timestamp of the last refresh."""
-    return f"release_data:{release_id}:refreshed_at"
+    return f"release_data:v{_CACHE_SCHEMA_VERSION}:{release_id}:refreshed_at"
+
+
+def _cache_options(release_id: str) -> dict:
+    """Redis SET options for a release entry.
+
+    The in-progress release expires quickly so a stale cycle cannot be served
+    indefinitely; published releases are immutable and keep a long TTL.
+    """
+    return {
+        "ex": (
+            _IN_PROGRESS_CACHE_TTL_SECONDS
+            if release_id == "in-progress"
+            else _PUBLISHED_CACHE_TTL_SECONDS
+        )
+    }
+
+
+async def _set_preserving_ttl(release_id: str, key: str, value: str) -> None:
+    """Write *value* to *key* without dropping an expiry already set on it.
+
+    A plain ``SET`` clears the TTL, which would make a zone refresh turn the
+    in-progress cache into a permanent entry that never refreshes again.
+    """
+    if await redis_client.exists(key):
+        await redis_client.set(key, value, keepttl=True)
+    else:
+        await redis_client.set(key, value, **_cache_options(release_id))
 
 
 # ------------------------------------------------------------------
 #  Release data computation (fetched from GitHub, not cached)
 # ------------------------------------------------------------------
 
-async def _compute_releases(github: GithubService) -> dict:
-    """Build the list of all releases (published + the in-progress one)."""
+def _normalise_rocq_version(version: str) -> str:
+    """Normalise release-note versions to the package-pick filename format."""
+    parts = version.split(".")
+    if len(parts) == 3:
+        return ".".join(parts[:2])
+    return version
+
+
+def _parse_package_pick_file(file: dict) -> dict | None:
+    """Return metadata for a dated stable package-pick file."""
+    match = _PACKAGE_PICK_FILE_RE.fullmatch(file.get("name", ""))
+    if not match:
+        return None
+
+    rocq_version = _normalise_rocq_version(match.group("rocq_version"))
+    pick_version = match.group("pick_version")
+    return {
+        "name": file["name"].removesuffix(".sh"),
+        "rocq_version": rocq_version,
+        "pick_version": pick_version,
+        "key": (rocq_version, pick_version),
+    }
+
+
+def _release_package_pick_references(releases: list[dict]) -> set[tuple[str, str]]:
+    """Extract package-picks explicitly referenced by published releases."""
+    references: set[tuple[str, str]] = set()
+    for release in releases:
+        text = "\n".join(
+            str(release.get(field) or "")
+            for field in ("name", "description", "body", "tag_name")
+        )
+        for match in _PACKAGE_PICK_REFERENCE_RE.finditer(text):
+            references.add((
+                _normalise_rocq_version(match.group("rocq_version")),
+                match.group("pick_version"),
+            ))
+    return references
+
+
+async def _find_in_progress_package_pick(
+    github: GithubService, published_releases: list[dict]
+) -> dict | None:
+    """Find the newest package-pick that has not been published yet.
+
+    Only the newest dated stable pick is considered. If it is already named by
+    a final GitHub release, there is no active Platform release cycle.
+    """
+    try:
+        files = await github.list_directory(OWNER, REPO, "package_picks")
+    except Exception:
+        logger.warning("Failed to list package_picks/ directory", exc_info=True)
+        return None
+
+    picks = [pick for file in files if (pick := _parse_package_pick_file(file))]
+    if not picks:
+        return None
+
+    def sort_key(pick: dict) -> tuple[int, int, tuple[int, ...]]:
+        year, month = (int(part) for part in pick["pick_version"].split("."))
+        rocq_version = tuple(int(part) for part in pick["rocq_version"].split("."))
+        return year, month, rocq_version
+
+    newest = max(picks, key=sort_key)
+    published_picks = _release_package_pick_references(published_releases)
+    return None if newest["key"] in published_picks else newest
+
+
+def _in_progress_release_option(package_pick: dict) -> dict:
+    rocq_version = package_pick["rocq_version"]
+    return {
+        "id": "in-progress",
+        "name": f"Rocq {rocq_version} (In Progress)",
+        "description": f"Release cycle in progress targeting Rocq {rocq_version}",
+        "published_at": None,
+        "draft": False,
+        "prerelease": True,
+        "status": "in_progress",
+    }
+
+
+async def _compute_releases(github: GithubService) -> list[dict]:
+    """Build the list of final releases and, when present, the active cycle."""
     releases = await github.get_releases(owner=OWNER, repo=REPO)
+    final_releases = [
+        release for release in releases
+        if not release.get("draft") and not release.get("prerelease")
+    ]
 
     published_releases = [
         {
@@ -56,50 +181,45 @@ async def _compute_releases(github: GithubService) -> dict:
             "prerelease": release["prerelease"],
             "status": "released",
         }
-        for release in releases
-        if not release["draft"]
+        for release in final_releases
     ]
 
-    # The in-progress release is always shown first
-    return [
-        {
-            "id": "in-progress",
-            "name": "In Progress Release",
-            "description": "Release cycle in progress targeting Rocq 9.1.0",
-            "published_at": None,
-            "draft": False,
-            "prerelease": True,
-            "status": "in_progress",
-        },
-        *published_releases,
-    ]
+    package_pick = await _find_in_progress_package_pick(github, final_releases)
+    if package_pick:
+        return [_in_progress_release_option(package_pick), *published_releases]
+    return published_releases
 
 
-async def _find_package_pick(release_tag: str, github: GithubService) -> tuple[str, str] | None:
+async def _find_package_pick(release: dict, github: GithubService) -> tuple[str, str] | None:
     """Find the package-pick file matching a release tag.
 
     Returns (package_pick_name, rocq_version) or None.
-    E.g. "2025.08.3" -> ("package-pick-9.0~2025.08", "Rocq 9.0")
+    E.g. a release mentioning ``9.1.0~2026.01`` maps to
+    ``("package-pick-9.1~2026.01", "Rocq 9.1")``.
     """
-    parts = release_tag.split(".")
-    if len(parts) < 2:
-        return None
-    date_prefix = f"{parts[0]}.{parts[1]}"
-
     try:
         files = await github.list_directory(OWNER, REPO, "package_picks")
     except Exception:
         logger.warning("Failed to list package_picks/ directory", exc_info=True)
         return None
 
-    for f in files:
-        name = f["name"]
-        if name.endswith(f"~{date_prefix}.sh"):
-            pick_name = name.removesuffix(".sh")
-            version_part = pick_name.replace("package-pick-", "").split("~")[0]
-            return pick_name, f"Rocq {version_part}"
+    picks = [pick for file in files if (pick := _parse_package_pick_file(file))]
+    references = _release_package_pick_references([release])
+    for pick in picks:
+        if pick["key"] in references:
+            return pick["name"], f"Rocq {pick['rocq_version']}"
 
-    logger.warning("No package-pick found for release %s (searched ~%s.sh)", release_tag, date_prefix)
+    # Older release titles do not always name the pick. Keep the historical
+    # release-tag date fallback for those releases.
+    release_tag = release.get("tag_name", "")
+    parts = release_tag.split(".")
+    if len(parts) >= 2:
+        date_prefix = f"{parts[0]}.{parts[1]}"
+        for pick in picks:
+            if pick["pick_version"] == date_prefix:
+                return pick["name"], f"Rocq {pick['rocq_version']}"
+
+    logger.warning("No package-pick found for release %s", release_tag)
     return None
 
 
@@ -108,11 +228,20 @@ async def _compute_release(
 ) -> dict:
     """Compute the full payload for a single release (in-progress or published)."""
     repo = await github.get_repo(owner=OWNER, repo=REPO)
+    releases = await github.get_releases(owner=OWNER, repo=REPO)
 
     if release_id == "in-progress":
-        # Hard-coded parameters for the current release cycle
-        package_pick_name = "package-pick-9.1~2026.01"
-        release_version = "Rocq 9.1"
+        published_releases = [
+            release for release in releases
+            if not release.get("draft") and not release.get("prerelease")
+        ]
+        package_pick = await _find_in_progress_package_pick(github, published_releases)
+        if package_pick is None:
+            return None
+
+        package_pick_name = package_pick["name"]
+        rocq_version = package_pick["rocq_version"]
+        release_version = f"Rocq {rocq_version}"
         branch = repo["default_branch"]
 
         summary = await kpi_service.compute_summary(
@@ -121,14 +250,14 @@ async def _compute_release(
 
         return {
             "id": "in-progress",
-            "name": "2026.06",
-            "description": "Release cycle in progress targeting Rocq 9.1.0",
+            "name": f"Rocq {rocq_version} (In Progress)",
+            "description": f"Release cycle in progress targeting Rocq {rocq_version}",
             "published_at": None,
             "draft": False,
             "prerelease": True,
             "status": "in_progress",
             "platform": {
-                "version": "2026.06",
+                "version": f"Unreleased ({package_pick['pick_version']})",
                 "status": "in_progress",
                 "package_pick": package_pick_name,
                 "repository": repo["full_name"],
@@ -137,7 +266,7 @@ async def _compute_release(
                 "open_pull_requests": summary["open_pull_requests"],
             },
             "rocq": {
-                "version": "9.1.0",
+                "version": rocq_version,
             },
             "summary": {
                 "packages": summary["packages"],
@@ -155,7 +284,6 @@ async def _compute_release(
         }
 
     # For published releases, look them up by tag name
-    releases = await github.get_releases(owner=OWNER, repo=REPO)
     release = next(
         (r for r in releases if r["tag_name"] == release_id),
         None,
@@ -165,7 +293,7 @@ async def _compute_release(
         return None
 
     # Find and load the matching package-pick
-    pick_info = await _find_package_pick(release_id, github)
+    pick_info = await _find_package_pick(release, github)
     if pick_info:
         package_pick_name, rocq_version = pick_info
         packages_list = await kpi_service._build_package_list(
@@ -286,13 +414,29 @@ async def refresh_releases(github: GithubService) -> dict:
     key = _release_key("list")
     at_key = _refreshed_at_key("list")
 
+    await _clear_github_cache()
     data = await _compute_releases(github)
     now = datetime.now(timezone.utc).isoformat()
 
-    await redis_client.set(key, json.dumps(data))
-    await redis_client.set(at_key, now)
+    await redis_client.set(
+        key, json.dumps(data), ex=_RELEASE_LIST_CACHE_TTL_SECONDS
+    )
+    await redis_client.set(
+        at_key, now, ex=_RELEASE_LIST_CACHE_TTL_SECONDS
+    )
 
     return {"releases": data, "last_refreshed_at": now}
+
+
+async def peek_cached_release(release_id: str) -> dict | None:
+    """Return the cached payload for *release_id*, or ``None`` if it is cold.
+
+    Never computes. Unauthenticated callers go through this so that anonymous
+    traffic cannot trigger the full recomputation (hundreds of GitHub calls
+    plus opam subprocesses) by hitting a cold cache.
+    """
+    cached = await redis_client.get(_release_key(release_id))
+    return json.loads(cached) if cached else None
 
 
 async def get_cached_release(
@@ -323,11 +467,13 @@ async def refresh_release(
 
     data = await _compute_release(release_id, github, kpi_service)
     if data is None:
+        await redis_client.delete(key, at_key)
         return None
 
     now = datetime.now(timezone.utc).isoformat()
-    await redis_client.set(key, json.dumps(data))
-    await redis_client.set(at_key, now)
+    cache_options = _cache_options(release_id)
+    await redis_client.set(key, json.dumps(data), **cache_options)
+    await redis_client.set(at_key, now, **cache_options)
 
     data["last_refreshed_at"] = now
     logger.info("Refreshed release data for %s", release_id)
@@ -343,7 +489,16 @@ async def _get_release_params(
     """
     repo = await github.get_repo(owner=OWNER, repo=REPO)
     if release_id == "in-progress":
-        return "package-pick-9.1~2026.01", "Rocq 9.1", repo["default_branch"]
+        releases = await github.get_releases(owner=OWNER, repo=REPO)
+        published_releases = [
+            release for release in releases
+            if not release.get("draft") and not release.get("prerelease")
+        ]
+        package_pick = await _find_in_progress_package_pick(github, published_releases)
+        if package_pick:
+            version = package_pick["rocq_version"]
+            return package_pick["name"], f"Rocq {version}", repo["default_branch"]
+        raise ValueError("No release cycle is currently in progress")
     raise ValueError(f"Zone refresh not supported for release {release_id}")
 
 
@@ -368,7 +523,8 @@ async def _read_modify_write(release_id: str, patch: dict) -> dict:
     """Read the cached release data, deep-merge *patch* into it and write back.
 
     This allows refreshing individual dashboard zones without recomputing
-    the entire release payload.
+    the entire release payload. The existing expiry is preserved so a zone
+    refresh does not make the cached payload permanent.
     """
     key = _release_key(release_id)
     at_key = _refreshed_at_key(release_id)
@@ -376,8 +532,8 @@ async def _read_modify_write(release_id: str, patch: dict) -> dict:
     data = json.loads(cached) if cached else {}
     _deep_merge(data, patch)
     now = datetime.now(timezone.utc).isoformat()
-    await redis_client.set(key, json.dumps(data))
-    await redis_client.set(at_key, now)
+    await _set_preserving_ttl(release_id, key, json.dumps(data))
+    await _set_preserving_ttl(release_id, at_key, now)
     return patch
 
 
