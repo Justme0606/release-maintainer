@@ -26,10 +26,10 @@ redis:
     # Redis holds every assembled dashboard payload. Losing it is not fatal,
     # but a cold start replays hundreds of GitHub calls to rebuild it.
     #
-    # Off by default: a PVC that cannot bind (no default StorageClass) leaves
-    # the pod Pending. Check `kubectl get storageclass`, then set this to true
-    # and, if no class is marked (default), fill in storageClassName.
-    enabled: false
+    # Needs a StorageClass: the cluster's default is `local-path`, which keeps
+    # the data on the node's disk. The pod therefore stays on that node, and
+    # the volume is deleted with the PVC (reclaimPolicy Delete).
+    enabled: true
     size: 1Gi
     # Leave empty to use the cluster's default StorageClass.
     storageClassName: ""
@@ -47,12 +47,13 @@ mongodb:
     # MongoDB stores the admin-edited release documents. With persistence
     # disabled they live in an emptyDir and are lost when the pod restarts.
     #
-    # Off by default, and this one matters more than Redis: the backend's
-    # readiness probe pings MongoDB, so a PVC that cannot bind keeps the pod
-    # Pending, the backend never becomes Ready and the ingress returns 503.
-    # Check `kubectl get storageclass`, then set this to true and, if no class
-    # is marked (default), fill in storageClassName.
-    enabled: false
+    # The backend's readiness probe pings MongoDB: if the PVC cannot bind the
+    # pod stays Pending, the backend never becomes Ready and the ingress
+    # returns 503. With `local-path` (WaitForFirstConsumer) the PVC is Pending
+    # until the pod is scheduled, which is expected. The data is deleted with
+    # the PVC (reclaimPolicy Delete); the chart marks the PVC Prune=false so
+    # Argo CD does not remove it if persistence is switched off.
+    enabled: true
     size: 1Gi
     # Leave empty to use the cluster's default StorageClass.
     storageClassName: ""
