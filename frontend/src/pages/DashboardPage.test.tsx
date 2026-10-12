@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { screen, waitFor } from '@testing-library/react'
+import { waitFor } from '@testing-library/react'
 import { renderWithProviders, createMockRelease, mockFetchResponse } from '../test/utils'
 
 // Mock DashboardPage imports

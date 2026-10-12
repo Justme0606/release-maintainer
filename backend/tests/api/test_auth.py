@@ -117,20 +117,14 @@ class TestLogout:
 class TestMe:
     """Tests for GET /api/auth/me endpoint."""
 
-    async def test_me_authenticated(self, client: AsyncClient, auth_headers: dict):
+    async def test_me_authenticated(self, auth_client: AsyncClient):
         """Test /me endpoint with valid authentication."""
-        # Create a valid token
-        token = create_access_token({"sub": "testuser", "role": "user"})
-
-        response = await client.get(
-            "/api/auth/me",
-            cookies={"access_token": token}
-        )
+        response = await auth_client.get("/api/auth/me")
 
         assert response.status_code == 200
         data = response.json()
         assert data["username"] == "testuser"
-        assert data["role"] == "user"
+        assert data["role"] == "maintainer"
 
     async def test_me_unauthenticated(self, client: AsyncClient):
         """Test /me endpoint without authentication."""

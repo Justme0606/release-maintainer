@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
-import { ReactNode } from 'react'
-import { DepGraphProvider, useDepGraph, FullGraph } from './DepGraphContext'
+import type { ReactNode } from 'react'
+import { DepGraphProvider, useDepGraph } from './DepGraphContext'
+import type { FullGraph } from './DepGraphContext'
 import { mockFetchResponse, mockFetchError } from '../test/utils'
 
 function createMockGraph(overrides?: Partial<FullGraph>): FullGraph {

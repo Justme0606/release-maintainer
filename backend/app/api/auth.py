@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 
 from app.core.auth import create_access_token, get_current_user, verify_password
+from app.core.config import settings
 from app.models.user import LoginRequest
 from app.repositories.user_repository import get_user_by_username
 
@@ -27,8 +28,8 @@ async def login(credentials: LoginRequest):
         value=token,
         httponly=True,
         samesite="lax",
-        secure=False,  # Set to True in production with HTTPS
-        max_age=60 * 480,  # 8 hours
+        secure=settings.cookie_secure,
+        max_age=60 * settings.jwt_expire_minutes,
     )
     return response
 

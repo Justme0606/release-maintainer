@@ -19,7 +19,11 @@ from app.api.github import router as github_router
 from app.core.config import settings
 from app.services.github_service import GithubService
 from app.services.kpi_service import KpiService
-from app.services.release_cache_service import refresh_release
+from app.services.release_cache_service import (
+    peek_cached_release,
+    refresh_release,
+    refresh_releases,
+)
 
 logging.basicConfig(
     level=logging.DEBUG if settings.debug else logging.INFO,
@@ -32,12 +36,30 @@ scheduler = AsyncIOScheduler()
 
 
 async def nightly_refresh():
-    """Refresh the in-progress release data every night at 02:00."""
+    """Refresh the release list and active release data every night at 02:00."""
     logger.info("Nightly refresh: starting")
     github = GithubService()
     kpi_service = KpiService(github)
+    await refresh_releases(github)
     await refresh_release("in-progress", github, kpi_service)
     logger.info("Nightly refresh: done")
+
+
+async def warm_cache_if_cold():
+    """Populate the release cache at startup when Redis came up empty.
+
+    The public landing page reads the cache without computing, so after a
+    Redis restart it would otherwise report zeros until 02:00.
+    """
+    try:
+        if await peek_cached_release("in-progress") is not None:
+            logger.info("Startup warm-up: cache already populated, skipping")
+            return
+        logger.info("Startup warm-up: cache is cold, refreshing")
+        await nightly_refresh()
+    except Exception:
+        # A cold cache must never prevent the application from starting.
+        logger.warning("Startup warm-up failed", exc_info=True)
 
 
 @asynccontextmanager
@@ -51,6 +73,8 @@ async def lifespan(app: FastAPI):
         id="nightly_refresh",
         replace_existing=True,
     )
+    # Runs once, in the background, as soon as the loop is free
+    scheduler.add_job(warm_cache_if_cold, id="warm_cache", replace_existing=True)
     scheduler.start()
     logger.info("Scheduler started – nightly refresh registered at 02:00")
     yield

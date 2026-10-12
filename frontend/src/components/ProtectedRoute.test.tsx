@@ -39,7 +39,7 @@ describe('ProtectedRoute', () => {
   describe('Loading state', () => {
     it('should show loading spinner while checking auth', () => {
       // Simulate slow auth check
-      global.fetch = vi.fn(() => new Promise(() => {}))
+      global.fetch = vi.fn(() => new Promise<Response>(() => {}))
 
       renderWithAuth(
         <ProtectedRoute>

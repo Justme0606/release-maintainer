@@ -4,8 +4,6 @@
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-import re
-import subprocess
 import httpx
 from datetime import datetime, timezone
 
@@ -13,13 +11,27 @@ from app.core.auth import require_admin
 from app.core.config import settings
 from app.repositories.release_repository import (
     get_release_by_id,
-    list_releases,
     upsert_release,
 )
 from app.repositories.user_repository import list_users
 from app.db.mongo import database
 
 router = APIRouter()
+
+
+def _github_headers() -> dict:
+    """Headers for direct GitHub API calls, authenticated when a token is set.
+
+    Anonymous calls are capped at 60 requests/hour per IP, which the changelog
+    comparison exhausts quickly.
+    """
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    if settings.github_token:
+        headers["Authorization"] = f"Bearer {settings.github_token}"
+    return headers
 
 
 class ReleaseCreate(BaseModel):
@@ -31,16 +43,6 @@ class ReleaseCreate(BaseModel):
     status: str | None = "draft"
 
 
-def generate_release_id(name: str) -> str:
-    """Generate a URL-friendly ID from release name."""
-    # Convert to lowercase and replace spaces/special chars with hyphens
-    slug = re.sub(r'[^\w\s-]', '', name.lower())
-    slug = re.sub(r'[-\s]+', '-', slug).strip('-')
-    # Add timestamp to ensure uniqueness
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    return f"{slug}-{timestamp}"
-
-
 async def get_git_changelog() -> str:
     """Generate changelog from git commits since last release using GitHub API."""
     repo_owner = "rocq-prover"
@@ -48,7 +50,7 @@ async def get_git_changelog() -> str:
     github_api_base = "https://api.github.com"
 
     try:
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=_github_headers()) as client:
             # Get the latest release (not just any tag, but actual releases)
             releases_url = f"{github_api_base}/repos/{repo_owner}/{repo_name}/releases"
             releases_response = await client.get(releases_url, timeout=10.0)
@@ -196,16 +198,10 @@ async def create_release(payload: ReleaseCreate):
                 "prerelease": False
             }
 
-            headers = {
-                "Authorization": f"Bearer {settings.github_token}",
-                "Accept": "application/vnd.github+json",
-                "X-GitHub-Api-Version": "2022-11-28"
-            }
-
             response = await client.post(
                 create_release_url,
                 json=release_payload,
-                headers=headers,
+                headers=_github_headers(),
                 timeout=10.0
             )
 
@@ -230,6 +226,10 @@ async def create_release(payload: ReleaseCreate):
                 "created_at": github_release["created_at"]
             }
 
+    except HTTPException:
+        # The 409/422 raised above are deliberate: let them reach the client
+        # unchanged instead of being swallowed by the catch-all below.
+        raise
     except httpx.HTTPError as e:
         raise HTTPException(
             status_code=500,

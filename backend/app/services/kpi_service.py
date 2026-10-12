@@ -6,6 +6,7 @@ import asyncio
 import json
 import logging
 import re
+import weakref
 from datetime import date, datetime, timedelta
 
 import httpx
@@ -113,6 +114,22 @@ def _normalize_pkg_name(name: str) -> str:
 # Limit concurrent ``opam`` subprocess invocations
 MAX_CONCURRENT_OPAM = 8
 
+# Shared per event loop, like the GitHub one: several KpiService instances
+# exist (one per router) and the subprocess cap has to be process-wide.
+_opam_semaphores: "weakref.WeakKeyDictionary[asyncio.AbstractEventLoop, asyncio.Semaphore]" = (
+    weakref.WeakKeyDictionary()
+)
+
+
+def _get_opam_semaphore() -> asyncio.Semaphore:
+    """Return the shared opam subprocess semaphore for the running event loop."""
+    loop = asyncio.get_running_loop()
+    semaphore = _opam_semaphores.get(loop)
+    if semaphore is None:
+        semaphore = asyncio.Semaphore(MAX_CONCURRENT_OPAM)
+        _opam_semaphores[loop] = semaphore
+    return semaphore
+
 
 class KpiService:
     """Service that computes all KPIs and dashboard data for a release.
@@ -123,13 +140,10 @@ class KpiService:
 
     def __init__(self, github: GithubService):
         self.github = github
-        self._opam_semaphore: asyncio.Semaphore | None = None
 
     def _get_opam_semaphore(self) -> asyncio.Semaphore:
-        """Lazily create a semaphore to cap concurrent opam subprocesses."""
-        if self._opam_semaphore is None:
-            self._opam_semaphore = asyncio.Semaphore(MAX_CONCURRENT_OPAM)
-        return self._opam_semaphore
+        """Return the process-wide opam semaphore (must be in an async context)."""
+        return _get_opam_semaphore()
 
     # ------------------------------------------------------------------
     #  opam CLI helpers
