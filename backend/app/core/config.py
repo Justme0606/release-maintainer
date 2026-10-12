@@ -37,6 +37,11 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 480  # 8 hours
 
+    # Mark the session cookie Secure. Defaults to False so the cookie still
+    # works over plain HTTP in local development; enable it wherever the app
+    # is served over HTTPS.
+    cookie_secure: bool = False
+
     # Seed users as JSON string, e.g. [{"username":"admin","password":"pass","role":"admin"}]
     seed_users: str = "[]"
 
