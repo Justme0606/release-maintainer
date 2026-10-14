@@ -102,7 +102,9 @@ CORS allows exactly `http://localhost:5173`. In production nginx proxies `/api/`
 
 `tests.yml` runs frontend lint+vitest and backend pytest, then calls `docker.yml` only on pushes to `main`/`develop`. The `frontend-e2e` job is disabled (`if: false`). Images go to `ghcr.io/justme0606/release-maintainer-{frontend,backend}`.
 
-Argo CD Image Updater writes new tags into `charts/release-maintainer/.argocd-source-release-maintainer.yaml` — that is what the recurring `build: automatic update of release-maintainer` commits are, and `tests.yml` has that path in `paths-ignore` to avoid a CI loop.
+Argo CD Image Updater runs with `writeBackConfig.method: argocd` (see `image-updater-release-maintainer.yaml`): it patches the `release-maintainer` Application's Helm parameters in the cluster and **never commits to Git**, so it needs no Git credentials and nothing writes to `main` except merged PRs. Do not reintroduce a `.argocd-source-release-maintainer.yaml` in the chart: Argo CD applies that file as parameter overrides that win over the Application, so stale digests in it would pin the images and hide every new build. The live `ImageUpdater` object is applied by hand (`kubectl apply -f image-updater-release-maintainer.yaml`), so check that the cluster still matches this file if images stop updating.
+
+Argo CD reads this repository anonymously (it is public); there is no repository credential secret to expire. Branch protection on `main` is a GitHub ruleset named `protect`, which requires a PR and the `backend-tests` / `frontend-tests` checks.
 
 ## Conventions
 

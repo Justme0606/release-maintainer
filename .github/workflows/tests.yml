@@ -3,8 +3,6 @@ name: Tests
 on:
   push:
     branches: [main, develop]
-    paths-ignore:
-      - "charts/release-maintainer/.argocd-source-release-maintainer.yaml"
   pull_request:
     branches: [main, develop]
   workflow_dispatch:
