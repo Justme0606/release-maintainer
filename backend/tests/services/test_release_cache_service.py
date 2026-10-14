@@ -237,3 +237,62 @@ def test_lists_are_overwritten_wholesale():
     merged = _deep_merge(base, {"timeline": [{"label": "new"}]})
 
     assert merged["timeline"] == [{"label": "new"}]
+
+
+# ------------------------------------------------------------------
+#  Pick resolution must follow the title, not the body
+# ------------------------------------------------------------------
+
+# Release notes list every compatibility version, in the same
+# ``<rocq>~<date>`` form as the pick the release is built from.
+COMPATIBILITY_BODY = """## Included Versions of Coq
+- Rocq 9.1.0~2026.01 with the first package collection
+- Coq 9.0.1~2025.08 with the first package collection
+- Coq 8.20~2025.01 with the first package collection
+- Coq 8.13~2022.01 with an updated package collection
+- Coq 8.13~2021.02 with the original package collection
+"""
+
+ALL_PICKS = [
+    "package-pick-8.13~2021.02.sh",
+    "package-pick-8.13~2022.01.sh",
+    "package-pick-8.20~2025.01.sh",
+    "package-pick-9.0~2025.08.sh",
+    "package-pick-9.1~2026.01.sh",
+]
+
+
+@pytest.mark.asyncio
+async def test_the_title_pick_wins_over_older_picks_listed_in_the_body():
+    """Regression: an alphabetically earlier compatibility pick used to win,
+    so every release reported ``Rocq 8.13`` and the wrong package list."""
+    release = github_release("2026.07.0", "2026.07.0 with latest pick 9.1.0~2026.01")
+    release["body"] = COMPATIBILITY_BODY
+    github = github_with([release], ALL_PICKS)
+
+    assert await _find_package_pick(release, github) == (
+        "package-pick-9.1~2026.01",
+        "Rocq 9.1",
+    )
+
+
+@pytest.mark.asyncio
+async def test_a_title_without_a_pick_falls_back_to_the_tag_date_not_the_body():
+    """The body is full of compatibility versions, so it is never a source."""
+    release = github_release("2025.08.1", "2025.08.1")
+    release["body"] = COMPATIBILITY_BODY
+    github = github_with([release], ALL_PICKS)
+
+    assert await _find_package_pick(release, github) == (
+        "package-pick-9.0~2025.08",
+        "Rocq 9.0",
+    )
+
+
+@pytest.mark.asyncio
+async def test_no_pick_is_returned_when_nothing_matches():
+    release = github_release("2099.01.0", "2099.01.0")
+    release["body"] = COMPATIBILITY_BODY
+    github = github_with([release], ALL_PICKS)
+
+    assert await _find_package_pick(release, github) is None
