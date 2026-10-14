@@ -20,7 +20,7 @@ REPO = "platform"
 
 _last_cache_clear: float = 0.0
 _CACHE_CLEAR_COOLDOWN = 5.0  # seconds between consecutive cache clears
-_CACHE_SCHEMA_VERSION = 3
+_CACHE_SCHEMA_VERSION = 4
 _RELEASE_LIST_CACHE_TTL_SECONDS = 1800
 _IN_PROGRESS_CACHE_TTL_SECONDS = 21600
 # Published releases are immutable, but an unbounded entry would outlive the

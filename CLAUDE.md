@@ -66,7 +66,7 @@ npm run build          # tsc -b && vite build
 **Matching a published release to its pick** (`_find_package_pick`) reads only the release *title* fields (`name`, `tag_name`, `description`), in the order the release names them, then falls back to the tag's date prefix. Never match against the body or iterate the pick files: the body lists every compatibility version (`8.13~2021.02`, ...) in the same `<rocq>~<date>` form, and the alphabetically first pick used to win, labelling releases "Rocq 8.13" with the wrong package list. Changing the payload's content, not only its shape, also needs a `_CACHE_SCHEMA_VERSION` bump, because published releases are cached for 30 days.
 
 **Package status** (`KpiService._build_package_list`) is assembled, not read from one place:
-1. parse the package-pick shell script (`_parse_package_pick`) — only lines after the `"FULL" COQ PLATFORM PACKAGES` marker; commented-out lines and `if false` blocks become `disabled`;
+1. parse the package-pick shell script (`_parse_package_pick`) — only lines after the `"FULL" <COQ|ROCq> PLATFORM PACKAGES` marker (matched case-insensitively; upstream renamed it between 9.1 and 9.2, and an unmatched marker silently yields an empty package list); commented-out lines and `if false` blocks become `disabled`;
 2. read the tracking issue (`TRACKING_ISSUE_NUMBER`) — markdown checkboxes → ready/waiting, plus `cross-referenced` timeline events where a closed issue means ready;
 3. `opam show` for version and `dev-repo`, used to locate a package's GitHub repo when the tracker doesn't name it;
 4. latest git tag per repo;
