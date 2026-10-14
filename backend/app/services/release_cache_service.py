@@ -20,7 +20,7 @@ REPO = "platform"
 
 _last_cache_clear: float = 0.0
 _CACHE_CLEAR_COOLDOWN = 5.0  # seconds between consecutive cache clears
-_CACHE_SCHEMA_VERSION = 2
+_CACHE_SCHEMA_VERSION = 3
 _RELEASE_LIST_CACHE_TTL_SECONDS = 1800
 _IN_PROGRESS_CACHE_TTL_SECONDS = 21600
 # Published releases are immutable, but an unbounded entry would outlive the
@@ -190,12 +190,39 @@ async def _compute_releases(github: GithubService) -> list[dict]:
     return published_releases
 
 
+# Release fields that state which package-pick a release was built from.
+# The body is deliberately absent: it also lists every compatibility version
+# (``8.13~2021.02``, ``8.16~2022.09``, ...), none of which is the pick the
+# release is based on.
+_PACKAGE_PICK_TITLE_FIELDS = ("name", "tag_name", "description")
+
+
+def _title_package_pick_references(release: dict) -> list[tuple[str, str]]:
+    """Package-pick references named in a release's title fields, in order."""
+    ordered: list[tuple[str, str]] = []
+    for field in _PACKAGE_PICK_TITLE_FIELDS:
+        text = str(release.get(field) or "")
+        for match in _PACKAGE_PICK_REFERENCE_RE.finditer(text):
+            key = (
+                _normalise_rocq_version(match.group("rocq_version")),
+                match.group("pick_version"),
+            )
+            if key not in ordered:
+                ordered.append(key)
+    return ordered
+
+
 async def _find_package_pick(release: dict, github: GithubService) -> tuple[str, str] | None:
-    """Find the package-pick file matching a release tag.
+    """Find the package-pick file a release was built from.
 
     Returns (package_pick_name, rocq_version) or None.
-    E.g. a release mentioning ``9.1.0~2026.01`` maps to
+    E.g. a release titled ``... with latest pick 9.1.0~2026.01`` maps to
     ``("package-pick-9.1~2026.01", "Rocq 9.1")``.
+
+    The title wins over everything else. Matching has to follow the order in
+    which the release names its picks, not the order of the files in the
+    directory: iterating the directory returns the alphabetically first pick
+    mentioned anywhere, which is an old compatibility version.
     """
     try:
         files = await github.list_directory(OWNER, REPO, "package_picks")
@@ -204,9 +231,10 @@ async def _find_package_pick(release: dict, github: GithubService) -> tuple[str,
         return None
 
     picks = [pick for file in files if (pick := _parse_package_pick_file(file))]
-    references = _release_package_pick_references([release])
-    for pick in picks:
-        if pick["key"] in references:
+    picks_by_key = {pick["key"]: pick for pick in picks}
+    for key in _title_package_pick_references(release):
+        pick = picks_by_key.get(key)
+        if pick:
             return pick["name"], f"Rocq {pick['rocq_version']}"
 
     # Older release titles do not always name the pick. Keep the historical
