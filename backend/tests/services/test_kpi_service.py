@@ -2,6 +2,8 @@
 
 from datetime import date
 
+import pytest
+
 from app.services.kpi_service import (
     KpiService,
     _add_business_days,
@@ -30,6 +32,17 @@ PACKAGES="${PACKAGES} coq-hierarchy-builder.1.7.0"
 # ------------------------------------------------------------------
 #  package-pick parsing
 # ------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("project", ["COQ", "ROcq", "ROCq"])
+def test_full_marker_is_matched_whatever_the_project_spelling(project):
+    """The 9.2 pick says "FULL" ROcq, not "FULL" COQ; it must still parse."""
+    pick = PICK_FILE.replace('"FULL" COQ', f'"FULL" {project}')
+
+    names = [pkg["name"] for pkg in _parse_package_pick(pick)]
+
+    assert "coq-mathcomp-ssreflect" in names
+    assert "coq-core" not in names
 
 
 def test_packages_before_the_full_marker_are_ignored():
