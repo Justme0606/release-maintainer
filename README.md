@@ -62,9 +62,9 @@ on the `frontend-e2e` job in `.github/workflows/tests.yml`.
 ## Deployment
 
 The Helm chart lives in `charts/release-maintainer`. Images are built and pushed
-to GHCR on every push to `main`/`develop`, and Argo CD Image Updater commits the
-new tags back into `.argocd-source-release-maintainer.yaml` — those are the
-recurring `build: automatic update of release-maintainer` commits.
+to GHCR on every push to `main`/`develop`. Argo CD Image Updater picks up the new
+`latest` digest and patches the Application's Helm parameters in the cluster; it
+does not commit to Git, so `main` only changes through merged pull requests.
 
 Per-cycle values to set: `releaseCycle.trackingIssueNumber` and
 `releaseCycle.deadline`. Secrets (`github_token`, `jwt_secret_key`, `seed_users`)
