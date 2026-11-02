@@ -36,10 +36,15 @@ def _add_business_days(start: date, days: int) -> date:
     return current
 
 
+# The marker spells the project name differently across picks
+# ("FULL" COQ ... in 9.1, "FULL" ROCq ... in 9.2); match it case-insensitively.
+_FULL_SECTION_MARKER = re.compile(r'"FULL"\s+\w+\s+PLATFORM PACKAGES', re.IGNORECASE)
+
+
 def _parse_package_pick(content: str) -> list[dict]:
     """Parse a package-pick shell file and return package dicts.
 
-    Only includes packages after the "FULL" COQ PLATFORM PACKAGES section,
+    Only includes packages after the "FULL" ... PLATFORM PACKAGES section,
     skipping base/IDE packages.  Also captures commented-out packages and
     packages inside ``if false`` blocks, marking them as ``disabled``.
     """
@@ -51,7 +56,7 @@ def _parse_package_pick(content: str) -> list[dict]:
         stripped = line.strip()
 
         # Start collecting only after the FULL section marker
-        if '"FULL" COQ PLATFORM PACKAGES' in stripped:
+        if _FULL_SECTION_MARKER.search(stripped):
             in_full_section = True
             continue
         if not in_full_section:
